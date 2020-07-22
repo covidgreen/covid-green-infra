@@ -1,3 +1,5 @@
+<img alttext="COVID Green Logo" src="https://raw.githubusercontent.com/lfph/artwork/master/projects/covidgreen/stacked/color/covidgreen-stacked-color.png" width="300" />
+
 # Terraform
 
 ## Diagrams
@@ -25,10 +27,10 @@ The RDS Aurora cluster is avilable to both `private` and `intra` subnets.
 ## Development
 
 You need first to set up AWS profiles locally for every AWS account/project/environment you're going to work on. Once done change it in the project/environment variables override files in `env-vars`. The project uses 2 different AWS profiles, one to manage the infrastructure and one to manage DNS entries. This is because the AWS account used to spin up an environments could be different from the account from where the DNS zone is registered.
- 
+
 See [Creating a new project](./docs/creating-a-new-project.md) for setting up the Terraform backend setup.
 
-Make file usage 
+Make file usage
 ```
 # Using the cti project (HSE) and dev environment
 make cti-dev-init
@@ -36,7 +38,7 @@ make cti-dev-plan
 make cti-dev-apply
 ```
 
-Every `terraform` command can be launched via the `Makefile`, it will take care of initializing the folder to use different backends, planning, applying, and destroying changes.                        
+Every `terraform` command can be launched via the `Makefile`, it will take care of initializing the folder to use different backends, planning, applying, and destroying changes.
 
 ## Lambdas
 ### authorizer
@@ -58,7 +60,7 @@ For calling Slack web hooks with info.
 This lambda is used to generate a daily stats.json file from a web service run by the Central Statistics Office in Ireland.
 This info is used in the Irish app to power various graphs and info screens.
 
-### settings 
+### settings
 This lambda is used to generate a settings.json file which contains values that can override the app defaults.
 This saves us having to go through a full App Store release cycle to change minor details like phone numbers etc.
 
@@ -83,3 +85,56 @@ All the infrastructure set up is automated but not secrets that need to be creat
 * [Data disaster recovery plan](./docs/drp-data.md)
 * [Monitoring & Logging](./docs/monitoring.md)
 * [Bastion access](./docs/bastion.md)
+
+## Team
+
+### Lead Maintainers
+
+* @colmharte - Colm Harte <colm.harte@nearform.com>
+* @jasnell - James M Snell <jasnell@gmail.com>
+* @aspiringarc - Gar Mac Críosta <gar.maccriosta@hse.ie>
+
+### Core Team
+
+* @ShaunBaker - Shaun Baker <shaun.baker@nearform.com>
+* @floridemai - Paul Negrutiu <paul.negrutiu@nearform.com>
+* @jackdclark - Jack Clark <jack.clark@nearform.com>
+* @andreaforni - Andrea Forni <andrea.forni@nearform.com>
+* @jackmurdoch - Jack Murdoch <jack.murdoch@nearform.com>
+
+### Contributors
+
+* TBD
+* TBD
+
+### Past Contributors
+
+* TBD
+* TBD
+
+## Hosted By
+
+<a href="https://www.lfph.io"><img alttext="Linux Foundation Public Health Logo" src="https://raw.githubusercontent.com/lfph/artwork/master/lfph/stacked/color/lfph-stacked-color.svg" width="200"></a>
+
+[Linux Foundation Public Health](https://www.lfph.io)
+
+## Acknowledgements
+
+<a href="https://www.hse.ie"><img alttext="HSE Ireland Logo" src="https://www.hse.ie/images/hse.jpg" width="200" /></a><a href="https://nearform.com"><img alttext="NearForm Logo" src="https://openjsf.org/wp-content/uploads/sites/84/2019/04/nearform.png" width="400" /></a>
+
+## License
+
+Copyright (c) 2020 HSEIreland
+Copyright (c) The COVID Green Contributors
+
+[Licensed](LICENSE) under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
