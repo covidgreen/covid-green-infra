@@ -1,6 +1,3 @@
-# This is WIP
-# 	Original with some pending content is at: git show dab9b5c1ba623a08b05e335c01cfcf9b984d6a7a
-# 	Need to add missing targets from above
 # We do make calling make targets, not the best but only way I could think of doing this
 # Have a target for each project and env so we use as follows
 # 	make xyz-dev-init
