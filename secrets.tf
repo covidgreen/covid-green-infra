@@ -38,7 +38,12 @@ data "aws_secretsmanager_secret_version" "cso" {
   secret_id = "${local.config_var_prefix}cso"
 }
 
-data "aws_secretsmanager_secret_version" "twilio" {
-  count     = contains(var.optional_secrets_to_include, "twilio") ? 1 : 0
-  secret_id = "${local.config_var_prefix}twilio"
+data "aws_secretsmanager_secret_version" "interop" {
+  count     = contains(var.optional_secrets_to_include, "interop") ? 1 : 0
+  secret_id = "${local.config_var_prefix}interop"
+}
+
+data "aws_secretsmanager_secret_version" "sms" {
+  count     = contains(var.optional_secrets_to_include, "sms") ? 1 : 0
+  secret_id = "${local.config_var_prefix}sms"
 }

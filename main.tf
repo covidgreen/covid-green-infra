@@ -2,7 +2,7 @@
 # Backend config
 # #########################################
 terraform {
-  required_version = ">= 0.12.26"
+  required_version = ">= 0.12.29"
   backend "s3" {}
 }
 
@@ -10,34 +10,34 @@ terraform {
 # AWS provider
 # #########################################
 provider "aws" {
-  version = "2.56.0"
+  version = "2.68.0"
   region  = var.aws_region
   profile = var.profile
 }
 
 provider "aws" {
-  version = "2.56.0"
+  version = "2.68.0"
   alias   = "us"
   region  = "us-east-1"
   profile = var.profile
 }
 
 provider "aws" {
-  version = "2.56.0"
+  version = "2.68.0"
   alias   = "root"
   region  = var.aws_region
   profile = var.root_profile
 }
 
 provider "aws" {
-  version = "2.56.0"
+  version = "2.68.0"
   alias   = "root-us"
   region  = "us-east-1"
   profile = var.root_profile
 }
 
 # #########################################
-# Other provider
+# Other providers
 # #########################################
 provider "null" {
   version = "~> 2.1"

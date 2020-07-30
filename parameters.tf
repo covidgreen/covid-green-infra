@@ -137,11 +137,11 @@ resource "aws_ssm_parameter" "metrics_config" {
   tags      = module.labels.tags
 }
 
-resource "aws_ssm_parameter" "push_enable_sns_for_sms" {
+resource "aws_ssm_parameter" "native_regions" {
   overwrite = true
-  name      = "${local.config_var_prefix}push_enable_sns_for_sms"
+  name      = "${local.config_var_prefix}native_regions"
   type      = "String"
-  value     = var.push_enable_sns_for_sms
+  value     = var.native_regions
   tags      = module.labels.tags
 }
 
@@ -166,6 +166,22 @@ resource "aws_ssm_parameter" "s3_assets_bucket" {
   name      = "${local.config_var_prefix}s3_assets_bucket"
   type      = "String"
   value     = aws_s3_bucket.assets.id
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "security_code_charset" {
+  overwrite = true
+  name      = "${local.config_var_prefix}security_code_charset"
+  type      = "String"
+  value     = var.code_charset
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "security_code_length" {
+  overwrite = true
+  name      = "${local.config_var_prefix}security_code_length"
+  type      = "String"
+  value     = var.code_length
   tags      = module.labels.tags
 }
 
@@ -233,6 +249,14 @@ resource "aws_ssm_parameter" "sms_template" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "sms_url" {
+  overwrite = true
+  name      = "${local.config_var_prefix}sms_url"
+  type      = "String"
+  value     = aws_sqs_queue.sms.id
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "upload_token_lifetime_mins" {
   overwrite = true
   name      = "${local.config_var_prefix}upload_token_lifetime_mins"
@@ -250,5 +274,23 @@ resource "aws_ssm_parameter" "arcgis_url" {
   name      = "${local.config_var_prefix}arcgis_url"
   type      = "String"
   value     = var.arcgis_url
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "daily_registrations_reporter_email_subject" {
+  count     = contains(var.optional_parameters_to_include, "daily_registrations_reporter_email_subject") ? 1 : 0
+  overwrite = true
+  name      = "${local.config_var_prefix}daily_registrations_reporter_email_subject"
+  type      = "String"
+  value     = var.daily_registrations_reporter_email_subject
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "daily_registrations_reporter_sns_arn" {
+  count     = contains(var.optional_parameters_to_include, "daily_registrations_reporter_sns_arn") ? 1 : 0
+  overwrite = true
+  name      = "${local.config_var_prefix}daily_registrations_reporter_sns_arn"
+  type      = "String"
+  value     = join("", aws_sns_topic.daily_registrations_reporter.*.arn)
   tags      = module.labels.tags
 }

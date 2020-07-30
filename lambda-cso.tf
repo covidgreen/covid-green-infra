@@ -33,6 +33,13 @@ data "aws_iam_policy_document" "cso_assume_role" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "cso" {
+  count             = local.lambda_cso_count
+  name              = format("/aws/lambda/%s-cso", module.labels.id)
+  retention_in_days = var.logs_retention_days
+  tags              = module.labels.tags
+}
+
 resource "aws_iam_policy" "cso_policy" {
   count  = local.lambda_cso_count
   name   = "${module.labels.id}-lambda-cso-policy"
@@ -67,9 +74,11 @@ resource "aws_lambda_function" "cso" {
   role             = aws_iam_role.cso[0].arn
   runtime          = "nodejs10.x"
   handler          = "cso.handler"
-  memory_size      = 128
-  timeout          = 15
+  memory_size      = 3008 # PENDING: This will need to be calculated after a few runs
+  timeout          = 900  # PENDING: this will need to be calculated after a few runs
   tags             = module.labels.tags
+
+  depends_on = [aws_cloudwatch_log_group.cso]
 
   vpc_config {
     security_group_ids = [module.lambda_sg.id]

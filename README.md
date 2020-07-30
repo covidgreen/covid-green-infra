@@ -101,6 +101,9 @@ All the infrastructure set up is automated but not secrets that need to be creat
 * @jackdclark - Jack Clark <jack.clark@nearform.com>
 * @andreaforni - Andrea Forni <andrea.forni@nearform.com>
 * @jackmurdoch - Jack Murdoch <jack.murdoch@nearform.com>
+* @pmcgrath - Pat McGrath <pat.mcgrath@nearform.com>
+* @zimny - Piotr Zimoch <piotr.zimoch@nearform.com>
+* @dgonzalez - David Gonzalez <david.gonzalez@nearform.com>
 
 ### Contributors
 

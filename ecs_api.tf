@@ -61,6 +61,13 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
   }
 
   statement {
+    actions = ["kms:*"]
+    resources = [
+      aws_kms_key.sqs.arn
+    ]
+  }
+
+  statement {
     actions = ["sqs:*"]
     resources = [
       aws_sqs_queue.callback.arn

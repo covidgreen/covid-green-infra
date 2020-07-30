@@ -9,6 +9,75 @@ resource "aws_cloudtrail" "cloudtrail" {
   name                          = format("%s-cloudtrail", module.labels.id)
   s3_bucket_name                = aws_s3_bucket.cloudtrail[0].id
   tags                          = module.labels.tags
+  cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail_cloudwatch_role[0].arn
+  cloud_watch_logs_group_arn    = aws_cloudwatch_log_group.cloudtrail[0].arn
+}
+
+resource "aws_cloudwatch_log_group" "cloudtrail" {
+  count             = local.enable_cloudtrail_count
+  name              = "/aws/cloudtrail/${module.labels.id}"
+  retention_in_days = var.logs_retention_days
+}
+
+resource "aws_iam_role" "cloudtrail_cloudwatch_role" {
+  count              = local.enable_cloudtrail_count
+  name               = "${module.labels.id}-cloudtrail-cloudwatch"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "cloudtrail.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_policy" "cloudtrail_cloudwatch_policy" {
+  count  = local.enable_cloudtrail_count
+  name   = "${module.labels.id}-cloudtrail-cloudwatch"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+
+      "Sid": "AWSCloudTrailCreateLogStream20201707",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogStream"
+      ],
+      "Resource": [
+        "${local.cloudtrail_log_stream_arn_pattern}"
+      ]
+
+    },
+    {
+      "Sid": "AWSCloudTrailPutLogEvents20201707",
+      "Effect": "Allow",
+      "Action": [
+        "logs:PutLogEvents"
+      ],
+      "Resource": [
+        "${local.cloudtrail_log_stream_arn_pattern}"
+      ]
+    }
+  ]
+}
+EOF
+
+}
+
+resource "aws_iam_role_policy_attachment" "cloudwatch_cloudtrail_attachment" {
+  count      = local.enable_cloudtrail_count
+  role       = aws_iam_role.cloudtrail_cloudwatch_role[0].name
+  policy_arn = aws_iam_policy.cloudtrail_cloudwatch_policy[0].arn
 }
 
 resource "aws_s3_bucket" "cloudtrail" {
@@ -54,4 +123,5 @@ resource "aws_s3_bucket_public_access_block" "default" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+
 }

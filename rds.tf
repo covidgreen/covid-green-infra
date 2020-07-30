@@ -2,9 +2,37 @@
 # RDS Cluster
 # https://github.com/cloudposse/terraform-aws-rds-cluster
 # #########################################
+data "aws_iam_policy_document" "rds_enhanced_monitoring" {
+  statement {
+    actions = [
+      "sts:AssumeRole",
+    ]
+
+    principals {
+      type        = "Service"
+      identifiers = ["monitoring.rds.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "rds_enhanced_monitoring" {
+  count = local.rds_enhanced_monitoring_enabled_count
+
+  assume_role_policy = data.aws_iam_policy_document.rds_enhanced_monitoring.json
+  name               = format("%s-rds-enhanced-monitoring", module.labels.id)
+  tags               = module.labels.tags
+}
+
+resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
+  count = local.rds_enhanced_monitoring_enabled_count
+
+  role       = aws_iam_role.rds_enhanced_monitoring[0].name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+}
+
 module "rds_cluster_aurora_postgres" {
   source              = "cloudposse/rds-cluster/aws"
-  version             = "0.21.0"
+  version             = "0.27.0"
   engine              = "aurora-postgresql"
   cluster_family      = var.rds_cluster_family
   cluster_size        = var.rds_cluster_size
@@ -21,9 +49,16 @@ module "rds_cluster_aurora_postgres" {
   storage_encrypted   = true
   skip_final_snapshot = var.environment == "dev" ? true : false
   backup_window       = "04:00-06:00"
-  allowed_cidr_blocks = [var.vpc_cidr]
+  security_groups     = concat([module.api_sg.id, module.push_sg.id, module.lambda_sg.id], aws_security_group.bastion.*.id)
   retention_period    = var.rds_backup_retention
   deletion_protection = true
+
+  # Use standard perf insights
+  performance_insights_enabled = true
+
+  # Enhanced monitoring - is optional
+  rds_monitoring_interval = var.rds_enhanced_monitoring_interval
+  rds_monitoring_role_arn = join("", aws_iam_role.rds_enhanced_monitoring.*.arn)
 
   # Put here the snapshot id to recreate the cluster using an existing dataset
   # snapshot_identifier = "SNAPSHOT ID HERE"

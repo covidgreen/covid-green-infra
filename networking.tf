@@ -2,14 +2,9 @@
 # AWS VPC module
 #   - check https://github.com/terraform-aws-modules/terraform-aws-vpc
 # #########################################
-data "aws_security_group" "default" {
-  name   = "default"
-  vpc_id = module.vpc.vpc_id
-}
-
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.31.0"
+  version = "2.44.0"
 
   name = module.labels.id
   cidr = var.vpc_cidr
@@ -19,6 +14,10 @@ module "vpc" {
     data.aws_availability_zones.available.names[1],
     data.aws_availability_zones.available.names[2]
   ]
+
+  manage_default_security_group  = true
+  default_security_group_ingress = []
+  default_security_group_egress  = []
 
   public_subnets  = var.public_subnets_cidr
   private_subnets = var.private_subnets_cidr
@@ -85,7 +84,6 @@ module "vpc" {
 
   tags = module.labels.tags
 }
-
 
 resource "aws_security_group" "vpce" {
   name   = "${module.labels.id}-endpoints"

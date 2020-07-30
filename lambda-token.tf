@@ -33,6 +33,12 @@ data "aws_iam_policy_document" "token_assume_role" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "token" {
+  name              = format("/aws/lambda/%s-token", module.labels.id)
+  retention_in_days = var.logs_retention_days
+  tags              = module.labels.tags
+}
+
 resource "aws_iam_policy" "token_policy" {
   name   = "${module.labels.id}-lambda-token-policy"
   path   = "/"
@@ -65,6 +71,8 @@ resource "aws_lambda_function" "token" {
   memory_size      = 128
   timeout          = 15
   tags             = module.labels.tags
+
+  depends_on = [aws_cloudwatch_log_group.token]
 
   vpc_config {
     security_group_ids = [module.lambda_sg.id]

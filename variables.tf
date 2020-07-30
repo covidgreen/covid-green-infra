@@ -8,6 +8,26 @@ variable "profile" {}
 variable "root_profile" {}
 variable "aws_region" {}
 
+
+# #########################################
+# Log retention
+# #########################################
+variable "logs_retention_days" {
+  description = "Retention in days for the logs"
+  default     = 1
+}
+
+# #########################################
+# APIGateway
+# If we want to limit here we can set the throttling_ values - currently -1 = no throttling
+# #########################################
+variable "api_gateway_throttling_rate_limit" {
+  default = -1
+}
+variable "api_gateway_throttling_burst_limit" {
+  default = -1
+}
+
 # #########################################
 # Cloudtrail
 # #########################################
@@ -31,37 +51,6 @@ variable "api_us_certificate_arn" {
 # Need this if we have enabled_certificates=false and have imported the certificates
 variable "push_eu_certificate_arn" {
   default = ""
-}
-
-# #########################################
-# Monitoring
-# #########################################
-variable "enable_monitoring" {
-  default = false
-}
-variable "slack_webhook_url" {
-  default = ""
-}
-variable "slack_username" {
-  default = ""
-}
-variable "threshold_5xx" {
-  default = 1
-}
-variable "period_5xx" {
-  default = 60
-}
-variable "threshold_4xx" {
-  default = 25
-}
-variable "period_4xx" {
-  default = 60
-}
-variable "threshold_latency" {
-  default = 500
-}
-variable "period_latency" {
-  default = 300
 }
 
 # #########################################
@@ -99,6 +88,10 @@ variable "rds_cluster_family" {
 variable "rds_backup_retention" {
   default = 14
 }
+# Enhanced monitoring metrics, the default is 0 which is disabled. Valid Values: 0, 1, 5, 10, 15, 30, 60. These are in seconds.
+variable "rds_enhanced_monitoring_interval" {
+  default = 0
+}
 
 # #########################################
 # ECR Settings
@@ -121,6 +114,31 @@ variable "wildcard_domain" {}
 # This allows preventing bastion access, if this is enabled the default is to have an ASG with desired count = 0
 variable "bastion_enabled" {
   default = true
+}
+
+# #########################################
+# SMS using AWS - used by the SMS lambda
+# #########################################
+variable "enable_sms_publishing_with_aws" {
+  default = false
+}
+
+# #########################################
+# WAF
+# #########################################
+# List of allowed country alpha 2 codes, see https://www.iso.org/obp/ui/#search
+# If this is empty then we do not restrict based on country
+variable "waf_geo_allowed_countries" {
+  default = []
+}
+
+
+# #########################################
+# Admins role
+# #########################################
+variable "admins_role_require_mfa" {
+  # Turning this on is fine with the AWS CLI but is tricky with TF and we have multiple accounts in play in some envs
+  default = false
 }
 
 # #########################################
@@ -181,17 +199,34 @@ variable "api_mem_low_threshold" {
   default = 15
 }
 variable "log_level" {}
-variable "logs_retention_days" {}
 variable "arcgis_url" {
   default = ""
 }
 variable "exposure_limit" {
   default = "10"
 }
+variable "daily_registrations_reporter_email_subject" {
+  default = ""
+}
+variable "daily_registrations_reporter_schedule" {
+  default = ""
+}
+variable "download_schedule" {
+  default = "cron(0 * * * ? *)"
+}
 variable "exposure_schedule" {}
 variable "settings_schedule" {}
+variable "upload_schedule" {
+  default = "cron(0 * * * ? *)"
+}
 variable "refresh_token_expiry" {
   default = "10y"
+}
+variable "code_charset" {
+  default = "0123456789"
+}
+variable "code_length" {
+  default = "6"
 }
 variable "code_lifetime_mins" {}
 variable "token_lifetime_mins" {}
@@ -238,9 +273,6 @@ variable "push_service_desired_count" {
 variable "push_allowed_ips" {
   default = ["0.0.0.0/0"]
 }
-variable "push_enable_sns_for_sms" {
-  default = "false"
-}
 variable "app_bundle_id" {
   default = ""
 }
@@ -257,6 +289,12 @@ variable "default_country_code" {
   default = ""
 }
 variable "default_region" {
+  default = ""
+}
+variable "lambda_provisioned_concurrencies" {
+  default = {}
+}
+variable "native_regions" {
   default = ""
 }
 variable "optional_parameters_to_include" {
