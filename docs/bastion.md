@@ -11,7 +11,7 @@ There is a schedule to scale down the bastions at 21:01 UTC each day - so your s
 
 
 # Postgres client installation
-The postgresql11 package will be installed using cloud-init, but of you need to install can use
+The postgresql11 package will be installed using cloud-init, but if you need to install can use
 ```sudo amazon-linux-extras install postgresql11```
 
 

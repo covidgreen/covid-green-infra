@@ -26,7 +26,8 @@ locals {
   # PENDING: Revisit this
   # Need to only create one of these for an account/region
   # Logic is all the dev envs are in a single account, and assumes all the other envs are in a dedicated account/region
-  gateway_api_account_count = (var.environment == "dev" && var.namespace == "fight-together") || var.environment != "dev" ? 1 : 0
+  # Want to only create one of these
+  gateway_api_account_count = (var.environment == "dev" && var.namespace == "xyz") || var.environment != "dev" ? 1 : 0
 
   # Pick one, using the var if it is set, else failback to the one we maanage
   gateway_api_certificate_arn = coalesce(var.api_us_certificate_arn, join("", aws_acm_certificate.wildcard_cert_us.*.arn))
@@ -34,6 +35,20 @@ locals {
   # Based on either of DNS enabled OR (We have an api_dns AND and api_us_certificate_arn)
   gateway_api_domain_name_count = var.enable_dns || (var.api_dns != "" && var.api_us_certificate_arn != "") ? 1 : 0
 
-  # cso lambda creation count
-  lambda_cso_count = contains(var.optional_lambdas_to_include, "cso") ? 1 : 0
+  # Lambda creation counts
+  lambda_cso_count                          = contains(var.optional_lambdas_to_include, "cso") ? 1 : 0
+  lambda_daily_registrations_reporter_count = contains(var.optional_lambdas_to_include, "daily-registrations-reporter") ? 1 : 0
+  lambda_download_count                     = contains(var.optional_lambdas_to_include, "download") ? 1 : 0
+  lambda_upload_count                       = contains(var.optional_lambdas_to_include, "upload") ? 1 : 0
+
+  # RDS enhanced monitoring count
+  rds_enhanced_monitoring_enabled_count = var.rds_enhanced_monitoring_interval > 0 ? 1 : 0
+
+  # WAF geo blocking - optional
+  waf_geo_blocking_count = length(var.waf_geo_allowed_countries) > 0 ? 1 : 0
+
+  # This is required as we use the count as toggle:
+  cloudtrail_log_group_name = "${join(" ", aws_cloudwatch_log_group.cloudtrail.*.name)}"
+  # Cloudtrail log stream related:
+  cloudtrail_log_stream_arn_pattern = "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:log-group:${local.cloudtrail_log_group_name}:log-stream:${data.aws_caller_identity.current.account_id}_CloudTrail_${var.aws_region}*"
 }

@@ -33,6 +33,12 @@ data "aws_iam_policy_document" "settings_assume_role" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "settings" {
+  name              = format("/aws/lambda/%s-settings", module.labels.id)
+  retention_in_days = var.logs_retention_days
+  tags              = module.labels.tags
+}
+
 resource "aws_iam_policy" "settings_policy" {
   name   = "${module.labels.id}-lambda-settings-policy"
   path   = "/"
@@ -65,6 +71,8 @@ resource "aws_lambda_function" "settings" {
   memory_size      = 128
   timeout          = 15
   tags             = module.labels.tags
+
+  depends_on = [aws_cloudwatch_log_group.settings]
 
   vpc_config {
     security_group_ids = [module.lambda_sg.id]

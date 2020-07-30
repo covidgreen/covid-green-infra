@@ -265,6 +265,109 @@ resource "aws_api_gateway_integration_response" "api_settings_get_integration" {
   }
 }
 
+## /api/settings/exposures
+resource "aws_api_gateway_resource" "api_settings_exposures" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.api_settings.id
+  path_part   = "exposures"
+}
+
+resource "aws_api_gateway_method" "api_settings_exposures_get" {
+  rest_api_id      = aws_api_gateway_rest_api.main.id
+  resource_id      = aws_api_gateway_resource.api_settings_exposures.id
+  http_method      = "GET"
+  authorization    = "CUSTOM"
+  authorizer_id    = aws_api_gateway_authorizer.main.id
+  api_key_required = false
+}
+
+resource "aws_api_gateway_integration" "api_settings_exposures_get_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.main.id
+  resource_id             = aws_api_gateway_resource.api_settings_exposures.id
+  http_method             = aws_api_gateway_method.api_settings_exposures_get.http_method
+  integration_http_method = "GET"
+  type                    = "AWS"
+  uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/exposures.json"
+  credentials             = aws_iam_role.gateway.arn
+}
+
+resource "aws_api_gateway_method_response" "api_settings_exposures_get" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.api_settings_exposures.id
+  http_method = aws_api_gateway_method.api_settings_exposures_get.http_method
+  status_code = "200"
+  response_models = {
+    "application/json" = "Empty"
+  }
+  response_parameters = {
+    "method.response.header.Content-Length" = false,
+    "method.response.header.Content-Type"   = false
+  }
+}
+
+resource "aws_api_gateway_integration_response" "api_settings_exposures_get_integration" {
+  rest_api_id       = aws_api_gateway_rest_api.main.id
+  resource_id       = aws_api_gateway_resource.api_settings_exposures.id
+  http_method       = aws_api_gateway_method.api_settings_exposures_get.http_method
+  selection_pattern = aws_api_gateway_method_response.api_settings_exposures_get.status_code
+  status_code       = aws_api_gateway_method_response.api_settings_exposures_get.status_code
+  response_parameters = {
+    "method.response.header.Content-Length" = "integration.response.header.Content-Length",
+    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+  }
+}
+
+## /api/settings/language
+resource "aws_api_gateway_resource" "api_settings_language" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.api_settings.id
+  path_part   = "language"
+}
+
+resource "aws_api_gateway_method" "api_settings_language_get" {
+  rest_api_id      = aws_api_gateway_rest_api.main.id
+  resource_id      = aws_api_gateway_resource.api_settings_language.id
+  http_method      = "GET"
+  authorization    = "NONE"
+  api_key_required = false
+}
+
+resource "aws_api_gateway_integration" "api_settings_language_get_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.main.id
+  resource_id             = aws_api_gateway_resource.api_settings_language.id
+  http_method             = aws_api_gateway_method.api_settings_language_get.http_method
+  integration_http_method = "GET"
+  type                    = "AWS"
+  uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/language.json"
+  credentials             = aws_iam_role.gateway.arn
+}
+
+resource "aws_api_gateway_method_response" "api_settings_language_get" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.api_settings_language.id
+  http_method = aws_api_gateway_method.api_settings_language_get.http_method
+  status_code = "200"
+  response_models = {
+    "application/json" = "Empty"
+  }
+  response_parameters = {
+    "method.response.header.Content-Length" = false,
+    "method.response.header.Content-Type"   = false
+  }
+}
+
+resource "aws_api_gateway_integration_response" "api_settings_language_get_integration" {
+  rest_api_id       = aws_api_gateway_rest_api.main.id
+  resource_id       = aws_api_gateway_resource.api_settings_language.id
+  http_method       = aws_api_gateway_method.api_settings_language_get.http_method
+  selection_pattern = aws_api_gateway_method_response.api_settings_language_get.status_code
+  status_code       = aws_api_gateway_method_response.api_settings_language_get.status_code
+  response_parameters = {
+    "method.response.header.Content-Length" = "integration.response.header.Content-Length",
+    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+  }
+}
+
 ## /api/stats
 resource "aws_api_gateway_resource" "api_stats" {
   rest_api_id = aws_api_gateway_rest_api.main.id
@@ -430,6 +533,8 @@ resource "aws_api_gateway_deployment" "live" {
     aws_api_gateway_integration.api_proxy_any_integration,
     aws_api_gateway_integration.api_healthcheck_get_integration,
     aws_api_gateway_integration.api_settings_get_integration,
+    aws_api_gateway_integration.api_settings_exposures_get_integration,
+    aws_api_gateway_integration.api_settings_language_get_integration,
     aws_api_gateway_integration.api_stats_get_integration,
     aws_api_gateway_integration.api_data_exposures_item_get_integration
   ]
@@ -471,8 +576,8 @@ resource "aws_api_gateway_method_settings" "settings" {
     metrics_enabled        = true
     data_trace_enabled     = true
     logging_level          = "INFO"
-    throttling_rate_limit  = 10000
-    throttling_burst_limit = 5000
+    throttling_rate_limit  = var.api_gateway_throttling_rate_limit
+    throttling_burst_limit = var.api_gateway_throttling_burst_limit
   }
 }
 
@@ -486,6 +591,6 @@ resource "aws_api_gateway_base_path_mapping" "main" {
 resource "aws_api_gateway_authorizer" "main" {
   name                   = "main"
   rest_api_id            = aws_api_gateway_rest_api.main.id
-  authorizer_uri         = aws_lambda_function.authorizer.invoke_arn
+  authorizer_uri         = coalesce(join("", aws_lambda_alias.authorizer_live.*.invoke_arn), aws_lambda_function.authorizer.invoke_arn)
   authorizer_credentials = aws_iam_role.authorizer.arn
 }

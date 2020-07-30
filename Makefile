@@ -1,4 +1,12 @@
-# We assume you have an AWS profile with the the PROJECT-ENVIRONMENT i.e. cti-dev
+# This is WIP
+# 	Original with some pending content is at: git show dab9b5c1ba623a08b05e335c01cfcf9b984d6a7a
+# 	Need to add missing targets from above
+# We do make calling make targets, not the best but only way I could think of doing this
+# Have a target for each project and env so we use as follows
+# 	make xyz-dev-init
+# 	make xyz-dev-plan
+# 	make xyz-dev-apply
+# We assume you have an AWS profile with the the PROJECT-ENVIRONMENT so in above case xyz-dev
 # 	This is the same profile that should exist in the env-vars file
 
 .ONESHELL:
@@ -26,6 +34,7 @@ PROJECT_KEY ?=
 MAKE_TF_INIT = $(MAKE) --no-print-directory internal-init
 MAKE_TF_PLAN = $(MAKE) --no-print-directory internal-plan
 MAKE_TF_APPLY = $(MAKE) --no-print-directory internal-apply
+MAKE_TF_DESTROY = $(MAKE) --no-print-directory internal-destroy
 
 
 # #########################################
@@ -42,63 +51,40 @@ AWS_PROFILE = $(PROJECT_ENVIRONMENT_KEY)
 # Determine from tf vars file(s) - will use the first match
 AWS_REGION = $(shell grep '^aws_region' $(PROJECT_ENVIRONMENT_TFVAR_FILE) $(PROJECT_TFVAR_FILE) | head -n 1 | cut -d '"' -f 2)
 
-# NOTE: We cannot always derive these as we do not have a consistent scheme currently, see the cti-ENV-init targets
 TERRAFORM_BACKEND_BUCKET ?= $(PROJECT_ENVIRONMENT_KEY)-terraform-store
 TERRAFORM_BACKEND_KEY ?= $(PROJECT_KEY)
 TERRAFORM_BACKEND_TABLE ?= $(PROJECT_ENVIRONMENT_KEY)-terraform-lock
 
 
 # #########################################
-# cti targets - HSE
-# This is the one that is non conformant re backends
+# xyz targets
 # #########################################
 # DEV
-.PHONY: cti-dev-init cti-dev-plan cti-dev-apply
-cti-dev-init:
-	@$(MAKE_TF_INIT) ENVIRONMENT=dev PROJECT_KEY=cti \
-		TERRAFORM_BACKEND_BUCKET=fight-together-terraform-store-dev \
-		TERRAFORM_BACKEND_TABLE=fight-together-terraform-lock \
-		TERRAFORM_BACKEND_KEY=fight-together-dev-eu-west-1
-cti-dev-plan:
-	@$(MAKE_TF_PLAN) ENVIRONMENT=dev PROJECT_KEY=cti
-cti-dev-apply:
-	@$(MAKE_TF_APPLY) ENVIRONMENT=dev PROJECT_KEY=cti
+.PHONY: xyz-dev-init xyz-dev-plan xyz-dev-apply
+xyz-dev-init:
+	@$(MAKE_TF_INIT) ENVIRONMENT=dev PROJECT_KEY=xyz
+xyz-dev-plan:
+	@$(MAKE_TF_PLAN) ENVIRONMENT=dev PROJECT_KEY=xyz
+xyz-dev-apply:
+	@$(MAKE_TF_APPLY) ENVIRONMENT=dev PROJECT_KEY=xyz
 
 # QA
-.PHONY: cti-qa-init cti-qa-plan cti-qa-apply
-cti-qa-init:
-	@$(MAKE_TF_INIT) ENVIRONMENT=qa PROJECT_KEY=cti \
-		TERRAFORM_BACKEND_BUCKET=fight-together-terraform-store-qa \
-		TERRAFORM_BACKEND_TABLE=fight-together-terraform-lock \
-		TERRAFORM_BACKEND_KEY=fight-together-qa-eu-west-1
-cti-qa-plan:
-	@$(MAKE_TF_PLAN) ENVIRONMENT=qa PROJECT_KEY=cti
-cti-qa-apply:
-	@$(MAKE_TF_APPLY) ENVIRONMENT=qa PROJECT_KEY=cti
-
-# TRIAL
-.PHONY: cti-trial-init cti-trial-plan cti-trial-apply
-cti-trial-init:
-	@$(MAKE_TF_INIT) ENVIRONMENT=trial PROJECT_KEY=cti \
-		TERRAFORM_BACKEND_BUCKET=cti-terraform-store-trial \
-		TERRAFORM_BACKEND_TABLE=cti-terraform-lock-trial \
-		TERRAFORM_BACKEND_KEY=cti
-cti-trial-plan:
-	@$(MAKE_TF_PLAN) ENVIRONMENT=trial PROJECT_KEY=cti
-cti-trial-apply:
-	@$(MAKE_TF_APPLY) ENVIRONMENT=trial PROJECT_KEY=cti
+.PHONY: xyz-qa-init xyz-qa-plan xyz-qa-apply
+xyz-qa-init:
+	@$(MAKE_TF_INIT) ENVIRONMENT=qa PROJECT_KEY=xyz
+xyz-qa-plan:
+	@$(MAKE_TF_PLAN) ENVIRONMENT=qa PROJECT_KEY=xyz
+xyz-qa-apply:
+	@$(MAKE_TF_APPLY) ENVIRONMENT=qa PROJECT_KEY=xyz
 
 # PROD
-.PHONY: cti-prod-init cti-prod-plan cti-prod-apply
-cti-prod-init:
-	@$(MAKE_TF_INIT) ENVIRONMENT=prod PROJECT_KEY=cti \
-		TERRAFORM_BACKEND_BUCKET=cti-terraform-store \
-		TERRAFORM_BACKEND_TABLE=cti-terraform-lock \
-		TERRAFORM_BACKEND_KEY=cti
-cti-prod-plan:
-	@$(MAKE_TF_PLAN) ENVIRONMENT=prod PROJECT_KEY=cti
-cti-prod-apply:
-	@$(MAKE_TF_APPLY) ENVIRONMENT=prod PROJECT_KEY=cti
+.PHONY: xyz-prod-init xyz-prod-plan xyz-prod-apply
+xyz-prod-init:
+	@$(MAKE_TF_INIT) ENVIRONMENT=prod PROJECT_KEY=xyz
+xyz-prod-plan:
+	@$(MAKE_TF_PLAN) ENVIRONMENT=prod PROJECT_KEY=xyz
+xyz-prod-apply:
+	@$(MAKE_TF_APPLY) ENVIRONMENT=prod PROJECT_KEY=xyz
 
 
 # #########################################
@@ -143,3 +129,8 @@ internal-plan:
 internal-apply:
 	@echo "$(WHITE)==> Applying changes - $(GREEN)$(PROJECT_ENVIRONMENT_KEY) - terraform apply$(RESET)"
 	terraform apply -parallelism=10 $(TERRAFORM_PLAN_FILE)
+
+internal-destroy:
+	@echo "Since some resources have deletion protection on - you will need to toggle that first - ALB and RDS"
+	@echo "$(WHITE)==> Destroying infrastructure - $(GREEN)$(PROJECT_ENVIRONMENT_KEY) - terraform destroy$(RESET)"
+	terraform destroy -var-file $(PROJECT_TFVAR_FILE) -var-file $(PROJECT_ENVIRONMENT_TFVAR_FILE)

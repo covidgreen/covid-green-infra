@@ -2,6 +2,10 @@ resource "aws_s3_bucket" "assets" {
   bucket = module.labels.id
   acl    = "private"
   tags   = module.labels.tags
+
+  versioning {
+    enabled = true
+  }
 }
 
 resource "aws_s3_bucket_public_access_block" "assets" {

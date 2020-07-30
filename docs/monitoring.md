@@ -1,20 +1,14 @@
 # Monitoring & Logging
 
-The application uses **CloudWatch** for monitoring and logging. The current setup includes alarming to the slcak channel **#covid-tracker-alarms** via SNS+Lambda.
+The application uses **CloudWatch** for monitoring and logging. 
 
 ## Monitoring
 
-The following alarms are in place right now:
-
-- 5xx errors > 25 for 1 datapoint within 1 minute
-- 4XX errors > 25 for 1 datapoint within 1 minute
-- p95 api latency > 500ms for 1 datapoint within 1 minute
-
-Alarms are enabled just for `production`.
+See the [monitoring repo](https://github.com/nearform/covid-tracker-monitoring) for additional alarms and monitoring.
 
 ## Logs
 
-Multiple log groups can be queried via `Logs Insights` slecting the proper log groups.
+Multiple log groups can be queried via `Logs Insights` selecting the proper log groups.
 
 * *Find all responses with specific status code*
 

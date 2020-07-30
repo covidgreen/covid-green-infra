@@ -15,7 +15,7 @@ data "aws_iam_policy_document" "push_ecs_assume_role_policy" {
 data "aws_iam_policy_document" "push_ecs_task_policy" {
   statement {
     actions = ["ssm:GetParameter", "secretsmanager:GetSecretValue"]
-    resources = concat([
+    resources = [
       aws_ssm_parameter.log_level.arn,
       aws_ssm_parameter.push_port.arn,
       aws_ssm_parameter.push_host.arn,
@@ -26,25 +26,24 @@ data "aws_iam_policy_document" "push_ecs_task_policy" {
       aws_ssm_parameter.db_database.arn,
       aws_ssm_parameter.db_ssl.arn,
       aws_ssm_parameter.default_country_code.arn,
-      aws_ssm_parameter.push_enable_sns_for_sms.arn,
-      aws_ssm_parameter.sms_template.arn,
-      aws_ssm_parameter.sms_sender.arn,
-      aws_ssm_parameter.sms_region.arn,
+      aws_ssm_parameter.security_code_charset.arn,
+      aws_ssm_parameter.security_code_length.arn,
+      aws_ssm_parameter.sms_url.arn,
       data.aws_secretsmanager_secret_version.rds.arn,
       data.aws_secretsmanager_secret_version.jwt.arn
-      ],
-      data.aws_secretsmanager_secret_version.twilio.*.arn
-    )
+    ]
   }
 
-  # This is optional
-  # PENDING: Restrict the scope here, Nigel's comment "I added this to allow the Push API to send SMS via SNS. There is no topic involved as it sends to arbitrary phone numbers. We can limit the action though. I think Publish seems like a good start. We may also need the Set* actions as we call the setSMSAttributes method to try and set sender etc. https://docs.amazonaws.cn/en_us/IAM/latest/UserGuide/list_amazonsns.html"
-  dynamic statement {
-    for_each = var.push_enable_sns_for_sms ? { "1" : 1 } : {}
-    content {
-      actions   = ["sns:*"]
-      resources = ["*"]
-    }
+  statement {
+    actions = ["kms:Decrypt", "kms:DescribeKey", "kms:Encrypt", "kms:GenerateDataKey", "kms:GenerateDataKey*", "kms:GetPublicKey", "kms:ReEncrypt*"]
+    resources = [
+      aws_kms_key.sqs.arn
+    ]
+  }
+
+  statement {
+    actions   = ["sqs:SendMessage"]
+    resources = [aws_sqs_queue.sms.arn]
   }
 }
 

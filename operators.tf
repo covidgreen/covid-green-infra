@@ -3,13 +3,29 @@
 # See https://alestic.com/2015/10/aws-iam-readonly-too-permissive/
 # #########################################
 data "aws_iam_policy_document" "operators" {
-  # PENDING: So I have at least one statement - will be able to add here when I know more
   statement {
     actions = [
-      "cloudformation:GetTemplate"
+      "lambda:InvokeFunction"
     ]
-    effect    = "Deny"
-    resources = ["*"]
+    resources = concat([
+      aws_lambda_function.callback.arn,
+      aws_lambda_function.exposures.arn,
+      aws_lambda_function.stats.arn,
+      aws_lambda_function.settings.arn,
+      aws_lambda_function.token.arn
+      ],
+    aws_lambda_function.cso.*.arn)
+  }
+
+  # Explicitly deny anything on authorizer as it contains a secret
+  statement {
+    actions = [
+      "lambda:*"
+    ]
+    resources = [
+      aws_lambda_function.authorizer.arn,
+    ]
+    effect = "Deny"
   }
 
   # Conditional

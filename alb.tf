@@ -28,6 +28,7 @@ resource "aws_lb" "api" {
   enable_cross_zone_load_balancing = true
   enable_http2                     = true
   ip_address_type                  = "dualstack"
+  enable_deletion_protection       = true
 
   tags = module.labels.tags
 }
@@ -118,6 +119,7 @@ resource "aws_lb" "push" {
   enable_cross_zone_load_balancing = true
   enable_http2                     = true
   ip_address_type                  = "dualstack"
+  enable_deletion_protection       = true
 
   tags = module.labels.tags
 }

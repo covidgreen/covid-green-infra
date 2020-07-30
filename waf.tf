@@ -8,6 +8,22 @@ resource "aws_wafregional_web_acl" "acl" {
     type = "ALLOW"
   }
 
+  # Only add this rule if we have a list, if empty ignore - unrestricted
+  # Action is block as we have negated the rule (Anything not in the list will be blocked)
+  dynamic rule {
+    for_each = local.waf_geo_blocking_count == 1 ? { 1 : 1 } : {}
+
+    content {
+      action {
+        type = "BLOCK"
+      }
+
+      priority = 5
+      rule_id  = aws_wafregional_rule.geo_allowed[0].id
+      type     = "REGULAR"
+    }
+  }
+
   rule {
     action {
       type = "BLOCK"
@@ -26,6 +42,34 @@ resource "aws_wafregional_web_acl" "acl" {
     priority = 20
     rule_id  = aws_wafregional_rule.xss.id
     type     = "REGULAR"
+  }
+}
+
+## Geo blocking
+resource "aws_wafregional_geo_match_set" "geo_allowed" {
+  count = local.waf_geo_blocking_count
+
+  name = "${module.labels.id}-geo-allowed"
+
+  dynamic geo_match_constraint {
+    for_each = toset(var.waf_geo_allowed_countries)
+
+    content {
+      type  = "Country"
+      value = geo_match_constraint.key
+    }
+  }
+}
+
+resource "aws_wafregional_rule" "geo_allowed" {
+  count       = local.waf_geo_blocking_count
+  name        = "${module.labels.id}-geo-allowed"
+  metric_name = "ftGEO${var.environment}"
+
+  predicate {
+    data_id = aws_wafregional_geo_match_set.geo_allowed[0].id
+    negated = true # This does a flip so we can do a block at the Web ACL rule
+    type    = "GeoMatch"
   }
 }
 

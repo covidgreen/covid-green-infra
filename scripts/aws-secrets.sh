@@ -1,12 +1,12 @@
 #!/bin/bash
 #	./aws-secrets.sh list
-#	./aws-secrets.sh list dev-cti-
+#	./aws-secrets.sh list dev-xyz-
 #
 #	./aws-secrets.sh values
-#	./aws-secrets.sh values dev-cti-
+#	./aws-secrets.sh values dev-xyz-
 #
-#	./aws-secrets.sh create dev-cti-device-check 'SOME-VALUE'
-#	./aws-secrets.sh create dev-cti-jwt "{\"key\": \"ABC{'&m\`<N\`\"}"		# Illustrates where we have to escape the ` char
+#	./aws-secrets.sh create dev-xyz-device-check 'SOME-VALUE'
+#	./aws-secrets.sh create dev-xyz-jwt "{\"key\": \"ABC{'&m\`<N\`\"}"		# Illustrates where we have to escape the ` char
 #
 set -eou pipefail
 
@@ -16,8 +16,8 @@ reset_text='\e[0m'
 
 create() {
 	# NOTE: Not catering for KMS, description, tags etc. here - KISS
-	: ${1?Secret name is required} 
-	: ${2?Secret value is required} 
+	: ${1?Secret name is required}
+	: ${2?Secret value is required}
 
 	name=${1}
 	value=${2}

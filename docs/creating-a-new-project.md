@@ -1,20 +1,34 @@
 # Checklist
-Using a project with key **cti** and a **dev** environment.
+Using a project with key **xyz** and a **dev** environment.
 
 
 ## Create an AWS profile
-Add a cti-dev profile to ~/.aws/credentials
+Add a xyz-dev profile to ~/.aws/credentials
 
 
-## Create the Terraform state backend
-See [../scripts/create-tf-state-backend.sh] script.
+## Create the infra CI user - admin privs by default
+See [../scripts/create-infra-ci-user.sh] script
 
 ```
 # Set your AWS_PROFILE
-export AWS_PROFILE=cti-dev
+export AWS_PROFILE=xyz-dev
 
 # Create
-./scripts/create-tf-state-backend.sh eu-west-1 cti-dev-terraform-store cti-dev-terraform-lock
+./scripts/create-infra-ci-user.sh dev-xyz
+
+# Grab the sensitive infra ci user credentials and configure in the CI system - these are VERY sensitive so treat with care
+```
+
+
+## Create the Terraform state backend
+See [../scripts/create-tf-state-backend.sh] script
+
+```
+# Set your AWS_PROFILE
+export AWS_PROFILE=xyz-dev
+
+# Create
+./scripts/create-tf-state-backend.sh eu-west-1 xyz-dev-terraform-store xyz-dev-terraform-lock
 ```
 
 ## Import TLS certificates
@@ -38,7 +52,7 @@ We need to create the secrets outside of Terraform, see the [secrets/parameters]
 | File                    | Content                                                    |
 | ------------------------| -----------------------------------------------------------|
 | env-vars/cti.tfvars     | Contains the CTI values that are the same across all envs  |
-| env-vars/cti-dev.tfvars | Contains the CTI values that are specific to the dev env   |
+| env-vars/xyz-dev.tfvars | Contains the CTI values that are specific to the dev env   |
 
 With these we need to decide on some optionals
 - Enable DNS where we manage the DNS, in some cases we do not manage the DNS
@@ -49,7 +63,7 @@ With these we need to decide on some optionals
 
 ## Slack channel/application
 May need to create a slack application/channel - usually for the prod env only at this time.
-- Application will be PROJECT-bot i.e. cti-bot
+- Application will be PROJECT-bot i.e. xyz-bot
 - Channel name will be PROJECT-contact-tracing-alarms i.e ctii-contact-tracing-alarms
 
 
@@ -58,6 +72,13 @@ Will need to create the following targets.
 
 | Target        | Description                                                                        |
 | --------------| -----------------------------------------------------------------------------------|
-| cti-dev-init  | Does the Terraform module pulls and backend config                                 |
-| cti-dev-plan  | Runs a Terraform plan, creating a local TF plan file i.e. terraform-cti-dev.tfplan |
-| cti-dev-apply | Does a Terraform apply using the created TF plan file                              |
+| xyz-dev-init  | Does the Terraform module pulls and backend config                                 |
+| xyz-dev-plan  | Runs a Terraform plan, creating a local TF plan file i.e. terraform-xyz-dev.tfplan |
+| xyz-dev-apply | Does a Terraform apply using the created TF plan file                              |
+
+
+## Post standup tasks
+- Seed the DB setting(s) tables
+- Create DB users - see [here](./db.md)
+- Complete DNS config if needed - with external party
+- Complete SMS provider configuration - if using an external SMS provider

@@ -18,6 +18,13 @@ data "aws_iam_policy_document" "callback_policy" {
     ]
     resources = ["*"]
   }
+
+  statement {
+    actions = ["kms:*"]
+    resources = [
+      aws_kms_key.sqs.arn
+    ]
+  }
 }
 
 data "aws_iam_policy_document" "callback_assume_role" {
@@ -32,6 +39,12 @@ data "aws_iam_policy_document" "callback_assume_role" {
       ]
     }
   }
+}
+
+resource "aws_cloudwatch_log_group" "callback" {
+  name              = format("/aws/lambda/%s-callback", module.labels.id)
+  retention_in_days = var.logs_retention_days
+  tags              = module.labels.tags
 }
 
 resource "aws_iam_policy" "callback_policy" {
@@ -66,6 +79,8 @@ resource "aws_lambda_function" "callback" {
   memory_size      = 128
   timeout          = 15
   tags             = module.labels.tags
+
+  depends_on = [aws_cloudwatch_log_group.callback]
 
   vpc_config {
     security_group_ids = [module.lambda_sg.id]
