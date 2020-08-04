@@ -65,10 +65,17 @@ data "aws_secretsmanager_secret_version" "jwt_secret" {
   secret_id = "${data.aws_secretsmanager_secret.jwt_secret.id}"
 }
 
+resource "aws_s3_bucket_object" "authorizer_s3_file" {
+  bucket = aws_s3_bucket.lambdas.id
+  key    = "lambdas/${module.labels.id}_authorizer.zip"
+  source = "${path.module}/.zip/${module.labels.id}_authorizer.zip"
+}
+
 resource "aws_lambda_function" "authorizer" {
-  filename         = "${path.module}/.zip/${module.labels.id}_authorizer.zip"
+  s3_bucket        = (var.authorizer_lambda_s3_bucket != "" ? var.authorizer_lambda_s3_bucket : aws_s3_bucket_object.authorizer_s3_file.bucket)
+  s3_key           = (var.authorizer_lambda_s3_key != "" ? var.authorizer_lambda_s3_key : aws_s3_bucket_object.authorizer_s3_file.key)
   function_name    = "${module.labels.id}-authorizer"
-  source_code_hash = data.archive_file.authorizer.output_base64sha256
+  source_code_hash = (var.authorizer_lambda_s3_key != "" ? "" : data.archive_file.authorizer.output_base64sha256)
   role             = aws_iam_role.authorizer.arn
   runtime          = "nodejs10.x"
   handler          = "authorizer.handler"

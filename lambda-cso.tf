@@ -66,11 +66,18 @@ resource "aws_iam_role_policy_attachment" "cso_logs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+resource "aws_s3_bucket_object" "cso_s3_file" {
+  bucket = aws_s3_bucket.lambdas.id
+  key    = "lambdas/${module.labels.id}_cso.zip"
+  source = "${path.module}/.zip/${module.labels.id}_cso.zip"
+}
+
 resource "aws_lambda_function" "cso" {
   count            = local.lambda_cso_count
-  filename         = "${path.module}/.zip/${module.labels.id}_cso.zip"
+  s3_bucket        = (var.cso_lambda_s3_bucket != "" ? var.cso_lambda_s3_bucket : aws_s3_bucket_object.cso_s3_file.bucket)
+  s3_key           = (var.cso_lambda_s3_key != "" ? var.cso_lambda_s3_key : aws_s3_bucket_object.cso_s3_file.key)
   function_name    = "${module.labels.id}-cso"
-  source_code_hash = data.archive_file.cso.output_base64sha256
+  source_code_hash = (var.cso_lambda_s3_key != "" ? "" : data.archive_file.cso.output_base64sha256)
   role             = aws_iam_role.cso[0].arn
   runtime          = "nodejs10.x"
   handler          = "cso.handler"

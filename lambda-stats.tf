@@ -61,10 +61,17 @@ resource "aws_iam_role_policy_attachment" "stats_logs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+resource "aws_s3_bucket_object" "stats_s3_file" {
+  bucket = aws_s3_bucket.lambdas.id
+  key    = "lambdas/${module.labels.id}_stats.zip"
+  source = "${path.module}/.zip/${module.labels.id}_stats.zip"
+}
+
 resource "aws_lambda_function" "stats" {
-  filename         = "${path.module}/.zip/${module.labels.id}_stats.zip"
+  s3_bucket        = (var.stats_lambda_s3_bucket != "" ? var.stats_lambda_s3_bucket : aws_s3_bucket_object.stats_s3_file.bucket)
+  s3_key           = (var.stats_lambda_s3_key != "" ? var.stats_lambda_s3_key : aws_s3_bucket_object.stats_s3_file.key)
   function_name    = "${module.labels.id}-stats"
-  source_code_hash = data.archive_file.stats.output_base64sha256
+  source_code_hash = (var.stats_lambda_s3_key != "" ? "" : data.archive_file.stats.output_base64sha256)
   role             = aws_iam_role.stats.arn
   runtime          = "nodejs10.x"
   handler          = "stats.handler"

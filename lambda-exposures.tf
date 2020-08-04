@@ -61,10 +61,17 @@ resource "aws_iam_role_policy_attachment" "exposures_logs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+resource "aws_s3_bucket_object" "exposures_s3_file" {
+  bucket = aws_s3_bucket.lambdas.id
+  key    = "lambdas/${module.labels.id}_exposures.zip"
+  source = "${path.module}/.zip/${module.labels.id}_exposures.zip"
+}
+
 resource "aws_lambda_function" "exposures" {
-  filename         = "${path.module}/.zip/${module.labels.id}_exposures.zip"
+  s3_bucket        = (var.exposures_lambda_s3_bucket != "" ? var.exposures_lambda_s3_bucket : aws_s3_bucket_object.exposures_s3_file.bucket)
+  s3_key           = (var.exposures_lambda_s3_key != "" ? var.exposures_lambda_s3_key : aws_s3_bucket_object.exposures_s3_file.key)
   function_name    = "${module.labels.id}-exposures"
-  source_code_hash = data.archive_file.exposures.output_base64sha256
+  source_code_hash = (var.exposures_lambda_s3_key != "" ? "" : data.archive_file.exposures.output_base64sha256)
   role             = aws_iam_role.exposures.arn
   runtime          = "nodejs10.x"
   handler          = "exposures.handler"

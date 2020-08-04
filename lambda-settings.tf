@@ -61,10 +61,17 @@ resource "aws_iam_role_policy_attachment" "settings_logs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+resource "aws_s3_bucket_object" "settings_s3_file" {
+  bucket = aws_s3_bucket.lambdas.id
+  key    = "lambdas/${module.labels.id}_settings.zip"
+  source = "${path.module}/.zip/${module.labels.id}_settings.zip"
+}
+
 resource "aws_lambda_function" "settings" {
-  filename         = "${path.module}/.zip/${module.labels.id}_settings.zip"
+  s3_bucket        = (var.settings_lambda_s3_bucket != "" ? var.settings_lambda_s3_bucket : aws_s3_bucket_object.settings_s3_file.bucket)
+  s3_key           = (var.settings_lambda_s3_key != "" ? var.settings_lambda_s3_key : aws_s3_bucket_object.settings_s3_file.key)
   function_name    = "${module.labels.id}-settings"
-  source_code_hash = data.archive_file.settings.output_base64sha256
+  source_code_hash = (var.settings_lambda_s3_key != "" ? "" : data.archive_file.settings.output_base64sha256)
   role             = aws_iam_role.settings.arn
   runtime          = "nodejs10.x"
   handler          = "settings.handler"
