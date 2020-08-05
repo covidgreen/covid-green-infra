@@ -54,10 +54,11 @@ The format for the secret is as follows:
 }
 ```
 ##### apkCertificateDigestSha256
-An array of SHA-265 hashes of the certificates used to sign the APK. Can be set to a falsy value to disable the check.
+An array of SHA-265 hashes of the certificates used to sign the APK. Can be set to a false value to disable the check.
 
 ##### apkDigestSha256
-The SHA-256 hash of the APK file.
+The SHA-256 hash of the APK file. Can be set to a false value to disable the check and should be set to false if there are multiple
+supported versions deployed.
 
 ##### apkPackageName
 The name of the APK package.
