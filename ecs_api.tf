@@ -94,8 +94,9 @@ data "template_file" "api_service_container_definitions" {
 
   vars = {
     api_image_uri        = "${aws_ecr_repository.api.repository_url}:${var.api_container_tag}"
+    api_image_uri        = "${var.api_container_repo_url != "" ? var.api_container_repo_url : aws_ecr_repository.api.repository_url}:${var.api_container_tag}"
     config_var_prefix    = local.config_var_prefix
-    migrations_image_uri = "${aws_ecr_repository.migrations.repository_url}:${var.api_container_tag}"
+    migrations_image_uri = "${var.migrations_container_repo_url != "" ? var.migrations_container_repo_url : aws_ecr_repository.migrations.repository_url}:${var.api_container_tag}"
     listening_port       = var.api_listening_port
     logs_service_name    = aws_cloudwatch_log_group.api.name
     log_group_region     = var.aws_region
