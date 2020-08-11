@@ -8,13 +8,13 @@ db_instance_attributes='DBInstanceClass PreferredBackupWindow AvailabilityZone P
 green_text='\e[32m'
 reset_text='\e[0m'
 
-cluster_data=$(aws rds describe-db-clusters --db-cluster-identifier ${cluster_identifier} | jq .DBClusters[0])
+cluster_data=$(aws rds describe-db-clusters --db-cluster-identifier ${cluster_identifier} --output json | jq .DBClusters[0])
 echo -e "${green_text}${cluster_identifier}${reset_text}"
 for key in ${cluster_attributes}; do
 	echo ${key}: $(jq -r .${key} <<< ${cluster_data})
 done
 
-db_instances_data=$(aws rds describe-db-instances --filters Name=db-cluster-id,Values=${cluster_identifier})
+db_instances_data=$(aws rds describe-db-instances --filters Name=db-cluster-id,Values=${cluster_identifier} --output json)
 for db_instance_identifier in $(jq -r .DBInstances[].DBInstanceIdentifier <<< ${db_instances_data}); do
 	echo -e "\n\t${green_text}${db_instance_identifier}${reset_text}"
 	db_instance_data=$(jq '.DBInstances[] | select(.DBInstanceIdentifier == "'${db_instance_identifier}'")' <<< $db_instances_data)

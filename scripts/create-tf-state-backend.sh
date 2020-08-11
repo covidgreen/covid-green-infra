@@ -18,13 +18,18 @@ set -eou pipefail
 aws_region=${1}
 s3_bucket_name=${2}
 dynamodb_table_name=${3}
+location_constraint="LocationConstraint=${aws_region}"
 
+if [ "$aws_region" = "us-east-1" ]; then
+    # us-east-1 is a special case per AWS.
+    location_constraint=""
+fi
 
 # S3 bucket
 # Create bucket
 aws s3api create-bucket --bucket ${s3_bucket_name} \
     --region ${aws_region} \
-    --create-bucket-configuration LocationConstraint=${aws_region}
+    --create-bucket-configuration $location_constraint
 # Encrypt bucket
 aws s3api put-bucket-encryption \
     --bucket ${s3_bucket_name} \

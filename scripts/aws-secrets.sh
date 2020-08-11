@@ -27,13 +27,13 @@ create() {
 list() {
 	# NOTE: Ignoring paging here, assumes we do not have a large number of secrets in our case - KISS
 	prefix=${1:-}
-	aws secretsmanager list-secrets | jq -r '.SecretList[] | select(.Name | startswith("'${prefix}'"))| .Name' | sort
+	aws secretsmanager list-secrets --output json | jq -r '.SecretList[] | select(.Name | startswith("'${prefix}'"))| .Name' | sort
 }
 
 values() {
 	prefix=${1:-}
 	for name in $(list "${prefix}"); do
- 		value=$(aws secretsmanager get-secret-value --secret-id ${name} | jq -r .SecretString)
+ 		value=$(aws secretsmanager get-secret-value --output json --secret-id ${name} | jq -r .SecretString)
 		echo -e "${green_text}${name}${reset_text}\n${value}\n"
 	done
 }
