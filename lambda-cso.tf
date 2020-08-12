@@ -74,10 +74,10 @@ resource "aws_s3_bucket_object" "cso_s3_file" {
 
 resource "aws_lambda_function" "cso" {
   count            = local.lambda_cso_count
-  s3_bucket        = (var.cso_lambda_s3_bucket != "" ? var.cso_lambda_s3_bucket : aws_s3_bucket_object.cso_s3_file.bucket)
-  s3_key           = (var.cso_lambda_s3_key != "" ? var.cso_lambda_s3_key : aws_s3_bucket_object.cso_s3_file.key)
+  s3_bucket        = (var.lambda_cso_s3_bucket != "" ? var.lambda_cso_s3_bucket : aws_s3_bucket_object.cso_s3_file.bucket)
+  s3_key           = (var.lambda_cso_s3_key != "" ? var.lambda_cso_s3_key : aws_s3_bucket_object.cso_s3_file.key)
   function_name    = "${module.labels.id}-cso"
-  source_code_hash = (var.cso_lambda_s3_key != "" ? "" : data.archive_file.cso.output_base64sha256)
+  source_code_hash = (var.lambda_cso_s3_key != "" ? "" : data.archive_file.cso.output_base64sha256)
   role             = aws_iam_role.cso[0].arn
   runtime          = "nodejs10.x"
   handler          = "cso.handler"

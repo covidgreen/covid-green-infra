@@ -315,85 +315,85 @@ variable "sms_sender" {
 variable "sms_region" {
   default = ""
 }
-variable "authorizer_lambda_s3_bucket" {
+variable "lambda_authorizer_s3_bucket" {
   description = "S3 bucket name where the lambda content will be found"
   type        = string
   default     = ""
 }
 
-variable "authorizer_lambda_s3_key" {
+variable "lambda_authorizer_s3_key" {
   description = "S3 key where the lambda archive will be found. This should be a path relative to the bucket root."
   type        = string
   default     = ""
 }
 
-variable "callback_lambda_s3_bucket" {
+variable "lambda_callback_s3_bucket" {
   description = "S3 bucket name where the lambda content will be found"
   type        = string
   default     = ""
 }
 
-variable "callback_lambda_s3_key" {
+variable "lambda_callback_s3_key" {
   description = "S3 key where the lambda archive will be found. This should be a path relative to the bucket root."
   type        = string
   default     = ""
 }
 
-variable "cso_lambda_s3_bucket" {
+variable "lambda_cso_s3_bucket" {
   description = "S3 bucket name where the lambda content will be found"
   type        = string
   default     = ""
 }
 
-variable "cso_lambda_s3_key" {
+variable "lambda_cso_s3_key" {
   description = "S3 key where the lambda archive will be found. This should be a path relative to the bucket root."
   type        = string
   default     = ""
 }
 
-variable "token_lambda_s3_bucket" {
+variable "lambda_token_s3_bucket" {
   description = "S3 bucket name where the lambda content will be found"
   type        = string
   default     = ""
 }
 
-variable "token_lambda_s3_key" {
+variable "lambda_token_s3_key" {
   description = "S3 key where the lambda archive will be found. This should be a path relative to the bucket root."
   type        = string
   default     = ""
 }
 
-variable "settings_lambda_s3_bucket" {
+variable "lambda_settings_s3_bucket" {
   description = "S3 bucket name where the lambda content will be found"
   type        = string
   default     = ""
 }
 
-variable "settings_lambda_s3_key" {
+variable "lambda_settings_s3_key" {
   description = "S3 key where the lambda archive will be found. This should be a path relative to the bucket root."
   type        = string
   default     = ""
 }
 
-variable "exposures_lambda_s3_key" {
+variable "lambda_exposures_s3_key" {
   description = "S3 key where the lambda archive will be found. This should be a path relative to the bucket root."
   type        = string
   default     = ""
 }
 
-variable "exposures_lambda_s3_bucket" {
+variable "lambda_exposures_s3_bucket" {
   description = "S3 bucket name where the lambda content will be found"
   type        = string
   default     = ""
 }
 
-variable "stats_lambda_s3_key" {
+variable "lambda_stats_s3_key" {
   description = "S3 key where the lambda archive will be found. This should be a path relative to the bucket root."
   type        = string
   default     = ""
 }
 
-variable "stats_lambda_s3_bucket" {
+variable "lambda_stats_s3_bucket" {
   description = "S3 bucket name where the lambda content will be found"
   type        = string
   default     = ""

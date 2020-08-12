@@ -76,10 +76,10 @@ resource "aws_s3_bucket_object" "callback_s3_file" {
 }
 
 resource "aws_lambda_function" "callback" {
-  s3_bucket        = (var.callback_lambda_s3_bucket != "" ? var.callback_lambda_s3_bucket : aws_s3_bucket_object.callback_s3_file.bucket)
-  s3_key           = (var.callback_lambda_s3_key != "" ? var.callback_lambda_s3_key : aws_s3_bucket_object.callback_s3_file.key)
+  s3_bucket        = (var.lambda_callback_s3_bucket != "" ? var.lambda_callback_s3_bucket : aws_s3_bucket_object.callback_s3_file.bucket)
+  s3_key           = (var.lambda_callback_s3_key != "" ? var.lambda_callback_s3_key : aws_s3_bucket_object.callback_s3_file.key)
   function_name    = "${module.labels.id}-callback"
-  source_code_hash = (var.callback_lambda_s3_key != "" ? "" : data.archive_file.callback.output_base64sha256)
+  source_code_hash = (var.lambda_callback_s3_key != "" ? "" : data.archive_file.callback.output_base64sha256)
   role             = aws_iam_role.callback.arn
   runtime          = "nodejs10.x"
   handler          = "callback.handler"

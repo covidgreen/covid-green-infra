@@ -72,10 +72,10 @@ resource "aws_s3_bucket_object" "authorizer_s3_file" {
 }
 
 resource "aws_lambda_function" "authorizer" {
-  s3_bucket        = (var.authorizer_lambda_s3_bucket != "" ? var.authorizer_lambda_s3_bucket : aws_s3_bucket_object.authorizer_s3_file.bucket)
-  s3_key           = (var.authorizer_lambda_s3_key != "" ? var.authorizer_lambda_s3_key : aws_s3_bucket_object.authorizer_s3_file.key)
+  s3_bucket        = (var.lambda_authorizer_s3_bucket != "" ? var.lambda_authorizer_s3_bucket : aws_s3_bucket_object.authorizer_s3_file.bucket)
+  s3_key           = (var.lambda_authorizer_s3_key != "" ? var.lambda_authorizer_s3_key : aws_s3_bucket_object.authorizer_s3_file.key)
   function_name    = "${module.labels.id}-authorizer"
-  source_code_hash = (var.authorizer_lambda_s3_key != "" ? "" : data.archive_file.authorizer.output_base64sha256)
+  source_code_hash = (var.lambda_authorizer_s3_key != "" ? "" : data.archive_file.authorizer.output_base64sha256)
   role             = aws_iam_role.authorizer.arn
   runtime          = "nodejs10.x"
   handler          = "authorizer.handler"

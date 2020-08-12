@@ -68,10 +68,10 @@ resource "aws_s3_bucket_object" "exposures_s3_file" {
 }
 
 resource "aws_lambda_function" "exposures" {
-  s3_bucket        = (var.exposures_lambda_s3_bucket != "" ? var.exposures_lambda_s3_bucket : aws_s3_bucket_object.exposures_s3_file.bucket)
-  s3_key           = (var.exposures_lambda_s3_key != "" ? var.exposures_lambda_s3_key : aws_s3_bucket_object.exposures_s3_file.key)
+  s3_bucket        = (var.lambda_exposures_s3_bucket != "" ? var.lambda_exposures_s3_bucket : aws_s3_bucket_object.exposures_s3_file.bucket)
+  s3_key           = (var.lambda_exposures_s3_key != "" ? var.lambda_exposures_s3_key : aws_s3_bucket_object.exposures_s3_file.key)
   function_name    = "${module.labels.id}-exposures"
-  source_code_hash = (var.exposures_lambda_s3_key != "" ? "" : data.archive_file.exposures.output_base64sha256)
+  source_code_hash = (var.lambda_exposures_s3_key != "" ? "" : data.archive_file.exposures.output_base64sha256)
   role             = aws_iam_role.exposures.arn
   runtime          = "nodejs10.x"
   handler          = "exposures.handler"

@@ -68,10 +68,10 @@ resource "aws_s3_bucket_object" "stats_s3_file" {
 }
 
 resource "aws_lambda_function" "stats" {
-  s3_bucket        = (var.stats_lambda_s3_bucket != "" ? var.stats_lambda_s3_bucket : aws_s3_bucket_object.stats_s3_file.bucket)
-  s3_key           = (var.stats_lambda_s3_key != "" ? var.stats_lambda_s3_key : aws_s3_bucket_object.stats_s3_file.key)
+  s3_bucket        = (var.lambda_stats_s3_bucket != "" ? var.lambda_stats_s3_bucket : aws_s3_bucket_object.stats_s3_file.bucket)
+  s3_key           = (var.lambda_stats_s3_key != "" ? var.lambda_stats_s3_key : aws_s3_bucket_object.stats_s3_file.key)
   function_name    = "${module.labels.id}-stats"
-  source_code_hash = (var.stats_lambda_s3_key != "" ? "" : data.archive_file.stats.output_base64sha256)
+  source_code_hash = (var.lambda_stats_s3_key != "" ? "" : data.archive_file.stats.output_base64sha256)
   role             = aws_iam_role.stats.arn
   runtime          = "nodejs10.x"
   handler          = "stats.handler"
