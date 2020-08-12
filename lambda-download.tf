@@ -17,12 +17,14 @@ module "download" {
     aws_ssm_parameter.db_reader_host.arn,
     aws_ssm_parameter.db_ssl.arn
   ]
-  aws_secret_arns                = concat([data.aws_secretsmanager_secret_version.rds.arn], data.aws_secretsmanager_secret_version.interop.*.arn)
+  aws_secret_arns                = concat([data.aws_secretsmanager_secret_version.rds.arn, data.aws_secretsmanager_secret_version.rds_read_write.arn], data.aws_secretsmanager_secret_version.interop.*.arn)
   cloudwatch_schedule_expression = var.download_schedule
   config_var_prefix              = local.config_var_prefix
   handler                        = "download.handler"
   log_retention_days             = var.logs_retention_days
+  memory_size                    = var.lambda_download_memory_size
   security_group_ids             = [module.lambda_sg.id]
   subnet_ids                     = module.vpc.private_subnets
   tags                           = module.labels.tags
+  timeout                        = var.lambda_download_timeout
 }

@@ -2,7 +2,7 @@
 # Locals
 # #########################################
 locals {
-  # Pick one, using the var if it is set, else failback to the one we maanage
+  # Pick one, using the var if it is set, else failback to the one we manage
   alb_push_certificate_arn = coalesce(var.push_eu_certificate_arn, join("", aws_acm_certificate.wildcard_cert.*.arn))
 
   # Based on flag
@@ -26,10 +26,9 @@ locals {
   # PENDING: Revisit this
   # Need to only create one of these for an account/region
   # Logic is all the dev envs are in a single account, and assumes all the other envs are in a dedicated account/region
-  # Want to only create one of these
-  gateway_api_account_count = (var.environment == "dev" && var.namespace == "xyz") || var.environment != "dev" ? 1 : 0
+  gateway_api_account_count = (var.environment == "dev" && var.namespace == "fight-together") || var.environment != "dev" ? 1 : 0
 
-  # Pick one, using the var if it is set, else failback to the one we maanage
+  # Pick one, using the var if it is set, else failback to the one we manage
   gateway_api_certificate_arn = coalesce(var.api_us_certificate_arn, join("", aws_acm_certificate.wildcard_cert_us.*.arn))
 
   # Based on either of DNS enabled OR (We have an api_dns AND and api_us_certificate_arn)
@@ -48,7 +47,7 @@ locals {
   waf_geo_blocking_count = length(var.waf_geo_allowed_countries) > 0 ? 1 : 0
 
   # This is required as we use the count as toggle:
-  cloudtrail_log_group_name = "${join(" ", aws_cloudwatch_log_group.cloudtrail.*.name)}"
+  cloudtrail_log_group_name = join(" ", aws_cloudwatch_log_group.cloudtrail.*.name)
   # Cloudtrail log stream related:
   cloudtrail_log_stream_arn_pattern = "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:log-group:${local.cloudtrail_log_group_name}:log-stream:${data.aws_caller_identity.current.account_id}_CloudTrail_${var.aws_region}*"
 }

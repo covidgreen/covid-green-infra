@@ -16,21 +16,23 @@ data "aws_iam_policy_document" "push_ecs_task_policy" {
   statement {
     actions = ["ssm:GetParameter", "secretsmanager:GetSecretValue"]
     resources = [
-      aws_ssm_parameter.log_level.arn,
-      aws_ssm_parameter.push_port.arn,
-      aws_ssm_parameter.push_host.arn,
       aws_ssm_parameter.cors_origin.arn,
-      aws_ssm_parameter.db_host.arn,
-      aws_ssm_parameter.db_reader_host.arn,
-      aws_ssm_parameter.db_port.arn,
       aws_ssm_parameter.db_database.arn,
+      aws_ssm_parameter.db_host.arn,
+      aws_ssm_parameter.db_port.arn,
+      aws_ssm_parameter.db_reader_host.arn,
       aws_ssm_parameter.db_ssl.arn,
       aws_ssm_parameter.default_country_code.arn,
+      aws_ssm_parameter.log_level.arn,
+      aws_ssm_parameter.push_host.arn,
+      aws_ssm_parameter.push_port.arn,
       aws_ssm_parameter.security_code_charset.arn,
       aws_ssm_parameter.security_code_length.arn,
+      aws_ssm_parameter.security_code_lifetime_mins.arn,
       aws_ssm_parameter.sms_url.arn,
+      data.aws_secretsmanager_secret_version.jwt.arn,
       data.aws_secretsmanager_secret_version.rds.arn,
-      data.aws_secretsmanager_secret_version.jwt.arn
+      data.aws_secretsmanager_secret_version.rds_read_write.arn
     ]
   }
 
@@ -77,7 +79,7 @@ resource "aws_iam_role_policy_attachment" "push_ecs_task_policy" {
 # Push Service
 # #########################################
 data "template_file" "push_service_container_definitions" {
-  template = file("templates/push_service_task_definition.tpl")
+  template = file(format("%s/templates/push_service_task_definition.tpl", path.module))
 
   vars = {
     config_var_prefix = local.config_var_prefix

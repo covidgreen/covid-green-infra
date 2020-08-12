@@ -20,7 +20,7 @@ list() {
 values() {
 	prefix=${1:-}
 	for name in $(list "${prefix}"); do
- 		value=$(aws ssm get-parameter --name ${name} --with-decryption --output json | jq -r .Parameter.Value)
+		value=$(aws ssm get-parameter --name ${name} --with-decryption --output json | jq -r .Parameter.Value)
 		echo -e "${green_text}${name}${reset_text}\n${value}\n"
 	done
 }

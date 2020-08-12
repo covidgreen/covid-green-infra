@@ -14,7 +14,9 @@ data "aws_iam_policy_document" "operators" {
       aws_lambda_function.settings.arn,
       aws_lambda_function.token.arn
       ],
-    aws_lambda_function.cso.*.arn)
+      aws_lambda_function.cso.*.arn,
+      compact([module.daily_registrations_reporter.function_arn, module.download.function_arn, module.upload.function_arn])
+    )
   }
 
   # Explicitly deny anything on authorizer as it contains a secret

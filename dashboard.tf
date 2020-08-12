@@ -1,5 +1,5 @@
 data "template_file" "dashboard" {
-  template = file("templates/dashboard.json")
+  template = file(format("%s/templates/dashboard.json", path.module))
 
   vars = {
     account_id            = data.aws_caller_identity.current.account_id
