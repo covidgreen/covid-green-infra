@@ -411,8 +411,8 @@ variable "migrations_container_repo_url" {
   default     = ""
 }
 
-variable "api_container_tag" {
-  description = "ECR tag to be deployed into ECS for the API & Migration containers"
+variable "api_image_tag" {
+  description = "ECR image tag to be deployed into ECS for the API & Migration containers"
   type        = string
   default     = "latest"
 }
@@ -423,8 +423,8 @@ variable "push_container_repo_url" {
   default     = ""
 }
 
-variable "push_container_tag" {
-  description = "ECR tag to be deployed into ECS for the Push API container"
+variable "push_image_tag" {
+  description = "ECR image tag to be deployed into ECS for the Push API container"
   type        = string
   default     = "latest"
 }
