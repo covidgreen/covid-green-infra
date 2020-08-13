@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 <a name="v0.1.1"></a>
-## [v0.1.0] 2020-08-13
+## [v0.1.1] 2020-08-13
 - Added: Added ability to set ECS image url and image tag overrides, this is based on @segfault's PR at https://github.com/covidgreen/covid-green-infra/pull/4
 - Updated: Switched lambdas from using the AWSLambdaBasicExecutionRole to AWSLambdaVPCAccessExecutionRole managed policy
 - Updated: Renamed the "root_profile" var and "root" AWS provider to "dns" as this is confusing, removed a redundant aws provider "root_us"
