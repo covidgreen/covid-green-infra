@@ -1,15 +1,14 @@
-output "api_aws_dns" {
-  value = join("", aws_api_gateway_domain_name.main.*.cloudfront_domain_name)
-}
-
-
 output "admins_role_arn" {
   description = "ARN of the role used for admins"
   value       = aws_iam_role.admins.arn
 }
 
+output "api_aws_dns" {
+  value = join("", aws_api_gateway_domain_name.main.*.cloudfront_domain_name)
+}
+
 output "cloudtrail_log_group_name" {
-  value = "${join(" ", aws_cloudwatch_log_group.cloudtrail.*.name)}"
+  value = join(" ", aws_cloudwatch_log_group.cloudtrail.*.name)
 }
 
 output "ecs_cluster_api_service_name" {
@@ -84,6 +83,14 @@ output "rds_cluster_identifier" {
   value = module.rds_cluster_aurora_postgres.cluster_identifier
 }
 
+output "rds_endpoint" {
+  value = module.rds_cluster_aurora_postgres.endpoint
+}
+
+output "rds_reader_endpoint" {
+  value = module.rds_cluster_aurora_postgres.reader_endpoint
+}
+
 output "secret" {
   value = aws_iam_access_key.ci_user.secret
 }
@@ -92,10 +99,10 @@ output "vpc_id" {
   value = module.vpc.vpc_id
 }
 
-output "waf_acl_name" {
-  value = aws_wafregional_web_acl.acl.name
-}
-
 output "waf_acl_metric_name" {
   value = aws_wafregional_web_acl.acl.metric_name
+}
+
+output "waf_acl_name" {
+  value = aws_wafregional_web_acl.acl.name
 }

@@ -14,7 +14,7 @@ data "aws_ami" "amazon_linux_2" {
 
 resource "aws_autoscaling_group" "bastion" {
   count               = local.bastion_enabled_count
-  desired_capacity    = 1
+  desired_capacity    = var.bastion_asg_desired_count
   max_size            = 1
   min_size            = 0
   name                = format("%s-bastion", module.labels.id)

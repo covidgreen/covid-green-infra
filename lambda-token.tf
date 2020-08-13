@@ -8,10 +8,6 @@ data "aws_iam_policy_document" "token_policy" {
   statement {
     actions = [
       "s3:*",
-      "ec2:CreateNetworkInterface",
-      "ec2:DescribeNetworkInterfaces",
-      "ec2:DetachNetworkInterface",
-      "ec2:DeleteNetworkInterface",
       "secretsmanager:GetSecretValue",
       "ssm:GetParameter"
     ]
@@ -56,9 +52,9 @@ resource "aws_iam_role_policy_attachment" "token_policy" {
   policy_arn = aws_iam_policy.token_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "token_logs" {
+resource "aws_iam_role_policy_attachment" "token_aws_managed_policy" {
   role       = aws_iam_role.token.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
 resource "aws_lambda_function" "token" {
@@ -66,10 +62,10 @@ resource "aws_lambda_function" "token" {
   function_name    = "${module.labels.id}-token"
   source_code_hash = data.archive_file.token.output_base64sha256
   role             = aws_iam_role.token.arn
-  runtime          = "nodejs10.x"
+  runtime          = "nodejs12.x"
   handler          = "token.handler"
-  memory_size      = 128
-  timeout          = 15
+  memory_size      = var.lambda_token_memory_size
+  timeout          = var.lambda_token_timeout
   tags             = module.labels.tags
 
   depends_on = [aws_cloudwatch_log_group.token]

@@ -3,8 +3,8 @@
 # 	make xyz-dev-init
 # 	make xyz-dev-plan
 # 	make xyz-dev-apply
-# We assume you have an AWS profile with the the PROJECT-ENVIRONMENT so in above case xyz-dev
-# 	This is the same profile that should exist in the env-vars file
+# We assume you have an AWS profile named PROJECT-ENVIRONMENT i.e. xyz-dev
+# 	This is the same profile that should exist in the env-vars files
 
 .ONESHELL:
 .SHELL := /bin/bash
@@ -48,6 +48,7 @@ AWS_PROFILE = $(PROJECT_ENVIRONMENT_KEY)
 # Determine from tf vars file(s) - will use the first match
 AWS_REGION = $(shell grep '^aws_region' $(PROJECT_ENVIRONMENT_TFVAR_FILE) $(PROJECT_TFVAR_FILE) | head -n 1 | cut -d '"' -f 2)
 
+# NOTE: Uses a convention
 TERRAFORM_BACKEND_BUCKET ?= $(PROJECT_ENVIRONMENT_KEY)-terraform-store
 TERRAFORM_BACKEND_KEY ?= $(PROJECT_KEY)
 TERRAFORM_BACKEND_TABLE ?= $(PROJECT_ENVIRONMENT_KEY)-terraform-lock
@@ -64,24 +65,6 @@ xyz-dev-plan:
 	@$(MAKE_TF_PLAN) ENVIRONMENT=dev PROJECT_KEY=xyz
 xyz-dev-apply:
 	@$(MAKE_TF_APPLY) ENVIRONMENT=dev PROJECT_KEY=xyz
-
-# QA
-.PHONY: xyz-qa-init xyz-qa-plan xyz-qa-apply
-xyz-qa-init:
-	@$(MAKE_TF_INIT) ENVIRONMENT=qa PROJECT_KEY=xyz
-xyz-qa-plan:
-	@$(MAKE_TF_PLAN) ENVIRONMENT=qa PROJECT_KEY=xyz
-xyz-qa-apply:
-	@$(MAKE_TF_APPLY) ENVIRONMENT=qa PROJECT_KEY=xyz
-
-# PROD
-.PHONY: xyz-prod-init xyz-prod-plan xyz-prod-apply
-xyz-prod-init:
-	@$(MAKE_TF_INIT) ENVIRONMENT=prod PROJECT_KEY=xyz
-xyz-prod-plan:
-	@$(MAKE_TF_PLAN) ENVIRONMENT=prod PROJECT_KEY=xyz
-xyz-prod-apply:
-	@$(MAKE_TF_APPLY) ENVIRONMENT=prod PROJECT_KEY=xyz
 
 
 # #########################################

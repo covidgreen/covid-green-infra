@@ -60,7 +60,7 @@ variable "name" {
 }
 
 variable "runtime" {
-  default = "nodejs10.x"
+  default = "nodejs12.x"
 }
 
 variable "security_group_ids" {

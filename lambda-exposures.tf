@@ -8,10 +8,6 @@ data "aws_iam_policy_document" "exposures_policy" {
   statement {
     actions = [
       "s3:*",
-      "ec2:CreateNetworkInterface",
-      "ec2:DescribeNetworkInterfaces",
-      "ec2:DetachNetworkInterface",
-      "ec2:DeleteNetworkInterface",
       "secretsmanager:GetSecretValue",
       "ssm:GetParameter"
     ]
@@ -56,9 +52,9 @@ resource "aws_iam_role_policy_attachment" "exposures_policy" {
   policy_arn = aws_iam_policy.exposures_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "exposures_logs" {
+resource "aws_iam_role_policy_attachment" "exposures_aws_managed_policy" {
   role       = aws_iam_role.exposures.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
 resource "aws_lambda_function" "exposures" {
@@ -66,10 +62,10 @@ resource "aws_lambda_function" "exposures" {
   function_name    = "${module.labels.id}-exposures"
   source_code_hash = data.archive_file.exposures.output_base64sha256
   role             = aws_iam_role.exposures.arn
-  runtime          = "nodejs10.x"
+  runtime          = "nodejs12.x"
   handler          = "exposures.handler"
-  memory_size      = 128
-  timeout          = 15
+  memory_size      = var.lambda_exposures_memory_size
+  timeout          = var.lambda_exposures_timeout
   tags             = module.labels.tags
 
   depends_on = [aws_cloudwatch_log_group.exposures]

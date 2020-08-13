@@ -1,8 +1,8 @@
 # Misc
-aws_region   = "eu-west-1"
-environment  = "dev"
-profile      = "xyz-dev"
-root_profile = "xyz-dev"
+aws_region  = "eu-west-1"
+dns_profile = "xyz-dev"
+environment = "dev"
+profile     = "xyz-dev"
 
 # RDS Settings
 rds_backup_retention = 3

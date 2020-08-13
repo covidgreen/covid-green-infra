@@ -8,10 +8,6 @@ data "aws_iam_policy_document" "callback_policy" {
   statement {
     actions = [
       "s3:*",
-      "ec2:CreateNetworkInterface",
-      "ec2:DescribeNetworkInterfaces",
-      "ec2:DetachNetworkInterface",
-      "ec2:DeleteNetworkInterface",
       "secretsmanager:GetSecretValue",
       "ssm:GetParameter",
       "sqs:*"
@@ -64,9 +60,9 @@ resource "aws_iam_role_policy_attachment" "callback_policy" {
   policy_arn = aws_iam_policy.callback_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "callback_logs" {
+resource "aws_iam_role_policy_attachment" "callback_aws_managed_policy" {
   role       = aws_iam_role.callback.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
 resource "aws_lambda_function" "callback" {
@@ -74,10 +70,10 @@ resource "aws_lambda_function" "callback" {
   function_name    = "${module.labels.id}-callback"
   source_code_hash = data.archive_file.callback.output_base64sha256
   role             = aws_iam_role.callback.arn
-  runtime          = "nodejs10.x"
+  runtime          = "nodejs12.x"
   handler          = "callback.handler"
-  memory_size      = 128
-  timeout          = 15
+  memory_size      = var.lambda_callback_memory_size
+  timeout          = var.lambda_callback_timeout
   tags             = module.labels.tags
 
   depends_on = [aws_cloudwatch_log_group.callback]

@@ -8,10 +8,6 @@ data "aws_iam_policy_document" "cso_policy" {
   statement {
     actions = [
       "s3:*",
-      "ec2:CreateNetworkInterface",
-      "ec2:DescribeNetworkInterfaces",
-      "ec2:DetachNetworkInterface",
-      "ec2:DeleteNetworkInterface",
       "secretsmanager:GetSecretValue",
       "ssm:GetParameter"
     ]
@@ -60,10 +56,10 @@ resource "aws_iam_role_policy_attachment" "cso_policy" {
   policy_arn = aws_iam_policy.cso_policy[0].arn
 }
 
-resource "aws_iam_role_policy_attachment" "cso_logs" {
+resource "aws_iam_role_policy_attachment" "cso_aws_managed_policy" {
   count      = local.lambda_cso_count
   role       = aws_iam_role.cso[0].name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
 resource "aws_lambda_function" "cso" {
@@ -72,10 +68,10 @@ resource "aws_lambda_function" "cso" {
   function_name    = "${module.labels.id}-cso"
   source_code_hash = data.archive_file.cso.output_base64sha256
   role             = aws_iam_role.cso[0].arn
-  runtime          = "nodejs10.x"
+  runtime          = "nodejs12.x"
   handler          = "cso.handler"
-  memory_size      = 3008 # PENDING: This will need to be calculated after a few runs
-  timeout          = 900  # PENDING: this will need to be calculated after a few runs
+  memory_size      = var.lambda_cso_memory_size
+  timeout          = var.lambda_cso_timeout
   tags             = module.labels.tags
 
   depends_on = [aws_cloudwatch_log_group.cso]

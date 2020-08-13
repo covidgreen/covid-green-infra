@@ -1,12 +1,12 @@
 # #########################################
 # Misc
 # #########################################
-variable "namespace" {}
-variable "full_name" {}
-variable "environment" {}
-variable "profile" {}
-variable "root_profile" {}
 variable "aws_region" {}
+variable "dns_profile" {}
+variable "environment" {}
+variable "full_name" {}
+variable "namespace" {}
+variable "profile" {}
 
 
 # #########################################
@@ -115,6 +115,9 @@ variable "wildcard_domain" {}
 variable "bastion_enabled" {
   default = true
 }
+variable "bastion_asg_desired_count" {
+  default = 0
+}
 
 # #########################################
 # SMS using AWS - used by the SMS lambda
@@ -144,6 +147,30 @@ variable "admins_role_require_mfa" {
 # #########################################
 # API & Lambda - Settings & Env vars
 # #########################################
+variable "api_image_repo_url" {
+  description = "ECR image repo to be deployed into ECS for the API container, includes the tag"
+  default     = ""
+}
+variable "api_image_tag" {
+  description = "ECR image tag to be deployed into ECS for the API container"
+  default     = "latest"
+}
+variable "migrations_image_repo_url" {
+  description = "ECR image repo to be deployed into ECS for the Migration container, includes the tag"
+  default     = ""
+}
+variable "migrations_image_tag" {
+  description = "ECR image tag to be deployed into ECS for the Migration container"
+  default     = "latest"
+}
+variable "push_image_repo_url" {
+  description = "ECR image repo to be deployed into ECS for the Push API container, includes the tag"
+  default     = ""
+}
+variable "push_image_tag" {
+  description = "ECR image tag to be deployed into ECS for the Push API container"
+  default     = "latest"
+}
 variable "api_listening_port" {
   default = 5000
 }
@@ -202,9 +229,6 @@ variable "log_level" {}
 variable "arcgis_url" {
   default = ""
 }
-variable "exposure_limit" {
-  default = "10"
-}
 variable "daily_registrations_reporter_email_subject" {
   default = ""
 }
@@ -234,7 +258,7 @@ variable "upload_token_lifetime_mins" {
   default = "1440"
 }
 variable "metrics_config" {
-  default = "{ \"CONTACT_UPLOAD\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"TOKEN_RENEWAL\": 60, \"CALLBACK_OPTIN\": 60, \"CALLBACK_REQUEST\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60 }"
+  default = "{ \"CONTACT_UPLOAD\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"TOKEN_RENEWAL\": 60, \"CALLBACK_OPTIN\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60 }"
 }
 variable "verify_rate_limit_secs" {}
 variable "push_listening_port" {
@@ -282,6 +306,9 @@ variable "enable_callback" {
 variable "enable_check_in" {
   default = "true"
 }
+variable "enable_legacy_settings" {
+  default = "false"
+}
 variable "enable_metrics" {
   default = "true"
 }
@@ -291,8 +318,74 @@ variable "default_country_code" {
 variable "default_region" {
   default = ""
 }
+variable "lambda_authorizer_memory_size" {
+  default = 512 # Since this is on the hot path and we get faster CPUs with higher memory
+}
+variable "lambda_authorizer_timeout" {
+  default = 15
+}
+variable "lambda_callback_memory_size" {
+  default = 128
+}
+variable "lambda_callback_timeout" {
+  default = 15
+}
+variable "lambda_cso_memory_size" {
+  default = 3008
+}
+variable "lambda_cso_timeout" {
+  default = 900
+}
+variable "lambda_daily_registrations_reporter_memory_size" {
+  default = 128
+}
+variable "lambda_daily_registrations_reporter_timeout" {
+  default = 15
+}
+variable "lambda_download_memory_size" {
+  default = 128
+}
+variable "lambda_download_timeout" {
+  default = 15
+}
+variable "lambda_exposures_memory_size" {
+  default = 128
+}
+variable "lambda_exposures_timeout" {
+  default = 15
+}
+variable "lambda_settings_memory_size" {
+  default = 128
+}
+variable "lambda_settings_timeout" {
+  default = 15
+}
+variable "lambda_sms_memory_size" {
+  default = 128
+}
 variable "lambda_provisioned_concurrencies" {
   default = {}
+}
+variable "lambda_sms_timeout" {
+  default = 15
+}
+variable "lambda_stats_memory_size" {
+  default = 256
+}
+variable "lambda_stats_timeout" {
+  default = 120
+}
+variable "lambda_token_memory_size" {
+  default = 128
+}
+variable "lambda_token_timeout" {
+  default = 15
+}
+variable "lambda_upload_memory_size" {
+  default = 128
+}
+variable "lambda_upload_timeout" {
+  default = 15
 }
 variable "native_regions" {
   default = ""

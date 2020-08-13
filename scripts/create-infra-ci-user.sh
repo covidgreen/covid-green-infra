@@ -7,6 +7,7 @@
 #
 # Usage is
 #	./create-infra-ci-user.sh dev-xyz
+#	./create-infra-ci-user.sh dev-abc
 #	./create-infra-ci-user.sh prod-xyz
 #
 set -eou pipefail
