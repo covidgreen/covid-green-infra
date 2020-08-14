@@ -567,6 +567,8 @@ resource "aws_api_gateway_method" "api_healthcheck_get" {
   http_method      = "GET"
   authorization    = "NONE"
   api_key_required = false
+
+  depends_on = [aws_api_gateway_resource.api_healthcheck]
 }
 
 resource "aws_api_gateway_integration" "api_healthcheck_get_integration" {
@@ -580,6 +582,8 @@ resource "aws_api_gateway_integration" "api_healthcheck_get_integration" {
       statusCode = 204
     })
   }
+
+  depends_on = [aws_api_gateway_method.api_healthcheck]
 }
 
 resource "aws_api_gateway_method_response" "api_healthcheck_get" {
@@ -587,6 +591,8 @@ resource "aws_api_gateway_method_response" "api_healthcheck_get" {
   resource_id = aws_api_gateway_resource.api_healthcheck.id
   http_method = aws_api_gateway_method.api_healthcheck_get.http_method
   status_code = "204"
+
+  depends_on = [aws_api_gateway_method.api_healthcheck]
 }
 
 resource "aws_api_gateway_integration_response" "api_healthcheck_get_integration" {
@@ -594,4 +600,6 @@ resource "aws_api_gateway_integration_response" "api_healthcheck_get_integration
   resource_id = aws_api_gateway_resource.api_healthcheck.id
   http_method = aws_api_gateway_method.api_healthcheck_get.http_method
   status_code = aws_api_gateway_method_response.api_healthcheck_get.status_code
+
+  depends_on = [aws_api_gateway_integration.api_healthcheck_get_integration]
 }
