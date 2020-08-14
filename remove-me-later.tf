@@ -20,10 +20,11 @@ provider "template" {
 
 
 ## Need to do a sequence to remove
-## 	- To remove we needed to add explicit depends_on
-##	- Apply on all envs
-##	- After the apply on all envs we can remove this and it should remove successfully
-##	- Error: Cycle: module.this.aws_api_gateway_stage.live, module.this.aws_api_gateway_resource.api_healthcheck (destroy), module.this.aws_api_gateway_method.api_healthcheck_get (destroy), module.this.aws_api_gateway_deployment.live, module.this.aws_api_gateway_deployment.live (destroy deposed 754a6586), module.this.aws_api_gateway_integration.api_healthcheck_get_integration (destroy)
+## 	To remove we needed to add explicit depends_on
+##	Apply on all envs
+##	After the apply on all envs we can remove this and it should remove successfully
+## Was getting this error
+##	Error: Cycle: module.this.aws_api_gateway_stage.live, module.this.aws_api_gateway_resource.api_healthcheck (destroy), module.this.aws_api_gateway_method.api_healthcheck_get (destroy), module.this.aws_api_gateway_deployment.live, module.this.aws_api_gateway_deployment.live (destroy deposed 754a6586), module.this.aws_api_gateway_integration.api_healthcheck_get_integration (destroy)
 ## /api/healthcheck
 resource "aws_api_gateway_resource" "api_healthcheck" {
   rest_api_id = aws_api_gateway_rest_api.main.id
