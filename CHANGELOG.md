@@ -2,13 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-<a name="unreleased"></a>
 ## [Unreleased]
+- Added: ALB logging - both ALBs log to the same bucket, using distinct prefixes - api and push
 - Updated: Upgraded AWS provider from = 2.68.0 to ~> 2.70.0
 - Updated: Switched to using templatefile function rather than deprecated template provider
 
 
-<a name="v0.1.1"></a>
 ## [v0.1.1] 2020-08-13
 - Added: Added ability to set ECS image url and image tag overrides, this is based on @segfault's PR at https://github.com/covidgreen/covid-green-infra/pull/4
 - Updated: Switched lambdas from using the AWSLambdaBasicExecutionRole to AWSLambdaVPCAccessExecutionRole managed policy
@@ -30,6 +29,6 @@ All notable changes to this project will be documented in this file.
 - Fixed: Linting issues - no logic
 - Added: Split RDS user usage so we no longer need to use the master credentials
 
-<a name="v0.1.0"></a>
+
 ## [v0.1.0] 2020-08-13
 - Initial content
