@@ -3,6 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Updated: Added explicit depends_on for the APIGateway /healthcheck resources, need this to be applied on all envs before we can remove this mock integration
 - Added: ALB logging - both ALBs log to the same bucket, using distinct prefixes - api and push
 - Updated: Upgraded AWS provider from = 2.68.0 to ~> 2.70.0
 - Updated: Switched to using templatefile function rather than deprecated template provider
