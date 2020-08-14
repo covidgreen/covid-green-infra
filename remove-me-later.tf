@@ -12,15 +12,18 @@ provider "aws" {
   profile = var.dns_profile
 }
 
+
 ## We keep this till we have applied all the way to prod and state files are updated
 provider "template" {
   version = "~> 2.1"
 }
 
 
-/*
-# PENDING: Had to restore this as we had an issue when doing an apply
-#	- Error: Cycle: module.this.aws_api_gateway_stage.live, module.this.aws_api_gateway_resource.api_healthcheck (destroy), module.this.aws_api_gateway_method.api_healthcheck_get (destroy), module.this.aws_api_gateway_deployment.live, module.this.aws_api_gateway_deployment.live (destroy deposed 754a6586), module.this.aws_api_gateway_integration.api_healthcheck_get_integration (destroy)
+## Need to do a sequence to remove
+## 	- To remove we needed to add explicit depends_on
+##	- Apply on all envs
+##	- After the apply on all envs we can remove this and it should remove successfully
+##	- Error: Cycle: module.this.aws_api_gateway_stage.live, module.this.aws_api_gateway_resource.api_healthcheck (destroy), module.this.aws_api_gateway_method.api_healthcheck_get (destroy), module.this.aws_api_gateway_deployment.live, module.this.aws_api_gateway_deployment.live (destroy deposed 754a6586), module.this.aws_api_gateway_integration.api_healthcheck_get_integration (destroy)
 ## /api/healthcheck
 resource "aws_api_gateway_resource" "api_healthcheck" {
   rest_api_id = aws_api_gateway_rest_api.main.id
@@ -70,4 +73,3 @@ resource "aws_api_gateway_integration_response" "api_healthcheck_get_integration
 
   depends_on = [aws_api_gateway_integration.api_healthcheck_get_integration]
 }
-*/
