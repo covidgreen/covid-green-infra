@@ -10,6 +10,9 @@ Secrets use a prefix ENV-NAMESPACE- in their names.
 	- header-x-secret
 	- jwt
 	- rds
+	- rds-read-only
+	- rds-read-write
+	- rds-read-write-create
 - Some are optional
 	- cct
 	- cso
@@ -20,7 +23,7 @@ Optional secrets need to be added to the option_secrets variable.
 
 You can use the [aws-secrets.sh](../scripts/aws-secrets.sh) script to create secrets.
 
-i.e. For **dev** env and **ni** project namespace
+i.e. For **dev** env and **xyz** project namespace
 ```
 ./scripts/aws-secrets.sh create dev-xyz-device-check 'SOME-VALUE'
 ```
@@ -53,12 +56,12 @@ The format for the secret is as follows:
   "timeDifferenceThresholdMins": MINS
 }
 ```
+
 ##### apkCertificateDigestSha256
 An array of SHA-265 hashes of the certificates used to sign the APK. Can be set to a false value to disable the check.
 
 ##### apkDigestSha256
-The SHA-256 hash of the APK file. Can be set to a false value to disable the check and should be set to false if there are multiple
-supported versions deployed.
+The SHA-256 hash of the APK file. Can be set to a false value to disable the check and should be set to false if there are multiple supported versions deployed.
 
 ##### apkPackageName
 The name of the APK package.
@@ -173,5 +176,14 @@ The format of the secret is as follows:
 {
   "password":"A strong password",
   "username":"rds_admin_user"
+}
+```
+
+The `rds-read-only`, `rds-read-write`, `rds-read-write-create` secrets contains the application RDS credentials.
+The format of the secret is as follows:
+```json
+{
+  "password":"A strong password",
+  "username":"user_name"
 }
 ```

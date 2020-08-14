@@ -113,11 +113,35 @@ resource "aws_ssm_parameter" "enable_check_in" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "enable_legacy_settings" {
+  overwrite = true
+  name      = "${local.config_var_prefix}enable_legacy_settings"
+  type      = "String"
+  value     = var.enable_legacy_settings
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "enable_metrics" {
   overwrite = true
   name      = "${local.config_var_prefix}enable_metrics"
   type      = "String"
   value     = var.enable_metrics
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "certificate_audience" {
+  overwrite = true
+  name      = "${local.config_var_prefix}certificate_audience"
+  type      = "String"
+  value     = "${module.labels.id}-api"
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "jwt_issuer" {
+  overwrite = true
+  name      = "${local.config_var_prefix}jwt_issuer"
+  type      = "String"
+  value     = "${module.labels.id}-api"
   tags      = module.labels.tags
 }
 
@@ -190,14 +214,6 @@ resource "aws_ssm_parameter" "security_code_lifetime_mins" {
   name      = "${local.config_var_prefix}security_code_lifetime_mins"
   type      = "String"
   value     = var.code_lifetime_mins
-  tags      = module.labels.tags
-}
-
-resource "aws_ssm_parameter" "security_exposure_limit" {
-  overwrite = true
-  name      = "${local.config_var_prefix}security_exposure_limit"
-  type      = "String"
-  value     = var.exposure_limit
   tags      = module.labels.tags
 }
 

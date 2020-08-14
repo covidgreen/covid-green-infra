@@ -3,7 +3,7 @@
 # #########################################
 data "aws_route53_zone" "primary" {
   count        = local.enable_dns_count
-  provider     = aws.root
+  provider     = aws.dns
   name         = var.route53_zone
   private_zone = false
 }
@@ -24,7 +24,7 @@ resource "aws_acm_certificate" "wildcard_cert" {
 
 resource "aws_route53_record" "wildcard_cert_validation" {
   count           = local.enable_certificates_count
-  provider        = aws.root
+  provider        = aws.dns
   name            = aws_acm_certificate.wildcard_cert[0].domain_validation_options.0.resource_record_name
   type            = aws_acm_certificate.wildcard_cert[0].domain_validation_options.0.resource_record_type
   zone_id         = data.aws_route53_zone.primary[0].id
@@ -49,7 +49,7 @@ resource "aws_acm_certificate_validation" "wildcard_cert" {
 
 resource "aws_acm_certificate" "wildcard_cert_us" {
   count             = local.enable_certificates_count
-  provider          = aws.us
+  provider          = aws.us_east_1
   domain_name       = var.wildcard_domain
   validation_method = "DNS"
 
@@ -60,7 +60,7 @@ resource "aws_acm_certificate" "wildcard_cert_us" {
 
 resource "aws_route53_record" "wildcard_cert_validation_us" {
   count           = local.enable_certificates_count
-  provider        = aws.root
+  provider        = aws.dns
   name            = aws_acm_certificate.wildcard_cert_us[0].domain_validation_options.0.resource_record_name
   type            = aws_acm_certificate.wildcard_cert_us[0].domain_validation_options.0.resource_record_type
   zone_id         = data.aws_route53_zone.primary[0].id
@@ -75,7 +75,7 @@ resource "aws_route53_record" "wildcard_cert_validation_us" {
 
 resource "aws_acm_certificate_validation" "wildcard_cert_us" {
   count                   = local.enable_certificates_count
-  provider                = aws.us
+  provider                = aws.us_east_1
   certificate_arn         = aws_acm_certificate.wildcard_cert_us[0].arn
   validation_record_fqdns = [aws_route53_record.wildcard_cert_validation_us[0].fqdn]
 
@@ -89,7 +89,7 @@ resource "aws_acm_certificate_validation" "wildcard_cert_us" {
 # #########################################
 resource "aws_route53_record" "api" {
   count    = local.enable_dns_count
-  provider = aws.root
+  provider = aws.dns
   zone_id  = data.aws_route53_zone.primary[0].id
   name     = var.api_dns
   type     = "A"
@@ -110,7 +110,7 @@ resource "aws_route53_record" "api" {
 
 resource "aws_route53_record" "push" {
   count    = local.enable_dns_count
-  provider = aws.root
+  provider = aws.dns
   zone_id  = data.aws_route53_zone.primary[0].id
   name     = var.push_dns
   type     = "A"

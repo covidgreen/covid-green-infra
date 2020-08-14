@@ -1,4 +1,5 @@
 #!/bin/bash
+# Assumes you have set your AWS_PROFILE or credentials - including the region
 #	./aws-secrets.sh list
 #	./aws-secrets.sh list dev-xyz-
 #
@@ -33,7 +34,7 @@ list() {
 values() {
 	prefix=${1:-}
 	for name in $(list "${prefix}"); do
- 		value=$(aws secretsmanager get-secret-value --output json --secret-id ${name} | jq -r .SecretString)
+		value=$(aws secretsmanager get-secret-value --secret-id ${name} --output json | jq -r .SecretString)
 		echo -e "${green_text}${name}${reset_text}\n${value}\n"
 	done
 }

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eou pipefail
 
-cluster_identifier=${1:-xyz-dev-rds}
+cluster_identifier=${1:-fight-together-dev-rds}
 
 cluster_attributes='DatabaseName Engine EngineVersion PreferredBackupWindow PreferredMaintenanceWindow'
 db_instance_attributes='DBInstanceClass PreferredBackupWindow AvailabilityZone PreferredMaintenanceWindow MonitoringInterval Endpoint.Address Endpoint.Port'
