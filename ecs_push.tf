@@ -78,20 +78,6 @@ resource "aws_iam_role_policy_attachment" "push_ecs_task_policy" {
 # #########################################
 # Push Service
 # #########################################
-data "template_file" "push_service_container_definitions" {
-  template = file(format("%s/templates/push_service_task_definition.tpl", path.module))
-
-  vars = {
-    config_var_prefix = local.config_var_prefix
-    image_uri         = local.ecs_push_image_uri
-    listening_port    = var.push_listening_port
-    logs_service_name = aws_cloudwatch_log_group.push.name
-    log_group_region  = var.aws_region
-    node_env          = "production"
-    aws_region        = var.aws_region
-  }
-}
-
 resource "aws_ecs_task_definition" "push" {
   family                   = "${module.labels.id}-push"
   requires_compatibilities = ["FARGATE"]
@@ -100,9 +86,18 @@ resource "aws_ecs_task_definition" "push" {
   memory                   = var.push_services_task_memory
   execution_role_arn       = aws_iam_role.push_ecs_task_execution.arn
   task_role_arn            = aws_iam_role.push_ecs_task_role.arn
-  container_definitions    = data.template_file.push_service_container_definitions.rendered
+  tags                     = module.labels.tags
 
-  tags = module.labels.tags
+  container_definitions = templatefile(format("%s/templates/push_service_task_definition.tpl", path.module),
+    {
+      aws_region        = var.aws_region
+      config_var_prefix = local.config_var_prefix
+      image_uri         = local.ecs_push_image_uri
+      listening_port    = var.push_listening_port
+      logs_service_name = aws_cloudwatch_log_group.push.name
+      log_group_region  = var.aws_region
+      node_env          = "production"
+  })
 }
 
 resource "aws_ecs_service" "push" {

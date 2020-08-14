@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 <a name="unreleased"></a>
 ## [Unreleased]
+- Updated: Upgraded AWS provider from = 2.68.0 to ~> 2.70.0
+- Updated: Switched to using templatefile function rather than deprecated template provider
+
 
 <a name="v0.1.1"></a>
 ## [v0.1.1] 2020-08-13
