@@ -133,7 +133,7 @@ resource "aws_ssm_parameter" "certificate_audience" {
   overwrite = true
   name      = "${local.config_var_prefix}certificate_audience"
   type      = "String"
-  value     = "${module.labels.id}-api"
+  value     = var.certificate_audience
   tags      = module.labels.tags
 }
 
@@ -141,7 +141,7 @@ resource "aws_ssm_parameter" "jwt_issuer" {
   overwrite = true
   name      = "${local.config_var_prefix}jwt_issuer"
   type      = "String"
-  value     = "${module.labels.id}-api"
+  value     = var.app_bundle_id
   tags      = module.labels.tags
 }
 

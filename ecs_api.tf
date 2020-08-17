@@ -59,7 +59,8 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
       data.aws_secretsmanager_secret_version.encrypt.arn,
       data.aws_secretsmanager_secret_version.jwt.arn,
       data.aws_secretsmanager_secret_version.rds.arn,
-      data.aws_secretsmanager_secret_version.rds_read_write_create.arn
+      data.aws_secretsmanager_secret_version.rds_read_write_create.arn,
+      data.aws_secretsmanager_secret_version.verify.arn
     ]
   }
 

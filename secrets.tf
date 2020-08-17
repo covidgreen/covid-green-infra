@@ -37,6 +37,10 @@ data "aws_secretsmanager_secret_version" "rds_read_write_create" {
   secret_id = "${local.config_var_prefix}rds-read-write-create"
 }
 
+data "aws_secretsmanager_secret_version" "verify" {
+  secret_id = "${local.config_var_prefix}verify"
+}
+
 # #########################################
 # Optional secrets - These exist for some instances
 # #########################################

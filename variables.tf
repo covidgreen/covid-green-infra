@@ -312,6 +312,9 @@ variable "enable_legacy_settings" {
 variable "enable_metrics" {
   default = "true"
 }
+variable "certificate_audience" {
+  default = ""
+}
 variable "default_country_code" {
   default = ""
 }
