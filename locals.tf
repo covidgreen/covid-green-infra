@@ -55,4 +55,7 @@ locals {
   cloudtrail_log_group_name = join(" ", aws_cloudwatch_log_group.cloudtrail.*.name)
   # Cloudtrail log stream related:
   cloudtrail_log_stream_arn_pattern = "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:log-group:${local.cloudtrail_log_group_name}:log-stream:${data.aws_caller_identity.current.account_id}_CloudTrail_${var.aws_region}*"
+
+  # Agency logo
+  agency_logo_path = coalesce(var.agency_logo_path, "${path.module}/images/agency_logo.png")
 }

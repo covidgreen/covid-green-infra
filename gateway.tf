@@ -474,6 +474,57 @@ resource "aws_api_gateway_integration_response" "api_data_exposures_item_get_int
   }
 }
 
+## /agency-logo
+resource "aws_api_gateway_resource" "agency_logo" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
+  path_part   = "agency-logo"
+}
+
+resource "aws_api_gateway_method" "agency_logo_get" {
+  rest_api_id      = aws_api_gateway_rest_api.main.id
+  resource_id      = aws_api_gateway_resource.agency_logo.id
+  http_method      = "GET"
+  authorization    = "NONE"
+  api_key_required = false
+}
+
+resource "aws_api_gateway_integration" "agency_logo_get_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.main.id
+  resource_id             = aws_api_gateway_resource.agency_logo.id
+  http_method             = aws_api_gateway_method.agency_logo_get.http_method
+  integration_http_method = "GET"
+  type                    = "AWS"
+  uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/${var.agency_logo_s3_key}"
+  credentials             = aws_iam_role.gateway.arn
+}
+
+resource "aws_api_gateway_method_response" "agency_logo_get" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.agency_logo.id
+  http_method = aws_api_gateway_method.agency_logo_get.http_method
+  status_code = "200"
+  response_models = {
+    "application/json" = "Empty"
+  }
+  response_parameters = {
+    "method.response.header.Content-Length" = false,
+    "method.response.header.Content-Type"   = false
+  }
+}
+
+resource "aws_api_gateway_integration_response" "agency_logo_get_integration" {
+  rest_api_id       = aws_api_gateway_rest_api.main.id
+  resource_id       = aws_api_gateway_resource.agency_logo.id
+  http_method       = aws_api_gateway_method.agency_logo_get.http_method
+  selection_pattern = aws_api_gateway_method_response.agency_logo_get.status_code
+  status_code       = aws_api_gateway_method_response.agency_logo_get.status_code
+  response_parameters = {
+    "method.response.header.Content-Length" = "integration.response.header.Content-Length",
+    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+  }
+}
+
 # #########################################
 # API Gateway Deployment
 # #########################################

@@ -411,3 +411,13 @@ variable "sms_sender" {
 variable "sms_region" {
   default = ""
 }
+
+variable "agency_logo_s3_key" {
+  description = "Agency logo S3 key"
+  default     = "images/agency_logo.png"
+}
+
+variable "agency_logo_path" {
+  description = "Path for the agency logo"
+  default     = "" 
+}

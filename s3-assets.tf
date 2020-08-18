@@ -16,3 +16,10 @@ resource "aws_s3_bucket_public_access_block" "assets" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+
+resource "aws_s3_bucket_object" "agency_logo" {
+  bucket = aws_s3_bucket.assets.id
+  key    = var.agency_logo_s3_key
+  source = local.agency_logo_path
+  etag   = filemd5(local.agency_logo_path)
+}
