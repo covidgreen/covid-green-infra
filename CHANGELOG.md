@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 - Added: Added "verify" secret and changed "jwt_issuer" and "certificate_audience" parameters to support third party key server
+- Added static resource served through the api to act as a logo
 
 
 ## [v0.1.2] 2020-08-14
