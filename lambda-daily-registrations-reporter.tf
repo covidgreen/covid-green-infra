@@ -22,7 +22,7 @@ module "daily_registrations_reporter" {
     aws_ssm_parameter.daily_registrations_reporter_email_subject.*.arn,
     aws_ssm_parameter.daily_registrations_reporter_sns_arn.*.arn
   )
-  aws_secret_arns                = [data.aws_secretsmanager_secret_version.rds.arn, data.aws_secretsmanager_secret_version.rds_read_write.arn]
+  aws_secret_arns                = [data.aws_secretsmanager_secret_version.rds_read_write.arn]
   cloudwatch_schedule_expression = var.daily_registrations_reporter_schedule
   config_var_prefix              = local.config_var_prefix
   handler                        = "reporter.handler"

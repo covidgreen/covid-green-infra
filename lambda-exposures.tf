@@ -7,11 +7,31 @@ data "archive_file" "exposures" {
 data "aws_iam_policy_document" "exposures_policy" {
   statement {
     actions = [
-      "s3:*",
-      "secretsmanager:GetSecretValue",
-      "ssm:GetParameter"
+      "s3:*"
     ]
     resources = ["*"]
+  }
+
+  statement {
+    actions = ["ssm:GetParameter"]
+    resources = [
+      aws_ssm_parameter.app_bundle_id.arn,
+      aws_ssm_parameter.db_database.arn,
+      aws_ssm_parameter.db_host.arn,
+      aws_ssm_parameter.db_port.arn,
+      aws_ssm_parameter.db_ssl.arn,
+      aws_ssm_parameter.default_region.arn,
+      aws_ssm_parameter.native_regions.arn,
+      aws_ssm_parameter.s3_assets_bucket.arn
+    ]
+  }
+
+  statement {
+    actions = ["secretsmanager:GetSecretValue"]
+    resources = [
+      data.aws_secretsmanager_secret_version.exposures.arn,
+      data.aws_secretsmanager_secret_version.rds_read_write.arn
+    ]
   }
 }
 
@@ -23,7 +43,7 @@ data "aws_iam_policy_document" "exposures_assume_role" {
       type = "Service"
 
       identifiers = [
-        "lambda.amazonaws.com",
+        "lambda.amazonaws.com"
       ]
     }
   }

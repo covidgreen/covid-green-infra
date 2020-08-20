@@ -17,7 +17,7 @@ module "upload" {
     aws_ssm_parameter.db_reader_host.arn,
     aws_ssm_parameter.db_ssl.arn
   ]
-  aws_secret_arns                = concat([data.aws_secretsmanager_secret_version.rds.arn, data.aws_secretsmanager_secret_version.rds_read_write.arn], data.aws_secretsmanager_secret_version.interop.*.arn)
+  aws_secret_arns                = concat([data.aws_secretsmanager_secret_version.rds_read_write.arn], data.aws_secretsmanager_secret_version.interop.*.arn)
   cloudwatch_schedule_expression = var.upload_schedule
   config_var_prefix              = local.config_var_prefix
   handler                        = "upload.handler"

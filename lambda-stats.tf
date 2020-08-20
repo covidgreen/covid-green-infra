@@ -6,12 +6,29 @@ data "archive_file" "stats" {
 
 data "aws_iam_policy_document" "stats_policy" {
   statement {
-    actions = [
-      "s3:*",
-      "secretsmanager:GetSecretValue",
-      "ssm:GetParameter"
-    ]
+    actions   = ["s3:*"]
     resources = ["*"]
+  }
+
+  statement {
+    actions = ["ssm:GetParameter"]
+    resources = concat(
+      [
+        aws_ssm_parameter.db_database.arn,
+        aws_ssm_parameter.db_host.arn,
+        aws_ssm_parameter.db_port.arn,
+        aws_ssm_parameter.db_ssl.arn,
+        aws_ssm_parameter.s3_assets_bucket.arn
+      ],
+      aws_ssm_parameter.arcgis_url.*.arn
+    )
+  }
+
+  statement {
+    actions = ["secretsmanager:GetSecretValue"]
+    resources = [
+      data.aws_secretsmanager_secret_version.rds_read_write.arn
+    ]
   }
 }
 
@@ -23,7 +40,7 @@ data "aws_iam_policy_document" "stats_assume_role" {
       type = "Service"
 
       identifiers = [
-        "lambda.amazonaws.com",
+        "lambda.amazonaws.com"
       ]
     }
   }

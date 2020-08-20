@@ -110,7 +110,7 @@ resource "aws_iam_role" "bastion" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "bastion_amazon_ssm_managed_Instance_core" {
+resource "aws_iam_role_policy_attachment" "bastion_amazon_ssm_managed_instance_core" {
   count      = local.bastion_enabled_count
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
   role       = aws_iam_role.bastion[0].name

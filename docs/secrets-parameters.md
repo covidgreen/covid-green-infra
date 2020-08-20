@@ -38,6 +38,9 @@ Parameters are managed by the Terraform content.
 	- daily_registrations_reporter_email_subject
 	- daily_registrations_reporter_sns_arn
 
+### Granting access to secrets and parameters
+When adding a new secret or parameter you will need to explicily add to the workload policies
+
 
 ### Generation of Secret Values
 
