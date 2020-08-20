@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Fixed: Altered the ECS image so the custom vars are just for the image and do not include the tag, we append the tag if using a custom image using the tag var
 - Fixed: Fixed the "bastion_amazon_ssm_managed_instance_core" aws_iam_role_policy_attachment (Incorrect casing in name), this will result in a Terraform apply failure when applied, can run a second time to fix
 - Fixed: Removed RDS admin user access where not needed
 - Added: Added "verify" secret and changed "jwt_issuer" and "certificate_audience" parameters to support third party key server

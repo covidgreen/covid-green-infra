@@ -110,10 +110,10 @@ resource "aws_ecs_task_definition" "api" {
 
   container_definitions = templatefile(format("%s/templates/api_service_task_definition.tpl", path.module),
     {
-      api_image_uri        = local.ecs_api_image_uri
+      api_image_uri        = local.ecs_api_image
       aws_region           = var.aws_region
       config_var_prefix    = local.config_var_prefix
-      migrations_image_uri = local.ecs_migrations_image_uri
+      migrations_image_uri = local.ecs_migrations_image
       listening_port       = var.api_listening_port
       logs_service_name    = aws_cloudwatch_log_group.api.name
       log_group_region     = var.aws_region

@@ -97,7 +97,7 @@ resource "aws_ecs_task_definition" "push" {
     {
       aws_region        = var.aws_region
       config_var_prefix = local.config_var_prefix
-      image_uri         = local.ecs_push_image_uri
+      image_uri         = local.ecs_push_image
       listening_port    = var.push_listening_port
       logs_service_name = aws_cloudwatch_log_group.push.name
       log_group_region  = var.aws_region

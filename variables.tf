@@ -147,28 +147,28 @@ variable "admins_role_require_mfa" {
 # #########################################
 # API & Lambda - Settings & Env vars
 # #########################################
-variable "api_image_repo_url" {
-  description = "ECR image repo to be deployed into ECS for the API container, includes the tag"
+variable "api_custom_image" {
+  description = "Custom image for the ECS API container, overrides the default ECR repo, assumes we can pull from the repository"
   default     = ""
 }
 variable "api_image_tag" {
-  description = "ECR image tag to be deployed into ECS for the API container"
+  description = "Image tag for the ECS API container"
   default     = "latest"
 }
-variable "migrations_image_repo_url" {
-  description = "ECR image repo to be deployed into ECS for the Migration container, includes the tag"
+variable "migrations_custom_image" {
+  description = "Custom image for the ECS Migrations container, overrides the default ECR repo, assumes we can pull from the repository"
   default     = ""
 }
 variable "migrations_image_tag" {
-  description = "ECR image tag to be deployed into ECS for the Migration container"
+  description = "Image tag for the ECS Migrations container"
   default     = "latest"
 }
-variable "push_image_repo_url" {
-  description = "ECR image repo to be deployed into ECS for the Push API container, includes the tag"
+variable "push_custom_image" {
+  description = "Custom image for the ECS Push container, overrides the default ECR repo, assumes we can pull from the repository"
   default     = ""
 }
 variable "push_image_tag" {
-  description = "ECR image tag to be deployed into ECS for the Push API container"
+  description = "Image tag for the ECS Push container"
   default     = "latest"
 }
 variable "api_listening_port" {
