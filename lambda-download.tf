@@ -23,6 +23,8 @@ module "download" {
   handler                        = "download.handler"
   log_retention_days             = var.logs_retention_days
   memory_size                    = var.lambda_download_memory_size
+  s3_bucket                      = var.lambdas_custom_s3_bucket
+  s3_key                         = var.lambda_download_s3_key
   security_group_ids             = [module.lambda_sg.id]
   subnet_ids                     = module.vpc.private_subnets
   tags                           = module.labels.tags

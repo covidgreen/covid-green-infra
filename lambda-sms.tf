@@ -30,6 +30,8 @@ module "sms" {
   kms_reader_arns                            = [aws_kms_key.sqs.arn]
   log_retention_days                         = var.logs_retention_days
   memory_size                                = var.lambda_sms_memory_size
+  s3_bucket                                  = var.lambdas_custom_s3_bucket
+  s3_key                                     = var.lambda_sms_s3_key
   security_group_ids                         = [module.lambda_sg.id]
   sqs_queue_arns_to_consume_from             = [aws_sqs_queue.sms.arn]
   subnet_ids                                 = module.vpc.private_subnets

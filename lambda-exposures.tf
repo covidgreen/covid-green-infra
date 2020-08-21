@@ -78,22 +78,21 @@ resource "aws_iam_role_policy_attachment" "exposures_aws_managed_policy" {
 }
 
 resource "aws_lambda_function" "exposures" {
-  filename         = "${path.module}/.zip/${module.labels.id}_exposures.zip"
-  function_name    = "${module.labels.id}-exposures"
-  source_code_hash = data.archive_file.exposures.output_base64sha256
-  role             = aws_iam_role.exposures.arn
-  runtime          = "nodejs12.x"
-  handler          = "exposures.handler"
-  memory_size      = var.lambda_exposures_memory_size
-  timeout          = var.lambda_exposures_timeout
-  tags             = module.labels.tags
+  # Default is to use the stub file, but we need to cater for S3 bucket file being the source
+  filename         = local.lambdas_use_s3_as_source ? null : "${path.module}/.zip/${module.labels.id}_exposures.zip"
+  s3_bucket        = local.lambdas_use_s3_as_source ? var.lambdas_custom_s3_bucket : null
+  s3_key           = local.lambdas_use_s3_as_source ? var.lambda_exposures_s3_key : null
+  source_code_hash = local.lambdas_use_s3_as_source ? "" : data.archive_file.exposures.output_base64sha256
+
+  function_name = "${module.labels.id}-exposures"
+  handler       = "exposures.handler"
+  memory_size   = var.lambda_exposures_memory_size
+  role          = aws_iam_role.exposures.arn
+  runtime       = "nodejs12.x"
+  tags          = module.labels.tags
+  timeout       = var.lambda_exposures_timeout
 
   depends_on = [aws_cloudwatch_log_group.exposures]
-
-  vpc_config {
-    security_group_ids = [module.lambda_sg.id]
-    subnet_ids         = module.vpc.private_subnets
-  }
 
   environment {
     variables = {
@@ -106,6 +105,11 @@ resource "aws_lambda_function" "exposures" {
     ignore_changes = [
       source_code_hash,
     ]
+  }
+
+  vpc_config {
+    security_group_ids = [module.lambda_sg.id]
+    subnet_ids         = module.vpc.private_subnets
   }
 }
 

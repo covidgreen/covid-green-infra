@@ -327,11 +327,17 @@ variable "default_region" {
 variable "lambda_authorizer_memory_size" {
   default = 512 # Since this is on the hot path and we get faster CPUs with higher memory
 }
+variable "lambda_authorizer_s3_key" {
+  default = ""
+}
 variable "lambda_authorizer_timeout" {
   default = 15
 }
 variable "lambda_callback_memory_size" {
   default = 128
+}
+variable "lambda_callback_s3_key" {
+  default = ""
 }
 variable "lambda_callback_timeout" {
   default = 15
@@ -339,11 +345,17 @@ variable "lambda_callback_timeout" {
 variable "lambda_cso_memory_size" {
   default = 3008
 }
+variable "lambda_cso_s3_key" {
+  default = ""
+}
 variable "lambda_cso_timeout" {
   default = 900
 }
 variable "lambda_daily_registrations_reporter_memory_size" {
   default = 128
+}
+variable "lambda_daily_registrations_reporter_s3_key" {
+  default = ""
 }
 variable "lambda_daily_registrations_reporter_timeout" {
   default = 15
@@ -351,11 +363,17 @@ variable "lambda_daily_registrations_reporter_timeout" {
 variable "lambda_download_memory_size" {
   default = 128
 }
+variable "lambda_download_s3_key" {
+  default = ""
+}
 variable "lambda_download_timeout" {
   default = 15
 }
 variable "lambda_exposures_memory_size" {
   default = 128
+}
+variable "lambda_exposures_s3_key" {
+  default = ""
 }
 variable "lambda_exposures_timeout" {
   default = 15
@@ -366,11 +384,17 @@ variable "lambda_provisioned_concurrencies" {
 variable "lambda_settings_memory_size" {
   default = 128
 }
+variable "lambda_settings_s3_key" {
+  default = ""
+}
 variable "lambda_settings_timeout" {
   default = 15
 }
 variable "lambda_sms_memory_size" {
   default = 128
+}
+variable "lambda_sms_s3_key" {
+  default = ""
 }
 variable "lambda_sms_timeout" {
   default = 15
@@ -378,11 +402,17 @@ variable "lambda_sms_timeout" {
 variable "lambda_stats_memory_size" {
   default = 256
 }
+variable "lambda_stats_s3_key" {
+  default = ""
+}
 variable "lambda_stats_timeout" {
   default = 120
 }
 variable "lambda_token_memory_size" {
   default = 128
+}
+variable "lambda_token_s3_key" {
+  default = ""
 }
 variable "lambda_token_timeout" {
   default = 15
@@ -390,8 +420,15 @@ variable "lambda_token_timeout" {
 variable "lambda_upload_memory_size" {
   default = 128
 }
+variable "lambda_upload_s3_key" {
+  default = ""
+}
 variable "lambda_upload_timeout" {
   default = 15
+}
+variable "lambdas_custom_s3_bucket" {
+  description = "Lambdas custom S3 bucket, overrides the default local file usage, assumes we can get content from the bucket as this module does not manage this bucket"
+  default     = ""
 }
 variable "native_regions" {
   default = ""
