@@ -293,6 +293,15 @@ resource "aws_ssm_parameter" "arcgis_url" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "callback_email_notifications_sns_arn" {
+  count     = local.enable_callback_email_notifications_count
+  overwrite = true
+  name      = "${local.config_var_prefix}callback_email_notifications_sns_arn"
+  type      = "String"
+  value     = join("", aws_sns_topic.callback_email_notifications.*.arn)
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "daily_registrations_reporter_email_subject" {
   count     = contains(var.optional_parameters_to_include, "daily_registrations_reporter_email_subject") ? 1 : 0
   overwrite = true

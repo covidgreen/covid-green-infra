@@ -20,6 +20,9 @@ locals {
   ecs_push_image       = format("%s:%s", coalesce(var.push_custom_image, aws_ecr_repository.push.repository_url), var.push_image_tag)
 
   # Based on flag
+  enable_callback_email_notifications_count = var.enable_callback && var.enable_callback_email_notifications ? 1 : 0
+
+  # Based on flag
   enable_certificates_count = var.enable_certificates ? 1 : 0
 
   # Based on flag
