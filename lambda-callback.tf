@@ -36,8 +36,17 @@ data "aws_iam_policy_document" "callback_policy" {
   }
 
   statement {
-    actions = ["kms:*"]
+    actions = [
+      "kms:Decrypt",
+      "kms:DescribeKey",
+      "kms:Encrypt",
+      "kms:GenerateDataKey",
+      "kms:GenerateDataKey*",
+      "kms:GetPublicKey",
+      "kms:ReEncrypt*"
+    ]
     resources = [
+      aws_kms_key.sns.arn,
       aws_kms_key.sqs.arn
     ]
   }
