@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+
+
+## [v0.1.3] 2020-08-25
 - Added: Option to use an S3 bucket as the source for lambdas, will be a global setting and we do not manage this bucket as this is a non default option
 - Added: Added option to send callback notifications using email via an SNS topic - subscription will not be automated
 - Fixed: Altered the ECS image so the custom vars are just for the image and do not include the tag, we append the tag if using a custom image using the tag var
