@@ -128,8 +128,7 @@ All the infrastructure set up is automated but not secrets that need to be creat
 
 ### Contributors
 
-* TBD
-* TBD
+* @segfault - Mark Guzman <segfault@hasno.info>
 
 ### Past Contributors
 
