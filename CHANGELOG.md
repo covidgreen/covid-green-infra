@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Added: Now sms lambda can send transactional SMS
 - Added: Added extra field "LOG_ERROR" = 60 to default "metrics_config" parameter value
 
 ## [v0.1.3] 2020-08-25
