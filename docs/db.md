@@ -19,15 +19,15 @@ Database name is in the prefix-db_database parameter
 ./scripts/aws-parameters.sh values dev-xyz-db_database
 ```
 
-Credentials are in the prefix-rds secrets - Will be 3 of them
+Credentials are in the prefix-rds secrets - Will be 3 of them - have used
 ```
-./scripts/aws-secrets.sh values dev-xyz-rds
+./scripts/aws-secrets.sh values dev-xyz-rds-read-only
 ```
 
 ## Connecting
 Connect with
 ```
-psql -h xyz-dev-rds.cluster-something.eu-west-1.rds.amazonaws.com -U rds_admin_user -d xyz
+psql -h xyz-dev-rds.cluster-something.eu-west-1.rds.amazonaws.com -U read_only_user -d xyz
 ```
 
 
@@ -35,7 +35,7 @@ psql -h xyz-dev-rds.cluster-something.eu-west-1.rds.amazonaws.com -U rds_admin_u
 # Extensions configuration
 Need to create the pgcrypto extension as the master user, seems you cannot/should not grant access to creating this to mormal users, see [here](https://dba.stackexchange.com/questions/175319/postgresql-enabling-extensions-without-super-user)
 
-## Connect with
+## Connect with rds_admin_user
 ```
 psql -h xyz-dev-rds.cluster-something.eu-west-1.rds.amazonaws.com -U rds_admin_user -d xyz
 ```
