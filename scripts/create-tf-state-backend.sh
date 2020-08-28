@@ -40,7 +40,7 @@ aws s3api put-bucket-versioning --bucket ${s3_bucket_name} --versioning-configur
 # Apply block public access config
 aws s3api put-public-access-block \
 	--bucket ${s3_bucket_name} \
-	--public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true" \
+	--public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
 
 
 # DynamoDb table

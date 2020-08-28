@@ -6,12 +6,29 @@ data "archive_file" "stats" {
 
 data "aws_iam_policy_document" "stats_policy" {
   statement {
-    actions = [
-      "s3:*",
-      "secretsmanager:GetSecretValue",
-      "ssm:GetParameter"
-    ]
+    actions   = ["s3:*"]
     resources = ["*"]
+  }
+
+  statement {
+    actions = ["ssm:GetParameter"]
+    resources = concat(
+      [
+        aws_ssm_parameter.db_database.arn,
+        aws_ssm_parameter.db_host.arn,
+        aws_ssm_parameter.db_port.arn,
+        aws_ssm_parameter.db_ssl.arn,
+        aws_ssm_parameter.s3_assets_bucket.arn
+      ],
+      aws_ssm_parameter.arcgis_url.*.arn
+    )
+  }
+
+  statement {
+    actions = ["secretsmanager:GetSecretValue"]
+    resources = [
+      data.aws_secretsmanager_secret_version.rds_read_write.arn
+    ]
   }
 }
 
@@ -23,7 +40,7 @@ data "aws_iam_policy_document" "stats_assume_role" {
       type = "Service"
 
       identifiers = [
-        "lambda.amazonaws.com",
+        "lambda.amazonaws.com"
       ]
     }
   }
@@ -58,22 +75,21 @@ resource "aws_iam_role_policy_attachment" "stats_aws_managed_policy" {
 }
 
 resource "aws_lambda_function" "stats" {
-  filename         = "${path.module}/.zip/${module.labels.id}_stats.zip"
-  function_name    = "${module.labels.id}-stats"
-  source_code_hash = data.archive_file.stats.output_base64sha256
-  role             = aws_iam_role.stats.arn
-  runtime          = "nodejs12.x"
-  handler          = "stats.handler"
-  memory_size      = var.lambda_stats_memory_size
-  timeout          = var.lambda_stats_timeout
-  tags             = module.labels.tags
+  # Default is to use the stub file, but we need to cater for S3 bucket file being the source
+  filename         = local.lambdas_use_s3_as_source ? null : "${path.module}/.zip/${module.labels.id}_stats.zip"
+  s3_bucket        = local.lambdas_use_s3_as_source ? var.lambdas_custom_s3_bucket : null
+  s3_key           = local.lambdas_use_s3_as_source ? var.lambda_stats_s3_key : null
+  source_code_hash = local.lambdas_use_s3_as_source ? "" : data.archive_file.stats.output_base64sha256
+
+  function_name = "${module.labels.id}-stats"
+  handler       = "stats.handler"
+  memory_size   = var.lambda_stats_memory_size
+  role          = aws_iam_role.stats.arn
+  runtime       = "nodejs12.x"
+  tags          = module.labels.tags
+  timeout       = var.lambda_stats_timeout
 
   depends_on = [aws_cloudwatch_log_group.stats]
-
-  vpc_config {
-    security_group_ids = [module.lambda_sg.id]
-    subnet_ids         = module.vpc.private_subnets
-  }
 
   environment {
     variables = {
@@ -86,6 +102,11 @@ resource "aws_lambda_function" "stats" {
     ignore_changes = [
       source_code_hash,
     ]
+  }
+
+  vpc_config {
+    security_group_ids = [module.lambda_sg.id]
+    subnet_ids         = module.vpc.private_subnets
   }
 }
 

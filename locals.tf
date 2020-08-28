@@ -15,9 +15,12 @@ locals {
   config_var_prefix = "${module.labels.id}-"
 
   # ECS image values
-  ecs_api_image_uri        = coalesce(var.api_image_repo_url, format("%s:%s", aws_ecr_repository.api.repository_url, var.api_image_tag))
-  ecs_migrations_image_uri = coalesce(var.migrations_image_repo_url, format("%s:%s", aws_ecr_repository.migrations.repository_url, var.migrations_image_tag))
-  ecs_push_image_uri       = coalesce(var.push_image_repo_url, format("%s:%s", aws_ecr_repository.push.repository_url, var.push_image_tag))
+  ecs_api_image        = format("%s:%s", coalesce(var.api_custom_image, aws_ecr_repository.api.repository_url), var.api_image_tag)
+  ecs_migrations_image = format("%s:%s", coalesce(var.migrations_custom_image, aws_ecr_repository.migrations.repository_url), var.migrations_image_tag)
+  ecs_push_image       = format("%s:%s", coalesce(var.push_custom_image, aws_ecr_repository.push.repository_url), var.push_image_tag)
+
+  # Based on flag
+  enable_callback_email_notifications_count = var.enable_callback && var.enable_callback_email_notifications ? 1 : 0
 
   # Based on flag
   enable_certificates_count = var.enable_certificates ? 1 : 0
@@ -44,6 +47,11 @@ locals {
   lambda_daily_registrations_reporter_count = contains(var.optional_lambdas_to_include, "daily-registrations-reporter") ? 1 : 0
   lambda_download_count                     = contains(var.optional_lambdas_to_include, "download") ? 1 : 0
   lambda_upload_count                       = contains(var.optional_lambdas_to_include, "upload") ? 1 : 0
+
+  # Lambdas using S3 bucket as source - is a global value, so will apply to all of them
+  # If set will assume the S3 key is provided and that a file exists in the bucket
+  # Since this is an override, we do not manage this bucket or access to the same
+  lambdas_use_s3_as_source = var.lambdas_custom_s3_bucket != ""
 
   # RDS enhanced monitoring count
   rds_enhanced_monitoring_enabled_count = var.rds_enhanced_monitoring_interval > 0 ? 1 : 0

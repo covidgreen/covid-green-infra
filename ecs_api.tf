@@ -29,7 +29,7 @@ resource "aws_iam_role" "api_ecs_task_role" {
 
 data "aws_iam_policy_document" "api_ecs_task_policy" {
   statement {
-    actions = ["ssm:GetParameter", "secretsmanager:GetSecretValue"]
+    actions = ["ssm:GetParameter"]
     resources = [
       aws_ssm_parameter.api_host.arn,
       aws_ssm_parameter.api_port.arn,
@@ -54,12 +54,18 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
       aws_ssm_parameter.security_refresh_token_expiry.arn,
       aws_ssm_parameter.security_token_lifetime_mins.arn,
       aws_ssm_parameter.security_verify_rate_limit_secs.arn,
-      aws_ssm_parameter.upload_token_lifetime_mins.arn,
+      aws_ssm_parameter.upload_token_lifetime_mins.arn
+    ]
+  }
+
+  statement {
+    actions = ["secretsmanager:GetSecretValue"]
+    resources = [
       data.aws_secretsmanager_secret_version.device_check.arn,
       data.aws_secretsmanager_secret_version.encrypt.arn,
       data.aws_secretsmanager_secret_version.jwt.arn,
-      data.aws_secretsmanager_secret_version.rds.arn,
-      data.aws_secretsmanager_secret_version.rds_read_write_create.arn
+      data.aws_secretsmanager_secret_version.rds_read_write_create.arn,
+      data.aws_secretsmanager_secret_version.verify.arn
     ]
   }
 
@@ -104,10 +110,10 @@ resource "aws_ecs_task_definition" "api" {
 
   container_definitions = templatefile(format("%s/templates/api_service_task_definition.tpl", path.module),
     {
-      api_image_uri        = local.ecs_api_image_uri
+      api_image_uri        = local.ecs_api_image
       aws_region           = var.aws_region
       config_var_prefix    = local.config_var_prefix
-      migrations_image_uri = local.ecs_migrations_image_uri
+      migrations_image_uri = local.ecs_migrations_image
       listening_port       = var.api_listening_port
       logs_service_name    = aws_cloudwatch_log_group.api.name
       log_group_region     = var.aws_region

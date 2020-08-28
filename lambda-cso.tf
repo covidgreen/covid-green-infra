@@ -6,12 +6,26 @@ data "archive_file" "cso" {
 
 data "aws_iam_policy_document" "cso_policy" {
   statement {
-    actions = [
-      "s3:*",
-      "secretsmanager:GetSecretValue",
-      "ssm:GetParameter"
-    ]
+    actions   = ["s3:*"]
     resources = ["*"]
+  }
+
+  statement {
+    actions = ["ssm:GetParameter"]
+    resources = [
+      aws_ssm_parameter.db_database.arn,
+      aws_ssm_parameter.db_host.arn,
+      aws_ssm_parameter.db_port.arn,
+      aws_ssm_parameter.db_ssl.arn
+    ]
+  }
+
+  statement {
+    actions = ["secretsmanager:GetSecretValue"]
+    resources = concat(
+      [data.aws_secretsmanager_secret_version.rds_read_write.arn],
+      data.aws_secretsmanager_secret_version.cso.*.arn
+    )
   }
 }
 
@@ -23,7 +37,7 @@ data "aws_iam_policy_document" "cso_assume_role" {
       type = "Service"
 
       identifiers = [
-        "lambda.amazonaws.com",
+        "lambda.amazonaws.com"
       ]
     }
   }
@@ -63,23 +77,23 @@ resource "aws_iam_role_policy_attachment" "cso_aws_managed_policy" {
 }
 
 resource "aws_lambda_function" "cso" {
-  count            = local.lambda_cso_count
-  filename         = "${path.module}/.zip/${module.labels.id}_cso.zip"
-  function_name    = "${module.labels.id}-cso"
-  source_code_hash = data.archive_file.cso.output_base64sha256
-  role             = aws_iam_role.cso[0].arn
-  runtime          = "nodejs12.x"
-  handler          = "cso.handler"
-  memory_size      = var.lambda_cso_memory_size
-  timeout          = var.lambda_cso_timeout
-  tags             = module.labels.tags
+  count = local.lambda_cso_count
+
+  # Default is to use the stub file, but we need to cater for S3 bucket file being the source
+  filename         = local.lambdas_use_s3_as_source ? null : "${path.module}/.zip/${module.labels.id}_cso.zip"
+  s3_bucket        = local.lambdas_use_s3_as_source ? var.lambdas_custom_s3_bucket : null
+  s3_key           = local.lambdas_use_s3_as_source ? var.lambda_cso_s3_key : null
+  source_code_hash = local.lambdas_use_s3_as_source ? "" : data.archive_file.cso.output_base64sha256
+
+  function_name = "${module.labels.id}-cso"
+  handler       = "cso.handler"
+  memory_size   = var.lambda_cso_memory_size
+  role          = aws_iam_role.cso[0].arn
+  runtime       = "nodejs12.x"
+  tags          = module.labels.tags
+  timeout       = var.lambda_cso_timeout
 
   depends_on = [aws_cloudwatch_log_group.cso]
-
-  vpc_config {
-    security_group_ids = [module.lambda_sg.id]
-    subnet_ids         = module.vpc.private_subnets
-  }
 
   environment {
     variables = {
@@ -92,6 +106,11 @@ resource "aws_lambda_function" "cso" {
     ignore_changes = [
       source_code_hash,
     ]
+  }
+
+  vpc_config {
+    security_group_ids = [module.lambda_sg.id]
+    subnet_ids         = module.vpc.private_subnets
   }
 }
 

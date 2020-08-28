@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "push_ecs_assume_role_policy" {
 
 data "aws_iam_policy_document" "push_ecs_task_policy" {
   statement {
-    actions = ["ssm:GetParameter", "secretsmanager:GetSecretValue"]
+    actions = ["ssm:GetParameter"]
     resources = [
       aws_ssm_parameter.cors_origin.arn,
       aws_ssm_parameter.db_database.arn,
@@ -29,9 +29,14 @@ data "aws_iam_policy_document" "push_ecs_task_policy" {
       aws_ssm_parameter.security_code_charset.arn,
       aws_ssm_parameter.security_code_length.arn,
       aws_ssm_parameter.security_code_lifetime_mins.arn,
-      aws_ssm_parameter.sms_url.arn,
+      aws_ssm_parameter.sms_url.arn
+    ]
+  }
+
+  statement {
+    actions = ["secretsmanager:GetSecretValue"]
+    resources = [
       data.aws_secretsmanager_secret_version.jwt.arn,
-      data.aws_secretsmanager_secret_version.rds.arn,
       data.aws_secretsmanager_secret_version.rds_read_write.arn
     ]
   }
@@ -92,7 +97,7 @@ resource "aws_ecs_task_definition" "push" {
     {
       aws_region        = var.aws_region
       config_var_prefix = local.config_var_prefix
-      image_uri         = local.ecs_push_image_uri
+      image_uri         = local.ecs_push_image
       listening_port    = var.push_listening_port
       logs_service_name = aws_cloudwatch_log_group.push.name
       log_group_region  = var.aws_region

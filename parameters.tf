@@ -133,7 +133,7 @@ resource "aws_ssm_parameter" "certificate_audience" {
   overwrite = true
   name      = "${local.config_var_prefix}certificate_audience"
   type      = "String"
-  value     = "${module.labels.id}-api"
+  value     = var.certificate_audience
   tags      = module.labels.tags
 }
 
@@ -141,7 +141,7 @@ resource "aws_ssm_parameter" "jwt_issuer" {
   overwrite = true
   name      = "${local.config_var_prefix}jwt_issuer"
   type      = "String"
-  value     = "${module.labels.id}-api"
+  value     = var.app_bundle_id
   tags      = module.labels.tags
 }
 
@@ -290,6 +290,15 @@ resource "aws_ssm_parameter" "arcgis_url" {
   name      = "${local.config_var_prefix}arcgis_url"
   type      = "String"
   value     = var.arcgis_url
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "callback_email_notifications_sns_arn" {
+  count     = local.enable_callback_email_notifications_count
+  overwrite = true
+  name      = "${local.config_var_prefix}callback_email_notifications_sns_arn"
+  type      = "String"
+  value     = join("", aws_sns_topic.callback_email_notifications.*.arn)
   tags      = module.labels.tags
 }
 

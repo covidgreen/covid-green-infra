@@ -147,28 +147,28 @@ variable "admins_role_require_mfa" {
 # #########################################
 # API & Lambda - Settings & Env vars
 # #########################################
-variable "api_image_repo_url" {
-  description = "ECR image repo to be deployed into ECS for the API container, includes the tag"
+variable "api_custom_image" {
+  description = "Custom image for the ECS API container, overrides the default ECR repo, assumes we can pull from the repository"
   default     = ""
 }
 variable "api_image_tag" {
-  description = "ECR image tag to be deployed into ECS for the API container"
+  description = "Image tag for the ECS API container"
   default     = "latest"
 }
-variable "migrations_image_repo_url" {
-  description = "ECR image repo to be deployed into ECS for the Migration container, includes the tag"
+variable "migrations_custom_image" {
+  description = "Custom image for the ECS Migrations container, overrides the default ECR repo, assumes we can pull from the repository"
   default     = ""
 }
 variable "migrations_image_tag" {
-  description = "ECR image tag to be deployed into ECS for the Migration container"
+  description = "Image tag for the ECS Migrations container"
   default     = "latest"
 }
-variable "push_image_repo_url" {
-  description = "ECR image repo to be deployed into ECS for the Push API container, includes the tag"
+variable "push_custom_image" {
+  description = "Custom image for the ECS Push container, overrides the default ECR repo, assumes we can pull from the repository"
   default     = ""
 }
 variable "push_image_tag" {
-  description = "ECR image tag to be deployed into ECS for the Push API container"
+  description = "Image tag for the ECS Push container"
   default     = "latest"
 }
 variable "api_listening_port" {
@@ -303,6 +303,9 @@ variable "app_bundle_id" {
 variable "enable_callback" {
   default = "true"
 }
+variable "enable_callback_email_notifications" {
+  default = "false"
+}
 variable "enable_check_in" {
   default = "true"
 }
@@ -311,6 +314,9 @@ variable "enable_legacy_settings" {
 }
 variable "enable_metrics" {
   default = "true"
+}
+variable "certificate_audience" {
+  default = ""
 }
 variable "default_country_code" {
   default = ""
@@ -321,11 +327,17 @@ variable "default_region" {
 variable "lambda_authorizer_memory_size" {
   default = 512 # Since this is on the hot path and we get faster CPUs with higher memory
 }
+variable "lambda_authorizer_s3_key" {
+  default = ""
+}
 variable "lambda_authorizer_timeout" {
   default = 15
 }
 variable "lambda_callback_memory_size" {
   default = 128
+}
+variable "lambda_callback_s3_key" {
+  default = ""
 }
 variable "lambda_callback_timeout" {
   default = 15
@@ -333,11 +345,17 @@ variable "lambda_callback_timeout" {
 variable "lambda_cso_memory_size" {
   default = 3008
 }
+variable "lambda_cso_s3_key" {
+  default = ""
+}
 variable "lambda_cso_timeout" {
   default = 900
 }
 variable "lambda_daily_registrations_reporter_memory_size" {
   default = 128
+}
+variable "lambda_daily_registrations_reporter_s3_key" {
+  default = ""
 }
 variable "lambda_daily_registrations_reporter_timeout" {
   default = 15
@@ -345,17 +363,29 @@ variable "lambda_daily_registrations_reporter_timeout" {
 variable "lambda_download_memory_size" {
   default = 128
 }
+variable "lambda_download_s3_key" {
+  default = ""
+}
 variable "lambda_download_timeout" {
   default = 15
 }
 variable "lambda_exposures_memory_size" {
   default = 128
 }
+variable "lambda_exposures_s3_key" {
+  default = ""
+}
 variable "lambda_exposures_timeout" {
   default = 15
 }
+variable "lambda_provisioned_concurrencies" {
+  default = {}
+}
 variable "lambda_settings_memory_size" {
   default = 128
+}
+variable "lambda_settings_s3_key" {
+  default = ""
 }
 variable "lambda_settings_timeout" {
   default = 15
@@ -363,8 +393,8 @@ variable "lambda_settings_timeout" {
 variable "lambda_sms_memory_size" {
   default = 128
 }
-variable "lambda_provisioned_concurrencies" {
-  default = {}
+variable "lambda_sms_s3_key" {
+  default = ""
 }
 variable "lambda_sms_timeout" {
   default = 15
@@ -372,11 +402,17 @@ variable "lambda_sms_timeout" {
 variable "lambda_stats_memory_size" {
   default = 256
 }
+variable "lambda_stats_s3_key" {
+  default = ""
+}
 variable "lambda_stats_timeout" {
   default = 120
 }
 variable "lambda_token_memory_size" {
   default = 128
+}
+variable "lambda_token_s3_key" {
+  default = ""
 }
 variable "lambda_token_timeout" {
   default = 15
@@ -384,8 +420,15 @@ variable "lambda_token_timeout" {
 variable "lambda_upload_memory_size" {
   default = 128
 }
+variable "lambda_upload_s3_key" {
+  default = ""
+}
 variable "lambda_upload_timeout" {
   default = 15
+}
+variable "lambdas_custom_s3_bucket" {
+  description = "Lambdas custom S3 bucket, overrides the default local file usage, assumes we can get content from the bucket as this module does not manage this bucket"
+  default     = ""
 }
 variable "native_regions" {
   default = ""

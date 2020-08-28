@@ -6,12 +6,26 @@ data "archive_file" "token" {
 
 data "aws_iam_policy_document" "token_policy" {
   statement {
-    actions = [
-      "s3:*",
-      "secretsmanager:GetSecretValue",
-      "ssm:GetParameter"
-    ]
+    actions   = ["s3:*"]
     resources = ["*"]
+  }
+
+  statement {
+    actions = ["ssm:GetParameter"]
+    resources = [
+      aws_ssm_parameter.db_database.arn,
+      aws_ssm_parameter.db_host.arn,
+      aws_ssm_parameter.db_port.arn,
+      aws_ssm_parameter.db_ssl.arn
+    ]
+  }
+
+  statement {
+    actions = ["secretsmanager:GetSecretValue"]
+    resources = [
+      data.aws_secretsmanager_secret_version.jwt.arn,
+      data.aws_secretsmanager_secret_version.rds_read_write.arn
+    ]
   }
 }
 
@@ -23,7 +37,7 @@ data "aws_iam_policy_document" "token_assume_role" {
       type = "Service"
 
       identifiers = [
-        "lambda.amazonaws.com",
+        "lambda.amazonaws.com"
       ]
     }
   }
@@ -58,22 +72,21 @@ resource "aws_iam_role_policy_attachment" "token_aws_managed_policy" {
 }
 
 resource "aws_lambda_function" "token" {
-  filename         = "${path.module}/.zip/${module.labels.id}_token.zip"
-  function_name    = "${module.labels.id}-token"
-  source_code_hash = data.archive_file.token.output_base64sha256
-  role             = aws_iam_role.token.arn
-  runtime          = "nodejs12.x"
-  handler          = "token.handler"
-  memory_size      = var.lambda_token_memory_size
-  timeout          = var.lambda_token_timeout
-  tags             = module.labels.tags
+  # Default is to use the stub file, but we need to cater for S3 bucket file being the source
+  filename         = local.lambdas_use_s3_as_source ? null : "${path.module}/.zip/${module.labels.id}_token.zip"
+  s3_bucket        = local.lambdas_use_s3_as_source ? var.lambdas_custom_s3_bucket : null
+  s3_key           = local.lambdas_use_s3_as_source ? var.lambda_token_s3_key : null
+  source_code_hash = local.lambdas_use_s3_as_source ? "" : data.archive_file.token.output_base64sha256
+
+  function_name = "${module.labels.id}-token"
+  handler       = "token.handler"
+  memory_size   = var.lambda_token_memory_size
+  role          = aws_iam_role.token.arn
+  runtime       = "nodejs12.x"
+  tags          = module.labels.tags
+  timeout       = var.lambda_token_timeout
 
   depends_on = [aws_cloudwatch_log_group.token]
-
-  vpc_config {
-    security_group_ids = [module.lambda_sg.id]
-    subnet_ids         = module.vpc.private_subnets
-  }
 
   environment {
     variables = {
@@ -87,4 +100,11 @@ resource "aws_lambda_function" "token" {
       source_code_hash,
     ]
   }
+
+  vpc_config {
+    security_group_ids = [module.lambda_sg.id]
+    subnet_ids         = module.vpc.private_subnets
+  }
+
+
 }
