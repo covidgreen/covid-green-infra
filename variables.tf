@@ -451,3 +451,6 @@ variable "sms_sender" {
 variable "sms_region" {
   default = ""
 }
+variable "time_zone" {
+  default = "UTC"
+}

@@ -273,6 +273,14 @@ resource "aws_ssm_parameter" "sms_url" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "time_zone" {
+  overwrite = true
+  name      = "${local.config_var_prefix}time_zone"
+  type      = "String"
+  value     = var.sms_template
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "upload_token_lifetime_mins" {
   overwrite = true
   name      = "${local.config_var_prefix}upload_token_lifetime_mins"
