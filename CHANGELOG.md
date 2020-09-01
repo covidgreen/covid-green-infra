@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Added: Re-added field "CALLBACK_REQUEST" = 60 to default "metrics_config" parameter value
 - Added: Allow operators read the rds_readonly_user secret so they can connect to the RDS DB
 - Added: Support for lambdas using transactional SMS
 - Added: Added extra field "LOG_ERROR" = 60 to default "metrics_config" parameter value
