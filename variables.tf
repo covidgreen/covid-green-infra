@@ -32,6 +32,10 @@ variable "logs_retention_days" {
 # APIGateway
 # If we want to limit here we can set the throttling_ values - currently -1 = no throttling
 # #########################################
+variable "api_gateway_account_creation_enabled" {
+  description = "APIGateway account creation flag, this is used for CloudWatch logging, should only have one of these per account/region, this flag allows disabling if one already exists"
+  default     = true
+}
 variable "api_gateway_throttling_rate_limit" {
   description = "APIGateway throttling rate limit, default is -1 which does not enforce a limit"
   default     = -1
