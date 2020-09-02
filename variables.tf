@@ -1,13 +1,24 @@
 # #########################################
 # Misc
 # #########################################
-variable "aws_region" {}
-variable "dns_profile" {}
-variable "environment" {}
-variable "full_name" {}
-variable "namespace" {}
-variable "profile" {}
-
+variable "aws_region" {
+  description = "AWS region"
+}
+variable "dns_profile" {
+  description = "AWS profile used to manage Route53 records"
+}
+variable "environment" {
+  description = "Environment i.e. dev"
+}
+variable "full_name" {
+  description = "Fullname, will add as a tag to resources"
+}
+variable "namespace" {
+  description = "Namespace which allows identifying resources i.e. xyz"
+}
+variable "profile" {
+  description = "AWS profile to use"
+}
 
 # #########################################
 # Log retention
@@ -22,108 +33,138 @@ variable "logs_retention_days" {
 # If we want to limit here we can set the throttling_ values - currently -1 = no throttling
 # #########################################
 variable "api_gateway_throttling_rate_limit" {
-  default = -1
+  description = "APIGateway throttling rate limit, default is -1 which does not enforce a limit"
+  default     = -1
 }
 variable "api_gateway_throttling_burst_limit" {
-  default = -1
+  description = "APIGateway throttling burst limit, default is -1 which does not enforce a limit"
+  default     = -1
 }
 
 # #########################################
 # Cloudtrail
 # #########################################
 variable "enable_cloudtrail" {
-  default = false
+  description = "Enable CloudTrail, default is not to, but non dev envs should enable"
+  default     = false
 }
 
 # #########################################
 # DNS and certificates (Imported/existing certs)
 # #########################################
 variable "enable_dns" {
-  default = true
+  description = "Enable DNS management of Route53 records, in some cases we do not control"
+  default     = true
 }
 variable "enable_certificates" {
-  default = true
+  description = "Enable certificate management using AWS Certificates Manage, in some cases we do not control"
+  default     = true
 }
 # Need this if we have enabled_certificates=false and have imported the certificates
 variable "api_us_certificate_arn" {
-  default = ""
+  description = "ECS API certificate used by CloudFront Edge for the APIGateway (us-east-1), we use this if we do not manage the certificates and have to use an imported/existing certificate"
+  default     = ""
 }
 # Need this if we have enabled_certificates=false and have imported the certificates
 variable "push_eu_certificate_arn" {
-  default = ""
+  description = "ECS Push certificate used by the ALB, we use this if we do not manage the certificates and have to use an imported/existing certificate"
+  default     = ""
 }
 
 # #########################################
 # Networking
 # #########################################
 variable "vpc_cidr" {
-  default = "10.0.0.0/16"
+  description = "VPC CIDR"
+  default     = "10.0.0.0/16"
 }
 variable "private_subnets_cidr" {
-  default = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  description = "Private subnet CIDRs"
+  default     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
 }
 variable "public_subnets_cidr" {
-  default = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
+  description = "Public subnet CIDRs"
+  default     = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
 }
 variable "database_subnets_cidr" {
-  default = ["10.0.21.0/24", "10.0.22.0/24", "10.0.23.0/24"]
+  description = "Database subnet CIDRs"
+  default     = ["10.0.21.0/24", "10.0.22.0/24", "10.0.23.0/24"]
 }
 variable "intra_subnets_cidr" {
-  default = ["10.0.31.0/24", "10.0.32.0/24", "10.0.33.0/24"]
+  description = "Intra subnet CIDRs"
+  default     = ["10.0.31.0/24", "10.0.32.0/24", "10.0.33.0/24"]
 }
 
 # #########################################
 # RDS Settings
 # #########################################
-variable "rds_db_name" {}
+variable "rds_db_name" {
+  description = "RDS master DB name"
+}
 variable "rds_instance_type" {
-  default = "db.t3.medium"
+  description = "RDS instance type"
+  default     = "db.t3.medium"
 }
 variable "rds_cluster_size" {
-  default = 1
+  description = "RDS cluster size, should be > 1 in non dev environments"
+  default     = 1
 }
 variable "rds_cluster_family" {
-  default = "aurora-postgresql11"
+  description = "RDS cluster family"
+  default     = "aurora-postgresql11"
 }
 variable "rds_backup_retention" {
-  default = 14
+  description = "RDS backup retention in days"
+  default     = 14
 }
-# Enhanced monitoring metrics, the default is 0 which is disabled. Valid Values: 0, 1, 5, 10, 15, 30, 60. These are in seconds.
 variable "rds_enhanced_monitoring_interval" {
-  default = 0
+  description = "RDS enhanced monitoring metrics interval, the default is 0 which is disabled. Valid Values: 0, 1, 5, 10, 15, 30, 60. These are in seconds."
+  default     = 0
 }
 
 # #########################################
 # ECR Settings
 # #########################################
 variable "default_ecr_max_image_count" {
-  default = 30
+  description = "Default ECR image retention count used for purging the ECR repositories"
+  default     = 30
 }
 
 # #########################################
 # R53 Settings
 # #########################################
-variable "route53_zone" {}
-variable "api_dns" {}
-variable "push_dns" {}
-variable "wildcard_domain" {}
+variable "route53_zone" {
+  description = "Route53 zone for DNS records"
+}
+variable "api_dns" {
+  description = "DNS for API service"
+}
+variable "push_dns" {
+  description = "DNS for Push service"
+}
+variable "wildcard_domain" {
+  description = "DNS wildcard domain"
+}
 
 # #########################################
 # Bastion
 # #########################################
 # This allows preventing bastion access, if this is enabled the default is to have an ASG with desired count = 0
 variable "bastion_enabled" {
-  default = true
+  description = "Bastion enabled, does not provision the bastion, only allows using a bastion, see the bastion_asg_desired_count variable"
+  default     = true
 }
 variable "bastion_asg_desired_count" {
-  default = 0
+  description = "Bastion ASG desired count"
+  default     = 0
 }
 
 # #########################################
 # SMS using AWS - used by the SMS lambda
 # #########################################
 variable "enable_sms_publishing_with_aws" {
-  default = false
+  description = "Enable sending SMS via a SNS topic"
+  default     = false
 }
 
 # #########################################
@@ -132,7 +173,8 @@ variable "enable_sms_publishing_with_aws" {
 # List of allowed country alpha 2 codes, see https://www.iso.org/obp/ui/#search
 # If this is empty then we do not restrict based on country
 variable "waf_geo_allowed_countries" {
-  default = []
+  description = "List of countries to enable Geo blocking, if empty will be no Geo blocking"
+  default     = []
 }
 
 
@@ -141,7 +183,8 @@ variable "waf_geo_allowed_countries" {
 # #########################################
 variable "admins_role_require_mfa" {
   # Turning this on is fine with the AWS CLI but is tricky with TF and we have multiple accounts in play in some envs
-  default = false
+  description = "Require MFA for assuming the admins IAM role"
+  default     = false
 }
 
 # #########################################
@@ -172,76 +215,104 @@ variable "push_image_tag" {
   default     = "latest"
 }
 variable "api_listening_port" {
-  default = 5000
+  description = "ECS API container port"
+  default     = 5000
 }
 variable "api_listening_protocol" {
-  default = "HTTP"
+  description = "API service ALB protocol"
+  default     = "HTTP"
 }
 variable "api_cors_origin" {
-  default = "*"
+  description = "API service CORS header value"
+  default     = "*"
 }
 variable "health_check_path" {
-  default = "/healthcheck"
+  description = "Health check path"
+  default     = "/healthcheck"
 }
 variable "health_check_matcher" {
-  default = "200"
+  description = "Health check matcher for ALB health checks"
+  default     = "200"
 }
 variable "health_check_interval" {
-  default = 10
+  description = "Health check interval for ALB health checks"
+  default     = 10
 }
 variable "health_check_timeout" {
-  default = 5
+  description = "Health check timeout for ALB health checks"
+  default     = 5
 }
 variable "health_check_healthy_threshold" {
-  default = 3
+  description = "Health check healthy threshold for ALB health checks"
+  default     = 3
 }
 variable "health_check_unhealthy_threshold" {
-  default = 2
+  description = "Health check unhealthy threshold for ALB health checks"
+  default     = 2
 }
 variable "api_service_desired_count" {
-  default = 1
+  description = "ECS API service ASG desired count"
+  default     = 1
 }
 variable "api_services_task_cpu" {
-  default = 256
+  description = "ECS API service task CPU"
+  default     = 256
 }
 variable "api_services_task_memory" {
-  default = 512
+  description = "ECS API service task memory"
+  default     = 512
 }
 variable "api_ecs_autoscale_min_instances" {
-  default = 1
+  description = "ECS API service ASG min count"
+  default     = 1
 }
 variable "api_ecs_autoscale_max_instances" {
-  default = 2
+  description = "ECS API service ASG max count"
+  default     = 2
 }
 variable "api_cpu_high_threshold" {
-  default = 15
+  description = "ECS API service ASG scaling CPU high threshold"
+  default     = 15
 }
 variable "api_cpu_low_threshold" {
-  default = 10
+  description = "ECS API service ASG scaling CPU low threshold"
+  default     = 10
 }
 variable "api_mem_high_threshold" {
-  default = 25
+  description = "ECS API service ASG scaling memory high threshold"
+  default     = 25
 }
 variable "api_mem_low_threshold" {
-  default = 15
+  description = "ECS API service ASG scaling memory low threshold"
+  default     = 15
 }
-variable "log_level" {}
+variable "log_level" {
+  description = "Log level for ECS and lambdas"
+}
 variable "arcgis_url" {
   default = ""
 }
 variable "daily_registrations_reporter_email_subject" {
-  default = ""
+  description = "daily-registrations-reporter lambda email subject text"
+  default     = ""
 }
 variable "daily_registrations_reporter_schedule" {
-  default = ""
+  description = "daily-registrations-reporter lambda CloudWatch schedule"
+  default     = ""
 }
 variable "download_schedule" {
-  default = "cron(0 * * * ? *)"
+  description = "download lambda CloudWatch schedule"
+  default     = "cron(0 * * * ? *)"
 }
-variable "exposure_schedule" {}
-variable "settings_schedule" {}
+variable "exposure_schedule" {
+  description = "exposures lambda CloudWatch schedule"
+}
+variable "settings_schedule" {
+  description = "settings lambda CloudWatch schedule"
+}
 variable "upload_schedule" {
-  default = "cron(0 * * * ? *)"
+  description = "upload lambda CloudWatch schedule"
+  default     = "cron(0 * * * ? *)"
 }
 variable "refresh_token_expiry" {
   default = "10y"
@@ -252,50 +323,65 @@ variable "code_charset" {
 variable "code_length" {
   default = "6"
 }
-variable "code_lifetime_mins" {}
-variable "token_lifetime_mins" {}
+variable "code_lifetime_mins" {
+}
+variable "token_lifetime_mins" {
+}
 variable "upload_token_lifetime_mins" {
   default = "1440"
 }
 variable "metrics_config" {
   default = "{ \"CONTACT_UPLOAD\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"TOKEN_RENEWAL\": 60, \"CALLBACK_OPTIN\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60, \"LOG_ERROR\": 60, \"CALLBACK_REQUEST\": 60 }"
 }
-variable "verify_rate_limit_secs" {}
+variable "verify_rate_limit_secs" {
+}
 variable "push_listening_port" {
-  default = 6000
+  description = "ECS Push container port"
+  default     = 6000
 }
 variable "push_listening_protocol" {
-  default = "HTTP"
+  description = "Push service ALB protocol"
+  default     = "HTTP"
 }
 variable "push_services_task_cpu" {
-  default = 256
+  description = "ECS Push service task CPU"
+  default     = 256
 }
 variable "push_services_task_memory" {
-  default = 512
+  description = "ECS Push service task memory"
+  default     = 512
 }
 variable "push_ecs_autoscale_min_instances" {
-  default = 1
+  description = "ECS Push service ASG min count"
+  default     = 1
 }
 variable "push_ecs_autoscale_max_instances" {
-  default = 1
+  description = "ECS Push service ASG max count"
+  default     = 1
 }
 variable "push_cpu_high_threshold" {
-  default = 15
+  description = "ECS Push service ASG scaling CPU high threshold"
+  default     = 15
 }
 variable "push_cpu_low_threshold" {
-  default = 10
+  description = "ECS Push service ASG scaling CPU low threshold"
+  default     = 10
 }
 variable "push_mem_high_threshold" {
-  default = 25
+  description = "ECS Push service ASG scaling memory high threshold"
+  default     = 25
 }
 variable "push_mem_low_threshold" {
-  default = 15
+  description = "ECS Push service ASG scaling memory low threshold"
+  default     = 15
 }
 variable "push_service_desired_count" {
-  default = 1
+  description = "ECS Push service ASG desired count"
+  default     = 1
 }
 variable "push_allowed_ips" {
-  default = ["0.0.0.0/0"]
+  description = "ECS Push service ALB allowed ingress CIDRs"
+  default     = ["0.0.0.0/0"]
 }
 variable "app_bundle_id" {
   default = ""
@@ -325,106 +411,140 @@ variable "default_region" {
   default = ""
 }
 variable "lambda_authorizer_memory_size" {
-  default = 512 # Since this is on the hot path and we get faster CPUs with higher memory
+  description = "authorizer lambda memory size"
+  default     = 512 # Since this is on the hot path and we get faster CPUs with higher memory
 }
 variable "lambda_authorizer_s3_key" {
-  default = ""
+  description = "authorizer lambda S3 key if using - file path"
+  default     = ""
 }
 variable "lambda_authorizer_timeout" {
-  default = 15
+  description = "authorizer lambda timeout"
+  default     = 15
 }
 variable "lambda_callback_memory_size" {
-  default = 128
+  description = "callback lambda memory size"
+  default     = 128
 }
 variable "lambda_callback_s3_key" {
-  default = ""
+  description = "callback lambda S3 key if using - file path"
+  default     = ""
 }
 variable "lambda_callback_timeout" {
-  default = 15
+  description = "callback lambda timeout"
+  default     = 15
 }
 variable "lambda_cso_memory_size" {
-  default = 3008
+  description = "cso lambda memory size"
+  default     = 3008
 }
 variable "lambda_cso_s3_key" {
-  default = ""
+  description = "cso lambda S3 key if using - file path"
+  default     = ""
 }
 variable "lambda_cso_timeout" {
-  default = 900
+  description = "cso lambda timeout"
+  default     = 900
 }
 variable "lambda_daily_registrations_reporter_memory_size" {
-  default = 128
+  description = "daily-registrations-reporter lambda memory size"
+  default     = 128
 }
 variable "lambda_daily_registrations_reporter_s3_key" {
-  default = ""
+  description = "daily-registrations-reporter lambda S3 key if using - file path"
+  default     = ""
 }
 variable "lambda_daily_registrations_reporter_timeout" {
-  default = 15
+  description = "daily-registrations-reporter lambda timeout"
+  default     = 15
 }
 variable "lambda_download_memory_size" {
-  default = 128
+  description = "download lambda memory size"
+  default     = 128
 }
 variable "lambda_download_s3_key" {
-  default = ""
+  description = "download lambda S3 key if using - file path"
+  default     = ""
 }
 variable "lambda_download_timeout" {
-  default = 15
+  description = "download lambda timeout"
+  default     = 15
 }
 variable "lambda_exposures_memory_size" {
-  default = 128
+  description = "exposures lambda memory size"
+  default     = 128
 }
 variable "lambda_exposures_s3_key" {
-  default = ""
+  description = "exposures lambda S3 key if using - file path"
+  default     = ""
 }
 variable "lambda_exposures_timeout" {
-  default = 15
+  description = "exposures lambda timeout"
+  default     = 15
 }
 variable "lambda_provisioned_concurrencies" {
-  default = {}
+  description = "Map of lambdas to use provisioned concurrency i.e. { \"authorizer\" : 300 }"
+  default     = {}
 }
 variable "lambda_settings_memory_size" {
-  default = 128
+  description = "settings lambda memory size"
+  default     = 128
 }
 variable "lambda_settings_s3_key" {
-  default = ""
+  description = "settings lambda S3 key if using - file path"
+  default     = ""
 }
 variable "lambda_settings_timeout" {
-  default = 15
+  description = "settings lambda timeout"
+  default     = 15
 }
 variable "lambda_sms_memory_size" {
-  default = 128
+  description = "sms lambda memory size"
+  default     = 128
 }
 variable "lambda_sms_s3_key" {
-  default = ""
+  description = "sms lambda S3 key if using - file path"
+  default     = ""
 }
 variable "lambda_sms_timeout" {
-  default = 15
+  description = "sms lambda timeout"
+  default     = 15
 }
 variable "lambda_stats_memory_size" {
-  default = 256
+  description = "stats lambda memory size"
+  default     = 256
 }
 variable "lambda_stats_s3_key" {
-  default = ""
+  description = "stats lambda S3 key if using - file path"
+  default     = ""
 }
 variable "lambda_stats_timeout" {
-  default = 120
+  description = "stats lambda timeout"
+  default     = 120
 }
 variable "lambda_token_memory_size" {
-  default = 128
+  description = "token lambda memory size"
+  default     = 128
 }
 variable "lambda_token_s3_key" {
-  default = ""
+  description = "token lambda S3 key if using - file path"
+  default     = ""
 }
 variable "lambda_token_timeout" {
-  default = 15
+  description = "token lambda timeout"
+  default     = 15
 }
 variable "lambda_upload_memory_size" {
-  default = 128
+  description = "upload lambda memory size"
+  default     = 128
 }
 variable "lambda_upload_s3_key" {
-  default = ""
+  description = "upload lambda S3 key if using - file path"
+  default     = ""
 }
 variable "lambda_upload_timeout" {
-  default = 15
+  description = "upload lambda timeout"
+  default     = 15
 }
 variable "lambdas_custom_s3_bucket" {
   description = "Lambdas custom S3 bucket, overrides the default local file usage, assumes we can get content from the bucket as this module does not manage this bucket"
@@ -434,23 +554,30 @@ variable "native_regions" {
   default = ""
 }
 variable "optional_parameters_to_include" {
-  default = []
+  description = "List of optional parameters to include"
+  default     = []
 }
 variable "optional_secrets_to_include" {
-  default = []
+  description = "List of optional secrets to include"
+  default     = []
 }
 variable "optional_lambdas_to_include" {
-  default = []
+  description = "List of optional lambdas to include"
+  default     = []
 }
 variable "sms_template" {
-  default = ""
+  description = "SMS message template"
+  default     = ""
 }
 variable "sms_sender" {
-  default = ""
+  description = "SMS message sender identifier"
+  default     = ""
 }
 variable "sms_region" {
-  default = ""
+  description = "AWS region to use when sending SMS messages"
+  default     = ""
 }
 variable "time_zone" {
-  default = "UTC"
+  description = "Time zone used for localisation of endpoints that are rate limited to once per day, for example /check-in"
+  default     = "UTC"
 }
