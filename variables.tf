@@ -581,6 +581,10 @@ variable "sms_region" {
   description = "AWS region to use when sending SMS messages"
   default     = ""
 }
+variable "symptom_date_offset" {
+  description = "Offset in hours subtracted from the symptom or onset date for uploads"
+  default     = "0"
+}
 variable "time_zone" {
   description = "Time zone used for localisation of endpoints that are rate limited to once per day, for example /check-in"
   default     = "UTC"

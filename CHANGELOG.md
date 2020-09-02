@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Added: Added extra parameter "symptom_date_offset" to add an offset in hours to symptomDate or onsetDate in uploads
 - Added: Added "api_gateway_account_creation_enabled" variable to control APIGateway account creation as needed for CloudWatch logging, if one already exists you may NOT want to create
 - Added: Added extra parameter "TIME_ZONE" to set regional timezone for localised daily rate limiting
 - Added: Re-added field "CALLBACK_REQUEST" = 60 to default "metrics_config" parameter value

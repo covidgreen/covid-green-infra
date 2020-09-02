@@ -273,6 +273,14 @@ resource "aws_ssm_parameter" "sms_url" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "symptom_date_offset" {
+  overwrite = true
+  name      = "${local.config_var_prefix}symptom_date_offset"
+  type      = "String"
+  value     = var.symptom_date_offset
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "time_zone" {
   overwrite = true
   name      = "${local.config_var_prefix}time_zone"
