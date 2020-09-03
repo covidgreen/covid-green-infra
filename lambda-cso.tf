@@ -105,6 +105,7 @@ resource "aws_lambda_function" "cso" {
   lifecycle {
     ignore_changes = [
       source_code_hash,
+      filename
     ]
   }
 

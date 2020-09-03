@@ -300,7 +300,10 @@ resource "aws_lambda_function" "this" {
   }
 
   lifecycle {
-    ignore_changes = [source_code_hash]
+    ignore_changes = [
+      source_code_hash,
+      filename
+    ]
   }
 
   # See https://www.terraform.io/docs/providers/aws/r/lambda_function.html#vpc_config

@@ -125,6 +125,7 @@ All the infrastructure set up is automated but not secrets that need to be creat
 * @pmcgrath - Pat McGrath <pat.mcgrath@nearform.com>
 * @zimny - Piotr Zimoch <piotr.zimoch@nearform.com>
 * @dgonzalez - David Gonzalez <david.gonzalez@nearform.com>
+* @ninjatux - Valerio Barrila <valerio.barrila@nearform.com>
 
 ### Contributors
 

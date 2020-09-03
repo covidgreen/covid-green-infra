@@ -129,6 +129,7 @@ resource "aws_lambda_function" "callback" {
   lifecycle {
     ignore_changes = [
       source_code_hash,
+      filename
     ]
   }
 

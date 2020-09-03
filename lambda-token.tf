@@ -98,6 +98,7 @@ resource "aws_lambda_function" "token" {
   lifecycle {
     ignore_changes = [
       source_code_hash,
+      filename
     ]
   }
 

@@ -104,6 +104,7 @@ resource "aws_lambda_function" "exposures" {
   lifecycle {
     ignore_changes = [
       source_code_hash,
+      filename
     ]
   }
 
