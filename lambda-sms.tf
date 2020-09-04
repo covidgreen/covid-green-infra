@@ -28,8 +28,10 @@ module "sms" {
   enable_sns_publish_for_sms_without_a_topic = var.enable_sms_publishing_with_aws
   handler                                    = "sms.handler"
   kms_reader_arns                            = [aws_kms_key.sqs.arn]
+  layers                                     = lookup(var.lambda_custom_runtimes, "sms", "NOT-FOUND") == "NOT-FOUND" ? null : var.lambda_custom_runtimes["sms"].layers
   log_retention_days                         = var.logs_retention_days
   memory_size                                = var.lambda_sms_memory_size
+  runtime                                    = lookup(var.lambda_custom_runtimes, "sms", "NOT-FOUND") == "NOT-FOUND" ? var.lambda_default_runtime : var.lambda_custom_runtimes["sms"].runtime
   s3_bucket                                  = var.lambdas_custom_s3_bucket
   s3_key                                     = var.lambda_sms_s3_key
   security_group_ids                         = [module.lambda_sg.id]

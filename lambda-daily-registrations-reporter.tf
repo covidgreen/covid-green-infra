@@ -27,8 +27,10 @@ module "daily_registrations_reporter" {
   config_var_prefix              = local.config_var_prefix
   handler                        = "reporter.handler"
   kms_writer_arns                = [aws_kms_key.sns.arn]
+  layers                         = lookup(var.lambda_custom_runtimes, "daily-registrations-reporter", "NOT-FOUND") == "NOT-FOUND" ? null : var.lambda_custom_runtimes["daily-registrations-reporter"].layers
   log_retention_days             = var.logs_retention_days
   memory_size                    = var.lambda_daily_registrations_reporter_memory_size
+  runtime                        = lookup(var.lambda_custom_runtimes, "daily-registrations-reporter", "NOT-FOUND") == "NOT-FOUND" ? var.lambda_default_runtime : var.lambda_custom_runtimes["daily-registrations-reporter"].runtime
   s3_bucket                      = var.lambdas_custom_s3_bucket
   s3_key                         = var.lambda_daily_registrations_reporter_s3_key
   security_group_ids             = [module.lambda_sg.id]

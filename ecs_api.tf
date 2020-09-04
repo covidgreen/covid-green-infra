@@ -54,6 +54,7 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
       aws_ssm_parameter.security_refresh_token_expiry.arn,
       aws_ssm_parameter.security_token_lifetime_mins.arn,
       aws_ssm_parameter.security_verify_rate_limit_secs.arn,
+      aws_ssm_parameter.time_zone.arn,
       aws_ssm_parameter.upload_token_lifetime_mins.arn
     ]
   }

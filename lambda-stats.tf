@@ -83,9 +83,10 @@ resource "aws_lambda_function" "stats" {
 
   function_name = "${module.labels.id}-stats"
   handler       = "stats.handler"
+  layers        = lookup(var.lambda_custom_runtimes, "stats", "NOT-FOUND") == "NOT-FOUND" ? null : var.lambda_custom_runtimes["stats"].layers
   memory_size   = var.lambda_stats_memory_size
   role          = aws_iam_role.stats.arn
-  runtime       = "nodejs12.x"
+  runtime       = lookup(var.lambda_custom_runtimes, "stats", "NOT-FOUND") == "NOT-FOUND" ? var.lambda_default_runtime : var.lambda_custom_runtimes["stats"].runtime
   tags          = module.labels.tags
   timeout       = var.lambda_stats_timeout
 
@@ -101,6 +102,7 @@ resource "aws_lambda_function" "stats" {
   lifecycle {
     ignore_changes = [
       source_code_hash,
+      filename
     ]
   }
 
