@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+
+
+## [v0.1.4] 2020-09-04
 - Added: Added parameter "use_test_date_as_onset_date" to flag whether to use testDate as onsetDate if the latter is omitted
 - Added: Added required lambda "cleanup" to handle data cleanup which runs on a CloudWatch schedule
 - Added: Default "lambda_default_runtime" variable - nodejs12.x
@@ -16,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Added: Allow operators read the rds_readonly_user secret so they can connect to the RDS DB
 - Added: Support for lambdas using transactional SMS
 - Added: Added extra field "LOG_ERROR" = 60 to default "metrics_config" parameter value
+
 
 ## [v0.1.3] 2020-08-25
 - Added: Option to use an S3 bucket as the source for lambdas, will be a global setting and we do not manage this bucket as this is a non default option
