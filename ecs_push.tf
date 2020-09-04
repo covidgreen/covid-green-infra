@@ -30,7 +30,8 @@ data "aws_iam_policy_document" "push_ecs_task_policy" {
       aws_ssm_parameter.security_code_length.arn,
       aws_ssm_parameter.security_code_lifetime_mins.arn,
       aws_ssm_parameter.sms_url.arn,
-      aws_ssm_parameter.symptom_date_offset.arn
+      aws_ssm_parameter.symptom_date_offset.arn,
+      aws_ssm_parameter.use_test_date_as_onset_date.arn
     ]
   }
 

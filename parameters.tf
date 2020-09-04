@@ -297,6 +297,14 @@ resource "aws_ssm_parameter" "upload_token_lifetime_mins" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "use_test_date_as_onset_date" {
+  overwrite = true
+  name      = "${local.config_var_prefix}use_test_date_as_onset_date"
+  type      = "String"
+  value     = var.use_test_date_as_onset_date
+  tags      = module.labels.tags
+}
+
 # #########################################
 # Optional parameters - These exist for some instances
 # #########################################

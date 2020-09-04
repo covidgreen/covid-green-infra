@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Added: Added parameter "use_test_date_as_onset_date" to flag whether to use testDate as onsetDate if the latter is omitted
 - Added: Added required lambda "cleanup" to handle data cleanup which runs on a CloudWatch schedule
 - Added: Default "lambda_default_runtime" variable - nodejs12.x
 - Added: Option to use lambda custom runtimes, see the "lambda_custom_runtimes" variable
