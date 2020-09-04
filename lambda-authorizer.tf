@@ -66,9 +66,10 @@ resource "aws_lambda_function" "authorizer" {
 
   function_name = "${module.labels.id}-authorizer"
   handler       = "authorizer.handler"
+  layers        = lookup(var.lambda_custom_runtimes, "authorizer", "NOT-FOUND") == "NOT-FOUND" ? null : var.lambda_custom_runtimes["authorizer"].layers
   memory_size   = var.lambda_authorizer_memory_size
   role          = aws_iam_role.authorizer.arn
-  runtime       = "nodejs12.x"
+  runtime       = lookup(var.lambda_custom_runtimes, "authorizer", "NOT-FOUND") == "NOT-FOUND" ? var.lambda_default_runtime : var.lambda_custom_runtimes["authorizer"].runtime
   tags          = module.labels.tags
   timeout       = var.lambda_authorizer_timeout
 

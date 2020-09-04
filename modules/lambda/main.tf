@@ -47,6 +47,11 @@ variable "kms_writer_arns" {
   default = []
 }
 
+# If using a custom runtime i.e. runtime = "provided", set this to a list of layers
+variable "layers" {
+  default = null
+}
+
 variable "log_retention_days" {
   default = 1
 }
@@ -284,6 +289,7 @@ resource "aws_lambda_function" "this" {
 
   function_name = var.name
   handler       = var.handler
+  layers        = var.layers
   memory_size   = var.memory_size
   role          = aws_iam_role.this[0].arn
   runtime       = var.runtime

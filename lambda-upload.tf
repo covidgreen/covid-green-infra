@@ -21,8 +21,10 @@ module "upload" {
   cloudwatch_schedule_expression = var.upload_schedule
   config_var_prefix              = local.config_var_prefix
   handler                        = "upload.handler"
+  layers                         = lookup(var.lambda_custom_runtimes, "upload", "NOT-FOUND") == "NOT-FOUND" ? null : var.lambda_custom_runtimes["upload"].layers
   log_retention_days             = var.logs_retention_days
   memory_size                    = var.lambda_upload_memory_size
+  runtime                        = lookup(var.lambda_custom_runtimes, "upload", "NOT-FOUND") == "NOT-FOUND" ? var.lambda_default_runtime : var.lambda_custom_runtimes["upload"].runtime
   s3_bucket                      = var.lambdas_custom_s3_bucket
   s3_key                         = var.lambda_upload_s3_key
   security_group_ids             = [module.lambda_sg.id]

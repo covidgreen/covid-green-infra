@@ -80,9 +80,10 @@ resource "aws_lambda_function" "token" {
 
   function_name = "${module.labels.id}-token"
   handler       = "token.handler"
+  layers        = lookup(var.lambda_custom_runtimes, "token", "NOT-FOUND") == "NOT-FOUND" ? null : var.lambda_custom_runtimes["token"].layers
   memory_size   = var.lambda_token_memory_size
   role          = aws_iam_role.token.arn
-  runtime       = "nodejs12.x"
+  runtime       = lookup(var.lambda_custom_runtimes, "token", "NOT-FOUND") == "NOT-FOUND" ? var.lambda_default_runtime : var.lambda_custom_runtimes["token"].runtime
   tags          = module.labels.tags
   timeout       = var.lambda_token_timeout
 

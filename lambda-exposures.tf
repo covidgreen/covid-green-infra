@@ -86,9 +86,10 @@ resource "aws_lambda_function" "exposures" {
 
   function_name = "${module.labels.id}-exposures"
   handler       = "exposures.handler"
+  layers        = lookup(var.lambda_custom_runtimes, "exposures", "NOT-FOUND") == "NOT-FOUND" ? null : var.lambda_custom_runtimes["exposures"].layers
   memory_size   = var.lambda_exposures_memory_size
   role          = aws_iam_role.exposures.arn
-  runtime       = "nodejs12.x"
+  runtime       = lookup(var.lambda_custom_runtimes, "exposures", "NOT-FOUND") == "NOT-FOUND" ? var.lambda_default_runtime : var.lambda_custom_runtimes["exposures"].runtime
   tags          = module.labels.tags
   timeout       = var.lambda_exposures_timeout
 

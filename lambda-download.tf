@@ -21,8 +21,10 @@ module "download" {
   cloudwatch_schedule_expression = var.download_schedule
   config_var_prefix              = local.config_var_prefix
   handler                        = "download.handler"
+  layers                         = lookup(var.lambda_custom_runtimes, "download", "NOT-FOUND") == "NOT-FOUND" ? null : var.lambda_custom_runtimes["download"].layers
   log_retention_days             = var.logs_retention_days
   memory_size                    = var.lambda_download_memory_size
+  runtime                        = lookup(var.lambda_custom_runtimes, "download", "NOT-FOUND") == "NOT-FOUND" ? var.lambda_default_runtime : var.lambda_custom_runtimes["download"].runtime
   s3_bucket                      = var.lambdas_custom_s3_bucket
   s3_key                         = var.lambda_download_s3_key
   security_group_ids             = [module.lambda_sg.id]
