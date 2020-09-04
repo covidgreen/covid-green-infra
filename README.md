@@ -59,6 +59,9 @@ Checks a JWT is valid when the Gateway tried to access items in the S3 bucket.
 ### callback
 Used to collect symptom info from the app from an SQS queue. Currently unused.
 
+### cleanup
+Handles removal of expired data from the database, and collects daily registration counts into a REGISTER metric.
+
 ### cso - Optional
 This lambda is specific to the Irish app and compiles symptom info into a CSV file. The file is then encrypted using GPG (symmetric key in Secrets) and then uploaded via SFTP to the Central Statistics Office in Ireland. This is obviously not used in Gibraltar.
 

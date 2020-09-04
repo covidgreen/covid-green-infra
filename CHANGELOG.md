@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Added: Added required lambda "cleanup" to handle data cleanup which runs on a CloudWatch schedule
 - Added: Default "lambda_default_runtime" variable - nodejs12.x
 - Added: Option to use lambda custom runtimes, see the "lambda_custom_runtimes" variable
 - Added: Ignore filename in lambda lifecycle
