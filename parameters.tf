@@ -273,11 +273,35 @@ resource "aws_ssm_parameter" "sms_url" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "symptom_date_offset" {
+  overwrite = true
+  name      = "${local.config_var_prefix}symptom_date_offset"
+  type      = "String"
+  value     = var.symptom_date_offset
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "time_zone" {
+  overwrite = true
+  name      = "${local.config_var_prefix}time_zone"
+  type      = "String"
+  value     = var.sms_template
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "upload_token_lifetime_mins" {
   overwrite = true
   name      = "${local.config_var_prefix}upload_token_lifetime_mins"
   type      = "String"
   value     = var.refresh_token_expiry
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "use_test_date_as_onset_date" {
+  overwrite = true
+  name      = "${local.config_var_prefix}use_test_date_as_onset_date"
+  type      = "String"
+  value     = var.use_test_date_as_onset_date
   tags      = module.labels.tags
 }
 

@@ -52,7 +52,7 @@ Like so - may have to watch for funny chars needing escaping - ignored here
 generate-random() {
 	length=${1:-32}
 
-	LC_ALL=C tr -dc 'A-Za-z0-9'\''()*+,-./:;<=>?@[\]^_{|}~' </dev/urandom | head -c ${length} ; echo
+	LC_ALL=C tr -dc 'A-Za-z0-9()*+,-./:;<=>?[\]^_{|}~' </dev/urandom | head -c ${length} ; echo
 }
 
 generate-random-alphanumeric() {
@@ -61,15 +61,16 @@ generate-random-alphanumeric() {
 	LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c ${length} ; echo
 }
 
-./scripts/aws-secrets.sh create dev-xyz-device-check '{ "keyId": "FILL-ME-IN", "teamId": "FILL-ME-IN", "key": "-----BEGIN PRIVATE KEY-----\nFILL-ME-IN\n-----END PRIVATE KEY-----", "apkPackageName": "",  "apkDigestSha256": "",  "apkCertificateDigestSha256": "",  "safetyNetRootCa": "-----BEGIN CERTIFICATE-----\nFILL-ME-IN\n-----END CERTIFICATE-----", "timeDifferenceThresholdMins": 10 }'
+./scripts/aws-secrets.sh create dev-xyz-device-check '{ "keyId": "FILL-ME-IN", "teamId": "FILL-ME-IN", "key": "-----BEGIN PRIVATE KEY-----\nFILL-ME-IN\n-----END PRIVATE KEY-----", "apkPackageName": "", "apkDigestSha256": "", "apkCertificateDigestSha256": "", "safetyNetRootCa": "-----BEGIN CERTIFICATE-----\nFILL-ME-IN\n-----END CERTIFICATE-----", "timeDifferenceThresholdMins": 10 }'
 ./scripts/aws-secrets.sh create dev-xyz-encrypt '{ "key": "'$(generate-random 32)'" }'
 ./scripts/aws-secrets.sh create dev-xyz-exposures '{ "privateKey": "-----BEGIN EC PRIVATE KEY-----\nFILL-ME-IN\n-----END EC PRIVATE KEY-----", "signatureAlgorithm": "1.2.840.10045.4.3.2", "verificationKeyId": "", "verificationKeyVersion": "v1" }'
-./scripts/aws-secrets.sh create dev-xyz-header-x-secret '{ "header-secret":"'$(generate-random-alphanumeric 96)'" }'
+./scripts/aws-secrets.sh create dev-xyz-header-x-secret '{ "header-secret": "'$(generate-random-alphanumeric 96)'" }'
 ./scripts/aws-secrets.sh create dev-xyz-jwt '{ "key": "'$(generate-random 32)'" }'
-./scripts/aws-secrets.sh create dev-xyz-rds '{ "username":"rds_admin_user","password":""'$(generate-random 32)'" }'
-./scripts/aws-secrets.sh create dev-xyz-rds-read-only '{ "username":"read_only_user","password":"'$(generate-random 32)'" }'
-./scripts/aws-secrets.sh create dev-xyz-rds-read-write '{ "username":"read_write_user","password":"'$(generate-random 32)'" }'
+./scripts/aws-secrets.sh create dev-xyz-rds '{ "username": "rds_admin_user", "password": "'$(generate-random 32)'" }'
+./scripts/aws-secrets.sh create dev-xyz-rds-read-only '{ "username": "read_only_user", "password": "'$(generate-random 32)'" }'
+./scripts/aws-secrets.sh create dev-xyz-rds-read-write '{ "username": "read_write_user", "password": "'$(generate-random 32)'" }'
 ./scripts/aws-secrets.sh create dev-xyz-rds-read-write-create '{ "username": "read_write_create_user", "password": "'$(generate-random 32)'" }'
+./scripts/aws-secrets.sh create dev-xyz-verify '{ "keyId": "1", "privateKey": "-----BEGIN EC PRIVATE KEY-----\nFILL-ME-IN\n-----END EC PRIVATE KEY-----", "publicKey": "-----BEGIN PUBLIC KEY-----\nFILL-ME-IN\n-----END PUBLIC KEY-----" }'
 
 # Do the same for optionals
 ```
@@ -83,10 +84,10 @@ There are 2 approaches to doing this
 This is the preferred approach, in this case we treat this repo as a Terraform module
 
 #### Git repo
-Create a git repo which uses this repos content as a a module
+Create a git repo which uses this repo's content as a a module
 - Will need a module which points at this repo as the module source
 - Will need a variables.tf copy
-- will need an ouputs.tf copy
+- Will need an ouputs.tf copy
 
 #### env-vars files
 

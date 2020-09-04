@@ -30,6 +30,14 @@ data "aws_iam_policy_document" "operators" {
     effect = "Deny"
   }
 
+  # Allow getting the RDS read_only_user credentials secret
+  statement {
+    actions = [
+      "secretsmanager:GetSecretValue"
+    ]
+    resources = [data.aws_secretsmanager_secret_version.rds_read_only.arn]
+  }
+
   # Conditional
   # PENDING: This works from the CLI without autoscaling:UpdateAutoScalingGroup but we need autoscaling:UpdateAutoScalingGroup to work in the console
   # autoscaling:UpdateAutoScalingGroup is too permissive

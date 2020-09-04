@@ -31,10 +31,8 @@ locals {
   # Based on flag
   enable_dns_count = var.enable_dns ? 1 : 0
 
-  # PENDING: Revisit this
   # Need to only create one of these for an account/region
-  # Logic is all the dev envs are in a single account, and assumes all the other envs are in a dedicated account/region
-  gateway_api_account_count = (var.environment == "dev" && var.namespace == "fight-together") || var.environment != "dev" ? 1 : 0
+  gateway_api_account_count = var.api_gateway_account_creation_enabled ? 1 : 0
 
   # Pick one, using the var if it is set, else failback to the one we manage
   gateway_api_certificate_arn = coalesce(var.api_us_certificate_arn, join("", aws_acm_certificate.wildcard_cert_us.*.arn))
