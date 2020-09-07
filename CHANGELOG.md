@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Added: Added option to configure SNS SMS spent quota
+- Added: Added option to configure SNS SMS delivery logs
 
 
 ## [v0.1.4] 2020-09-04
