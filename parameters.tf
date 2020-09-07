@@ -217,6 +217,14 @@ resource "aws_ssm_parameter" "security_code_lifetime_mins" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "security_code_removal_mins" {
+  overwrite = true
+  name      = "${local.config_var_prefix}security_code_removal_mins"
+  type      = "String"
+  value     = var.code_removal_mins
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "security_refresh_token_expiry" {
   overwrite = true
   name      = "${local.config_var_prefix}security_refresh_token_expiry"
@@ -285,7 +293,15 @@ resource "aws_ssm_parameter" "time_zone" {
   overwrite = true
   name      = "${local.config_var_prefix}time_zone"
   type      = "String"
-  value     = var.sms_template
+  value     = var.time_zone
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "upload_max_keys" {
+  overwrite = true
+  name      = "${local.config_var_prefix}upload_max_keys"
+  type      = "String"
+  value     = var.upload_max_keys
   tags      = module.labels.tags
 }
 

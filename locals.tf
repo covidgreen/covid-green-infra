@@ -31,6 +31,14 @@ locals {
   # Based on flag
   enable_dns_count = var.enable_dns ? 1 : 0
 
+  # SMS
+  # Based on flag
+  enable_sms_publishing_with_aws_count = var.enable_sms_publishing_with_aws ? 1 : 0
+  sns_sms_cloudwatch_log_group_names = var.enable_sms_publishing_with_aws ? [
+    format("sns/%s/%s/DirectPublishToPhoneNumber", var.sms_region, data.aws_caller_identity.current.account_id),
+    format("sns/%s/%s/DirectPublishToPhoneNumber/Failure", var.sms_region, data.aws_caller_identity.current.account_id)
+  ] : []
+
   # Need to only create one of these for an account/region
   gateway_api_account_count = var.api_gateway_account_creation_enabled ? 1 : 0
 

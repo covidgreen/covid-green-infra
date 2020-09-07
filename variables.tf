@@ -179,16 +179,15 @@ variable "enable_sms_publishing_with_aws" {
   description = "Enable sending SMS via a SNS topic"
   default     = false
 }
-
 variable "sms_delivery_status_success_sampling_rate" {
   description = "Percentage sampling of delivery logs sent into CloudWatch"
   default     = 0
 }
-
 variable "sms_monthly_spend_limit" {
   description = "Monthly limit for SMS"
   default     = 100 # Note: this value has to be requested to the AWS Support as a quota increase ticket.
 }
+
 # #########################################
 # WAF
 # #########################################
@@ -284,6 +283,10 @@ variable "code_length" {
 }
 variable "code_lifetime_mins" {
   description = "Lifetime in minutes of the one-time upload codes"
+}
+variable "code_removal_mins" {
+  description = "Lifetime in minutes before a one-time upload code is removed from the database"
+  default     = "10080"
 }
 variable "daily_registrations_reporter_email_subject" {
   description = "daily-registrations-reporter lambda email subject text"
@@ -626,6 +629,11 @@ variable "time_zone" {
   default     = "UTC"
 }
 variable "token_lifetime_mins" {
+  description = "Token lifetime in minutes"
+}
+variable "upload_max_keys" {
+  description = "Maximum keys accepted in a single upload request"
+  default     = "14"
 }
 variable "upload_schedule" {
   description = "upload lambda CloudWatch schedule"
