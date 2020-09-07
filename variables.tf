@@ -180,6 +180,15 @@ variable "enable_sms_publishing_with_aws" {
   default     = false
 }
 
+variable "sms_delivery_status_success_sampling_rate" {
+  description = "Percentage sampling of delivery logs sent into CloudWatch"
+  default     = 0
+}
+
+variable "sms_monthly_spend_limit" {
+  description = "Monthly limit for SMS"
+  default     = 100 # Note: this value has to be requested to the AWS Support as a quota increase ticket.
+}
 # #########################################
 # WAF
 # #########################################
