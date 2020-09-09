@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 
-## [Unreleased]
+## [v0.1.5] 2020-09-09
 - Added: Included the ALB arns (api and push) as outputs
 - Updated: Fixed "time_zone" parameter value - used incorrect value previously
 - Added: Added parameter "security_code_removal_mins" to control number of minutes before a one-time upload code is removed from the database by the cleanup lambda
