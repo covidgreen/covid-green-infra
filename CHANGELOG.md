@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Added: Enabled encryption on the CloudTrail and assets S3 buckets
 
 
 ## [v0.1.5] 2020-09-09
