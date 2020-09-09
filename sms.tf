@@ -4,6 +4,8 @@
 resource "aws_cloudwatch_log_group" "sns_sms_logs" {
   for_each = toset(local.sns_sms_cloudwatch_log_group_names)
 
+  provider = aws.sms
+
   name              = each.key
   retention_in_days = var.logs_retention_days
   tags              = module.labels.tags
@@ -66,6 +68,10 @@ resource "aws_iam_role_policy_attachment" "sns_sms_policy" {
 resource "aws_sns_sms_preferences" "update_sms_prefs" {
   count = local.enable_sms_publishing_with_aws_count
 
+  provider = aws.sms
+
+  default_sender_id                     = var.sms_sender
+  default_sms_type                      = var.sms_type
   delivery_status_iam_role_arn          = aws_iam_role.sns_sms_role[0].arn
   delivery_status_success_sampling_rate = var.sms_delivery_status_success_sampling_rate
   monthly_spend_limit                   = var.sms_monthly_spend_limit

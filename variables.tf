@@ -620,6 +620,10 @@ variable "sms_template" {
   description = "SMS message template"
   default     = ""
 }
+variable "sms_type" {
+  description = "SMS message type"
+  default     = "Transactional"
+}
 variable "symptom_date_offset" {
   description = "Offset in hours subtracted from the symptom or onset date for uploads"
   default     = "0"
