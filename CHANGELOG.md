@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Fix: Parameter "upload_token_lifetime_mins" was using the wrong variable value
 - Updated: Operators role can manage their MFA
 - Added: extra properties to configure SNS SMS preferences
 - Fix: sms cross region setup
