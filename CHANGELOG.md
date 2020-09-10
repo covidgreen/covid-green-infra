@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Updated: Operators role can manage their MFA
 - Added: extra properties to configure SNS SMS preferences
 - Fix: sms cross region setup
 - Updated: Alter terraform version requirement so we can start using v0.13.*, we now have >= 0.12.29 < 0.14
