@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+
+
+## [v0.1.6] 2020-09-10
 - Updated: Module versions, needed to ensure they result in no changes
 	- alb.tf - Went with v8.2.0, cannot use latest as it requires AWS provider v3+ and TF v0.13+
 	- labels.tf - Went with v0.19.2, is the latest at this time
