@@ -42,6 +42,13 @@ provider "aws" {
   profile = var.dns_profile
 }
 
+# SMS provider
+# Will use this if SMS via SNS is enabled
+provider "aws" {
+  alias   = "sms"
+  region  = var.sms_region
+  profile = var.profile
+}
 
 # #########################################
 # Data
