@@ -37,18 +37,16 @@ data "aws_iam_policy_document" "operators" {
     ]
     resources = [data.aws_secretsmanager_secret_version.rds_read_only.arn]
   }
-  
+
   # Allow own MFA management
-  
+
   statement {
-    sid    = "MFAPersonalCreate"
-    
+    sid = "MFAPersonalCreate"
     actions = [
       "iam:CreateVirtualMFADevice",
       "iam:DeleteVirtualMFADevice"
     ]
     resources = [format("arn:aws:iam::%s:mfa/&{aws:username}", data.aws_caller_identity.current.account_id)]
-    
   }
 
   # Conditional

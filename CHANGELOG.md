@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Updated: Module versions, needed to ensure they result in no changes
+	- alb.tf - Went with v8.2.0, cannot use latest as it requires AWS provider v3+ and TF v0.13+
+	- labels.tf - Went with v0.19.2, is the latest at this time
+	- networking.tf	- Went with v2.48.0, is the latest at this time
+	- rds.tf - Went with v0.31.0, cannot use latest, as it results in changes
 - Fix: Parameter "upload_token_lifetime_mins" was using the wrong variable value
 - Updated: Operators role can manage their MFA
 - Added: extra properties to configure SNS SMS preferences
