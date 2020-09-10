@@ -1,6 +1,3 @@
-# #########################################
-# SNS
-# #########################################
 resource "aws_sns_topic" "callback_email_notifications" {
   count = local.enable_callback_email_notifications_count
 

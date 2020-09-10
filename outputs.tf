@@ -55,8 +55,16 @@ output "lambda_names" {
   )
 }
 
+output "lb_api_arn" {
+  value = aws_lb.api.arn
+}
+
 output "lb_api_arn_suffix" {
   value = aws_lb.api.arn_suffix
+}
+
+output "lb_push_arn" {
+  value = aws_lb.push.arn
 }
 
 output "lb_push_arn_suffix" {
