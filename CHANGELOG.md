@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Updated: CloudWatch dashboard to include more distinct metrics for ALB requests
+- Updated: CloudWatch dashboard RDS connections sum changed to average
 
 
 ## [v0.1.6] 2020-09-10
