@@ -3,7 +3,7 @@
 # #########################################
 module "labels" {
   source  = "cloudposse/label/null"
-  version = "0.16.0"
+  version = "0.19.2"
   name    = var.namespace
   stage   = var.environment
 

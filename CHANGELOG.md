@@ -6,6 +6,22 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## [v0.1.6] 2020-09-10
+- Updated: CloudWatch dashboard to include more distinct metrics for ALB requests
+- Updated: CloudWatch dashboard RDS connections sum changed to average
+- Updated: Module versions, needed to ensure they result in no changes
+	- alb.tf - Went with v8.2.0, cannot use latest as it requires AWS provider v3+ and TF v0.13+
+	- labels.tf - Went with v0.19.2, is the latest at this time
+	- networking.tf	- Went with v2.48.0, is the latest at this time
+	- rds.tf - Went with v0.31.0, cannot use latest, as it results in changes
+- Fix: Parameter "upload_token_lifetime_mins" was using the wrong variable value
+- Updated: Operators role can manage their MFA
+- Added: extra properties to configure SNS SMS preferences
+- Fix: sms cross region setup
+- Updated: Alter terraform version requirement so we can start using v0.13.*, we now have >= 0.12.29 < 0.14
+- Added: Enabled encryption on the CloudTrail and assets S3 buckets
+
+
 ## [v0.1.5] 2020-09-09
 - Added: Included the ALB arns (api and push) as outputs
 - Updated: Fixed "time_zone" parameter value - used incorrect value previously

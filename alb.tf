@@ -176,7 +176,7 @@ resource "aws_lb_listener" "push_https" {
 # #########################################
 module "alb_logs" {
   source  = "trussworks/logs/aws"
-  version = "8.1.0"
+  version = "8.2.0"
 
   alb_logs_prefixes       = ["api", "push"]
   allow_alb               = true

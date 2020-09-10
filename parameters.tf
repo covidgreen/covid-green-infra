@@ -309,7 +309,7 @@ resource "aws_ssm_parameter" "upload_token_lifetime_mins" {
   overwrite = true
   name      = "${local.config_var_prefix}upload_token_lifetime_mins"
   type      = "String"
-  value     = var.refresh_token_expiry
+  value     = var.upload_token_lifetime_mins
   tags      = module.labels.tags
 }
 
