@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Fix: Adjusted values displayed in the CloudWatch dashboard, so take into consideration doubled logs in ApiGateway logs 
 
 
 ## [v0.1.6] 2020-09-10
