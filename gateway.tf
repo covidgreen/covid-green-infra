@@ -2,8 +2,12 @@
 # API Gateway REST API
 # #########################################
 resource "aws_api_gateway_rest_api" "main" {
-  name = "${module.labels.id}-gw"
-  tags = module.labels.tags
+  name                     = "${module.labels.id}-gw"
+  tags                     = module.labels.tags
+  minimum_compression_size = 2048
+  // sticking with 2k for now. stats is ~1.4Mb
+  // and compresses to ~99k which is what
+  // we're hoping for generally
 
   binary_media_types = [
     "application/zip",
