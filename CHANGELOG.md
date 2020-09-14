@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Updated: Added additional resources to the operators group policy for MFA
 - Fix: Adjusted values displayed in the CloudWatch dashboard, so take into consideration doubled logs in ApiGateway logs 
 
 
