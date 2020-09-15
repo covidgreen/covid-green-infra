@@ -162,12 +162,53 @@ resource "aws_lb_listener" "push_https" {
   load_balancer_arn = aws_lb.push.id
   port              = 443
   protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-FS-2018-06"
+  ssl_policy        = "ELBSecurityPolicy-FS-2018-06" #ELBSecurityPolicy-TLS-1-2-2017-01
   certificate_arn   = local.alb_push_certificate_arn
 
   default_action {
     target_group_arn = aws_lb_target_group.push.id
     type             = "forward"
+  }
+}
+
+resource "aws_lb_ssl_negotiation_policy" "push_negotiation_policy" {
+  name          = "push-tls-12"
+  load_balancer = aws_lb.push.id
+  lb_port       = 443
+
+  attribute {
+    name  = "Protocol-TLSv1"
+    value = "false"
+  }
+
+  attribute {
+    name  = "Protocol-TLSv1.1"
+    value = "false"
+  }
+
+  attribute {
+    name  = "Protocol-TLSv1.2"
+    value = "true"
+  }
+
+  attribute {
+    name  = "Server-Defined-Cipher-Order"
+    value = "true"
+  }
+
+  attribute {
+    name  = "ECDHE-RSA-AES128-GCM-SHA256"
+    value = "true"
+  }
+
+  attribute {
+    name  = "AES128-GCM-SHA256"
+    value = "true"
+  }
+
+  attribute {
+    name  = "EDH-RSA-DES-CBC3-SHA"
+    value = "false"
   }
 }
 
