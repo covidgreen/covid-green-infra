@@ -647,10 +647,6 @@ variable "upload_token_lifetime_mins" {
   description = "Lifetime of tokens which are generated in exchange for a valid one-time upload code"
   default     = "1440"
 }
-variable "upload_max_keys" {
-  description = "Maximum number of keys allowed in a single upload"
-  default     = "14"
-}
 variable "use_test_date_as_onset_date" {
   description = "Flag to use the testDate as the onsetDate if the latter is omitted"
   default     = "false"

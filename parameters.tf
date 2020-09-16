@@ -313,14 +313,6 @@ resource "aws_ssm_parameter" "upload_token_lifetime_mins" {
   tags      = module.labels.tags
 }
 
-resource "aws_ssm_parameter" "upload_max_keys" {
-  overwrite = true
-  name      = "${local.config_var_prefix}upload_max_keys"
-  type      = "String"
-  value     = var.upload_max_keys
-  tags      = module.labels.tags
-}
-
 resource "aws_ssm_parameter" "use_test_date_as_onset_date" {
   overwrite = true
   name      = "${local.config_var_prefix}use_test_date_as_onset_date"
