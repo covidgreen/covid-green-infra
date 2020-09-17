@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Updated: Set "upload_max_keys" to "15" by default due to ENS changes
 - Updated: moved lambda common resources in a separate file
 - Updated: Added outputs: lambda security group, default tags, resources prefix id
 - Removed: Redundant aws providers with aliases "us" and "root", we no longer use these

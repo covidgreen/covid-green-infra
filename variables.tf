@@ -641,7 +641,7 @@ variable "token_lifetime_mins" {
 }
 variable "upload_max_keys" {
   description = "Maximum keys accepted in a single upload request"
-  default     = "14"
+  default     = "15"
 }
 variable "upload_schedule" {
   description = "upload lambda CloudWatch schedule"
