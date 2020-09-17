@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+
+
+## [v0.1.7] 2020-09-17
 - Updated: Set "upload_max_keys" to "15" by default due to ENS changes
 - Updated: moved lambda common resources in a separate file
 - Updated: Added outputs: lambda security group, default tags, resources prefix id
