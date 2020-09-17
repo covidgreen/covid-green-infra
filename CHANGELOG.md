@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Updated: moved lambda common resources in a separate file
+- Updated: Added outputs: lambda security group, default tags, resources prefix id
 - Removed: Redundant aws providers with aliases "us" and "root", we no longer use these
 - Removed: Redundant template provider - we no longer use
 - Added: Include additional mock APIGateway for HEAD /api/healthcheck
