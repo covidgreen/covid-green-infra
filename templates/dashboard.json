@@ -513,7 +513,7 @@
       "width": 6,
       "height": 3,
       "properties": {
-        "query": "SOURCE '${api_log_group}' | fields req.url\n| filter req.url like /exposures/\n| filter req.method like /GET/\n| stats count(*) as calls by req.url\n| sort calls desc",
+        "query": "SOURCE '${api_log_group}' | fields req.url\n| filter req.url like /exposures/\n| filter req.method like /GET/\n| stats count(*) / 2 as calls by req.url\n| sort calls desc",
         "region": "${region}",
         "stacked": false,
         "view": "table",
@@ -527,7 +527,7 @@
       "width": 6,
       "height": 3,
       "properties": {
-        "query": "SOURCE '${api_log_group}' | fields req.url\n| filter req.url like /register/\n| filter req.method like /PUT/\n| stats count(*) as calls by req.url\n| sort calls desc",
+        "query": "SOURCE '${api_log_group}' | fields req.url\n| filter req.url like /register/\n| filter req.method like /PUT/\n| stats count(*) / 2 as calls by req.url\n| sort calls desc",
         "region": "${region}",
         "stacked": false,
         "title": "API: Register PUT",
@@ -541,7 +541,7 @@
       "width": 6,
       "height": 3,
       "properties": {
-        "query": "SOURCE '${api_log_group}' | fields req.url\n| filter req.url like /metrics/\n| filter req.method like /POST/\n| stats count(*) as calls by req.url\n| sort calls desc",
+        "query": "SOURCE '${api_log_group}' | fields req.url\n| filter req.url like /metrics/\n| filter req.method like /POST/\n| stats count(*) / 2 as calls by req.url\n| sort calls desc",
         "region": "${region}",
         "stacked": false,
         "title": "API: Metrics POST",
@@ -555,7 +555,7 @@
       "width": 6,
       "height": 3,
       "properties": {
-        "query": "SOURCE '${api_log_group}' | fields req.url\n| filter req.url like /register/\n| filter req.method like /POST/\n| stats count(*) as calls by req.url\n| sort calls desc",
+        "query": "SOURCE '${api_log_group}' | fields req.url\n| filter req.url like /register/\n| filter req.method like /POST/\n| stats count(*) / 2 as calls by req.url\n| sort calls desc",
         "region": "${region}",
         "stacked": false,
         "title": "API: Register POST",

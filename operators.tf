@@ -39,14 +39,25 @@ data "aws_iam_policy_document" "operators" {
   }
 
   # Allow own MFA management
-
+  # See https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_aws_my-sec-creds-self-manage.html
+  # For the $${user_name} escaping see https://github.com/terraform-providers/terraform-provider-aws/issues/5984#issuecomment-424470589
   statement {
-    sid = "MFAPersonalCreate"
     actions = [
       "iam:CreateVirtualMFADevice",
       "iam:DeleteVirtualMFADevice"
     ]
-    resources = [format("arn:aws:iam::%s:mfa/&{aws:username}", data.aws_caller_identity.current.account_id)]
+    resources = [format("arn:aws:iam::%s:mfa/$${aws:username}", data.aws_caller_identity.current.account_id)]
+    sid       = "AllowManageOwnVirtualMFADevice"
+  }
+  statement {
+    actions = [
+      "iam:DeactivateMFADevice",
+      "iam:EnableMFADevice",
+      "iam:ListMFADevices",
+      "iam:ResyncMFADevice"
+    ]
+    resources = [format("arn:aws:iam::%s:user/$${aws:username}", data.aws_caller_identity.current.account_id)]
+    sid       = "AllowManageOwnUserMFA"
   }
 
   # Conditional
