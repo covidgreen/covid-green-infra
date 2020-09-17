@@ -6,6 +6,19 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## [v0.1.7] 2020-09-17
+- Updated: Set "upload_max_keys" to "15" by default due to ENS changes
+- Updated: moved lambda common resources in a separate file
+- Updated: Added outputs: lambda security group, default tags, resources prefix id
+- Removed: Redundant aws providers with aliases "us" and "root", we no longer use these
+- Removed: Redundant template provider - we no longer use
+- Added: Include additional mock APIGateway for HEAD /api/healthcheck
+- Added: Added "db_pool_size" variable to control pg max pool size - Can be used by ECS API and ECS Push services
+- Updated: Allow stats lambda to access "time_zone" parameter
+- Updated: Added additional resources to the operators group policy for MFA
+- Fix: Adjusted values displayed in the CloudWatch dashboard, so take into consideration doubled logs in ApiGateway logs 
+
+
 ## [v0.1.6] 2020-09-10
 - Updated: CloudWatch dashboard to include more distinct metrics for ALB requests
 - Updated: CloudWatch dashboard RDS connections sum changed to average
