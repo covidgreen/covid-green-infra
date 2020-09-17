@@ -18,7 +18,8 @@ data "aws_iam_policy_document" "stats_policy" {
         aws_ssm_parameter.db_host.arn,
         aws_ssm_parameter.db_port.arn,
         aws_ssm_parameter.db_ssl.arn,
-        aws_ssm_parameter.s3_assets_bucket.arn
+        aws_ssm_parameter.s3_assets_bucket.arn,
+        aws_ssm_parameter.time_zone.arn
       ],
       aws_ssm_parameter.arcgis_url.*.arn
     )
