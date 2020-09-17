@@ -296,6 +296,10 @@ variable "daily_registrations_reporter_schedule" {
   description = "daily-registrations-reporter lambda CloudWatch schedule"
   default     = ""
 }
+variable "db_pool_size" {
+  description = "Maximum number of clients the db pool should contain"
+  default     = "30"
+}
 variable "default_country_code" {
   description = "Default ISO country code to use for parsing mobile numbers provided to push service"
   default     = ""

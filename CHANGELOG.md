@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Added: Added "db_pool_size" variable to control pg max pool size
 - Updated: Allow stats lambda to access "time_zone" parameter
 - Updated: Added additional resources to the operators group policy for MFA
 - Fix: Adjusted values displayed in the CloudWatch dashboard, so take into consideration doubled logs in ApiGateway logs 

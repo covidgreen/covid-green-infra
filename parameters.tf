@@ -57,6 +57,14 @@ resource "aws_ssm_parameter" "db_host" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "db_pool_size" {
+  overwrite = true
+  name      = "${local.config_var_prefix}db_pool_size"
+  type      = "String"
+  value     = vars.db_pool_size
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "db_port" {
   overwrite = true
   name      = "${local.config_var_prefix}db_port"
