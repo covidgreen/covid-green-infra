@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 - Removed: Redundant aws providers with aliases "us" and "root", we no longer use these
 - Removed: Redundant template provider - we no longer use
 - Added: Include additional mock APIGateway for HEAD /api/healthcheck
-- Added: Added "db_pool_size" variable to control pg max pool size
+- Added: Added "db_pool_size" variable to control pg max pool size - Can be used by ECS API and ECS Push services
 - Updated: Allow stats lambda to access "time_zone" parameter
 - Updated: Added additional resources to the operators group policy for MFA
 - Fix: Adjusted values displayed in the CloudWatch dashboard, so take into consideration doubled logs in ApiGateway logs 
