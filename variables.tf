@@ -37,6 +37,10 @@ variable "api_gateway_account_creation_enabled" {
   description = "APIGateway account creation flag, this is used for CloudWatch logging, should only have one of these per account/region, this flag allows disabling if one already exists"
   default     = true
 }
+variable "api_gateway_minimum_compression_size" {
+  description = "APIGateway minimum response size to compress for the REST API. Integer between -1 and 10485760 (10MB). Setting a value greater than -1 will enable compression, -1 disables compression (default)"
+  default     = -1
+}
 variable "api_gateway_throttling_burst_limit" {
   description = "APIGateway throttling burst limit, default is -1 which does not enforce a limit"
   default     = -1
@@ -223,6 +227,14 @@ variable "api_ecs_autoscale_max_instances" {
 }
 variable "api_ecs_autoscale_min_instances" {
   description = "ECS API service ASG min count"
+  default     = 1
+}
+variable "api_ecs_autoscale_scale_down_adjustment" {
+  description = "ECS API service ASG scaling scale down adjustment"
+  default     = -1
+}
+variable "api_ecs_autoscale_scale_up_adjustment" {
+  description = "ECS API service ASG scaling scale up adjustment"
   default     = 1
 }
 variable "api_image_tag" {
@@ -571,6 +583,14 @@ variable "push_ecs_autoscale_max_instances" {
 }
 variable "push_ecs_autoscale_min_instances" {
   description = "ECS Push service ASG min count"
+  default     = 1
+}
+variable "push_ecs_autoscale_scale_down_adjustment" {
+  description = "ECS Push service ASG scaling scale down adjustment"
+  default     = -1
+}
+variable "push_ecs_autoscale_scale_up_adjustment" {
+  description = "ECS Push service ASG scaling scale up adjustment"
   default     = 1
 }
 variable "push_image_tag" {

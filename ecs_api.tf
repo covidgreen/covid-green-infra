@@ -155,16 +155,18 @@ resource "aws_ecs_service" "api" {
 }
 
 module "api_autoscale" {
-  source                      = "./modules/ecs-autoscale-service"
-  ecs_cluster_resource_name   = aws_ecs_cluster.services.name
-  service_resource_name       = aws_ecs_service.api.name
-  ecs_autoscale_max_instances = var.api_ecs_autoscale_max_instances
-  ecs_autoscale_min_instances = var.api_ecs_autoscale_min_instances
-  ecs_as_cpu_high_threshold   = var.api_cpu_high_threshold
-  ecs_as_cpu_low_threshold    = var.api_cpu_low_threshold
-  ecs_as_mem_high_threshold   = var.api_mem_high_threshold
-  ecs_as_mem_low_threshold    = var.api_mem_low_threshold
-  tags                        = module.labels.tags
+  source                              = "./modules/ecs-autoscale-service"
+  ecs_cluster_resource_name           = aws_ecs_cluster.services.name
+  service_resource_name               = aws_ecs_service.api.name
+  ecs_autoscale_max_instances         = var.api_ecs_autoscale_max_instances
+  ecs_autoscale_min_instances         = var.api_ecs_autoscale_min_instances
+  ecs_autoscale_scale_down_adjustment = var.api_ecs_autoscale_scale_down_adjustment
+  ecs_autoscale_scale_up_adjustment   = var.api_ecs_autoscale_scale_up_adjustment
+  ecs_as_cpu_high_threshold           = var.api_cpu_high_threshold
+  ecs_as_cpu_low_threshold            = var.api_cpu_low_threshold
+  ecs_as_mem_high_threshold           = var.api_mem_high_threshold
+  ecs_as_mem_low_threshold            = var.api_mem_low_threshold
+  tags                                = module.labels.tags
 }
 
 # #########################################
