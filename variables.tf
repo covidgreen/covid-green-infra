@@ -371,6 +371,10 @@ variable "health_check_unhealthy_threshold" {
   description = "Health check unhealthy threshold for ALB health checks"
   default     = 2
 }
+variable "hsts_max_age" {
+  description = "The time, in seconds, that the browser should remember that a site is only to be accessed using HTTPS."
+  default     = "300" // 5 minutes
+}
 variable "lambda_authorizer_memory_size" {
   description = "authorizer lambda memory size"
   default     = 512 # Since this is on the hot path and we get faster CPUs with higher memory

@@ -145,6 +145,14 @@ resource "aws_ssm_parameter" "certificate_audience" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "hsts_max_age" {
+  overwrite = true
+  name      = "${local.config_var_prefix}hsts_max_age"
+  type      = "String"
+  value     = var.hsts_max_age
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "jwt_issuer" {
   overwrite = true
   name      = "${local.config_var_prefix}jwt_issuer"
