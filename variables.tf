@@ -320,6 +320,10 @@ variable "default_region" {
   description = "Default region to use for exposure key uploads where the region is not provided"
   default     = ""
 }
+variable "disable_valid_key_check" {
+  description = "Flag to disable whether exposure keys which are still valid are ignored when generating export files"
+  default     = "false"
+}
 variable "download_schedule" {
   description = "download lambda CloudWatch schedule"
   default     = "cron(0 * * * ? *)"
@@ -682,6 +686,10 @@ variable "upload_token_lifetime_mins" {
 variable "use_test_date_as_onset_date" {
   description = "Flag to use the testDate as the onsetDate if the latter is omitted"
   default     = "false"
+}
+variable "variance_offset_mins" {
+  description = "Variance offset in minutes to add to lifetime of keys to check if they are still valid"
+  default     = "120"
 }
 variable "verify_rate_limit_secs" {
   description = "Time in seconds a user must wait before attempting to verify a one-time upload code"
