@@ -26,6 +26,7 @@ data "aws_iam_policy_document" "push_ecs_task_policy" {
       aws_ssm_parameter.default_country_code.arn,
       aws_ssm_parameter.hsts_max_age.arn,
       aws_ssm_parameter.log_level.arn,
+      aws_ssm_parameter.onset_date_mandatory.arn,
       aws_ssm_parameter.push_host.arn,
       aws_ssm_parameter.push_port.arn,
       aws_ssm_parameter.security_code_charset.arn,
