@@ -185,6 +185,14 @@ resource "aws_ssm_parameter" "native_regions" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "onset_date_mandatory" {
+  overwrite = true
+  name      = "${local.config_var_prefix}onset_date_mandatory"
+  type      = "String"
+  value     = var.onset_date_mandatory
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "push_host" {
   overwrite = true
   name      = "${local.config_var_prefix}push_host"

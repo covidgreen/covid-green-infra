@@ -553,6 +553,10 @@ variable "migrations_image_tag" {
   description = "Image tag for the ECS Migrations container"
   default     = "latest"
 }
+variable "onset_date_mandatory" {
+  description = "Flag whether onsetDate/symptomDate is mandatory"
+  default     = "false"
+}
 variable "optional_lambdas_to_include" {
   description = "List of optional lambdas to include"
   default     = []
