@@ -47,6 +47,7 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
       aws_ssm_parameter.enable_check_in.arn,
       aws_ssm_parameter.enable_legacy_settings.arn,
       aws_ssm_parameter.enable_metrics.arn,
+      aws_ssm_parameter.hsts_max_age.arn,
       aws_ssm_parameter.jwt_issuer.arn,
       aws_ssm_parameter.log_level.arn,
       aws_ssm_parameter.metrics_config.arn,

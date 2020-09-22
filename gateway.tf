@@ -207,8 +207,11 @@ resource "aws_api_gateway_method_response" "api_settings_get" {
     "application/json" = "Empty"
   }
   response_parameters = {
-    "method.response.header.Content-Length" = false,
-    "method.response.header.Content-Type"   = false
+    "method.response.header.Content-Length"            = false,
+    "method.response.header.Content-Type"              = false,
+    "method.response.header.Cache-Control"             = true,
+    "method.response.header.Pragma"                    = true,
+    "method.response.header.Strict-Transport-Security" = true
   }
 }
 
@@ -219,8 +222,11 @@ resource "aws_api_gateway_integration_response" "api_settings_get_integration" {
   selection_pattern = aws_api_gateway_method_response.api_settings_get.status_code
   status_code       = aws_api_gateway_method_response.api_settings_get.status_code
   response_parameters = {
-    "method.response.header.Content-Length" = "integration.response.header.Content-Length",
-    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+    "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
+    "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
+    "method.response.header.Cache-Control"             = "'no-store'",
+    "method.response.header.Pragma"                    = "'no-cache'",
+    "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
   }
 }
 
@@ -259,8 +265,11 @@ resource "aws_api_gateway_method_response" "api_settings_exposures_get" {
     "application/json" = "Empty"
   }
   response_parameters = {
-    "method.response.header.Content-Length" = false,
-    "method.response.header.Content-Type"   = false
+    "method.response.header.Content-Length"            = false,
+    "method.response.header.Content-Type"              = false,
+    "method.response.header.Cache-Control"             = true,
+    "method.response.header.Pragma"                    = true,
+    "method.response.header.Strict-Transport-Security" = true
   }
 }
 
@@ -271,8 +280,11 @@ resource "aws_api_gateway_integration_response" "api_settings_exposures_get_inte
   selection_pattern = aws_api_gateway_method_response.api_settings_exposures_get.status_code
   status_code       = aws_api_gateway_method_response.api_settings_exposures_get.status_code
   response_parameters = {
-    "method.response.header.Content-Length" = "integration.response.header.Content-Length",
-    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+    "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
+    "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
+    "method.response.header.Cache-Control"             = "'no-store'",
+    "method.response.header.Pragma"                    = "'no-cache'",
+    "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
   }
 }
 
@@ -310,8 +322,11 @@ resource "aws_api_gateway_method_response" "api_settings_language_get" {
     "application/json" = "Empty"
   }
   response_parameters = {
-    "method.response.header.Content-Length" = false,
-    "method.response.header.Content-Type"   = false
+    "method.response.header.Content-Length"            = false,
+    "method.response.header.Content-Type"              = false,
+    "method.response.header.Cache-Control"             = true,
+    "method.response.header.Pragma"                    = true,
+    "method.response.header.Strict-Transport-Security" = true
   }
 }
 
@@ -322,8 +337,11 @@ resource "aws_api_gateway_integration_response" "api_settings_language_get_integ
   selection_pattern = aws_api_gateway_method_response.api_settings_language_get.status_code
   status_code       = aws_api_gateway_method_response.api_settings_language_get.status_code
   response_parameters = {
-    "method.response.header.Content-Length" = "integration.response.header.Content-Length",
-    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+    "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
+    "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
+    "method.response.header.Cache-Control"             = "'no-store'",
+    "method.response.header.Pragma"                    = "'no-cache'",
+    "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
   }
 }
 
@@ -362,8 +380,11 @@ resource "aws_api_gateway_method_response" "api_stats_get" {
     "application/json" = "Empty"
   }
   response_parameters = {
-    "method.response.header.Content-Length" = false,
-    "method.response.header.Content-Type"   = false
+    "method.response.header.Content-Length"            = false,
+    "method.response.header.Content-Type"              = false,
+    "method.response.header.Cache-Control"             = true,
+    "method.response.header.Pragma"                    = true,
+    "method.response.header.Strict-Transport-Security" = true
   }
 }
 
@@ -374,8 +395,11 @@ resource "aws_api_gateway_integration_response" "api_stats_get_integration" {
   selection_pattern = aws_api_gateway_method_response.api_stats_get.status_code
   status_code       = aws_api_gateway_method_response.api_stats_get.status_code
   response_parameters = {
-    "method.response.header.Content-Length" = "integration.response.header.Content-Length",
-    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+    "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
+    "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
+    "method.response.header.Cache-Control"             = "'no-store'",
+    "method.response.header.Pragma"                    = "'no-cache'",
+    "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
   }
 }
 
@@ -435,8 +459,11 @@ resource "aws_api_gateway_method_response" "api_data_exposures_item_get_success"
     "application/zip"  = "Empty"
   }
   response_parameters = {
-    "method.response.header.Content-Length" = false,
-    "method.response.header.Content-Type"   = false
+    "method.response.header.Content-Length"            = false,
+    "method.response.header.Content-Type"              = false,
+    "method.response.header.Cache-Control"             = true,
+    "method.response.header.Pragma"                    = true,
+    "method.response.header.Strict-Transport-Security" = true
   }
 }
 
@@ -454,8 +481,11 @@ resource "aws_api_gateway_integration_response" "api_data_exposures_item_get_int
   status_code       = aws_api_gateway_method_response.api_data_exposures_item_get_success.status_code
   selection_pattern = aws_api_gateway_method_response.api_data_exposures_item_get_success.status_code
   response_parameters = {
-    "method.response.header.Content-Length" = "integration.response.header.Content-Length",
-    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+    "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
+    "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
+    "method.response.header.Cache-Control"             = "'no-store'",
+    "method.response.header.Pragma"                    = "'no-cache'",
+    "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
   }
 }
 
