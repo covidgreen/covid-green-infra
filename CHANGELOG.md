@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 
 ## [Unreleased]
+- Added: Added "disable_valid_key_check" variable to flag whether to disable check if key is still valid when generating export files
+- Added: Added "variance_offset_mins" variable to add to lifetime of keys to check if they are still valid
 - Added: Added "onset_date_mandatory" variable to control whether onsetDate/symptomDate is mandatory
 - Added: New "api_gateway_minimum_compression_size" to allow compression configuration on the APIGateway
 - Added: New variables to control ECS scaling adjustments

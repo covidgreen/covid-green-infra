@@ -105,6 +105,14 @@ resource "aws_ssm_parameter" "default_region" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "disable_valid_key_check" {
+  overwrite = true
+  name      = "${local.config_var_prefix}disable_valid_key_check"
+  type      = "String"
+  value     = var.disable_valid_key_check
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "enable_callback" {
   overwrite = true
   name      = "${local.config_var_prefix}enable_callback"
@@ -342,6 +350,14 @@ resource "aws_ssm_parameter" "use_test_date_as_onset_date" {
   name      = "${local.config_var_prefix}use_test_date_as_onset_date"
   type      = "String"
   value     = var.use_test_date_as_onset_date
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "variance_offset_mins" {
+  overwrite = true
+  name      = "${local.config_var_prefix}variance_offset_mins"
+  type      = "String"
+  value     = var.variance_offset_mins
   tags      = module.labels.tags
 }
 
