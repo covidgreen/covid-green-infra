@@ -256,16 +256,19 @@ resource "aws_wafregional_rule" "xss" {
 }
 
 resource "aws_wafregional_web_acl_association" "gateway" {
+  count        = var.attach_waf ? 1 : 0
   resource_arn = aws_api_gateway_stage.live.arn
   web_acl_id   = aws_wafregional_web_acl.acl.id
 }
 
 resource "aws_wafregional_web_acl_association" "api" {
+  count        = var.attach_waf ? 1 : 0
   resource_arn = aws_lb.api.arn
   web_acl_id   = aws_wafregional_web_acl.acl.id
 }
 
 resource "aws_wafregional_web_acl_association" "push" {
+  count        = var.attach_waf ? 1 : 0
   resource_arn = aws_lb.push.arn
   web_acl_id   = aws_wafregional_web_acl.acl.id
 }

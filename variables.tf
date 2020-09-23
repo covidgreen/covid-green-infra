@@ -195,6 +195,10 @@ variable "sms_monthly_spend_limit" {
 # #########################################
 # WAF
 # #########################################
+variable "attach_waf" {
+  type    = bool
+  default = true
+}
 # List of allowed country alpha 2 codes, see https://www.iso.org/obp/ui/#search
 # If this is empty then we do not restrict based on country
 variable "waf_geo_allowed_countries" {
