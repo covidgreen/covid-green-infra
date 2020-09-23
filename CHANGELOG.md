@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 
-## [Unreleased]
+## [v0.1.8] 2020-09-23
 - Added: Added "attach_waf" variable to attach/detach WAF to ALB and API Gateway
 - Added: Added "disable_valid_key_check" variable to flag whether to disable check if key is still valid when generating export files
 - Added: Added "variance_offset_mins" variable to add to lifetime of keys to check if they are still valid
