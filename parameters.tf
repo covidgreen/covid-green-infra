@@ -105,6 +105,14 @@ resource "aws_ssm_parameter" "default_region" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "disable_valid_key_check" {
+  overwrite = true
+  name      = "${local.config_var_prefix}disable_valid_key_check"
+  type      = "String"
+  value     = var.disable_valid_key_check
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "enable_callback" {
   overwrite = true
   name      = "${local.config_var_prefix}enable_callback"
@@ -145,6 +153,14 @@ resource "aws_ssm_parameter" "certificate_audience" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "hsts_max_age" {
+  overwrite = true
+  name      = "${local.config_var_prefix}hsts_max_age"
+  type      = "String"
+  value     = var.hsts_max_age
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "jwt_issuer" {
   overwrite = true
   name      = "${local.config_var_prefix}jwt_issuer"
@@ -174,6 +190,14 @@ resource "aws_ssm_parameter" "native_regions" {
   name      = "${local.config_var_prefix}native_regions"
   type      = "String"
   value     = var.native_regions
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "onset_date_mandatory" {
+  overwrite = true
+  name      = "${local.config_var_prefix}onset_date_mandatory"
+  type      = "String"
+  value     = var.onset_date_mandatory
   tags      = module.labels.tags
 }
 
@@ -326,6 +350,14 @@ resource "aws_ssm_parameter" "use_test_date_as_onset_date" {
   name      = "${local.config_var_prefix}use_test_date_as_onset_date"
   type      = "String"
   value     = var.use_test_date_as_onset_date
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "variance_offset_mins" {
+  overwrite = true
+  name      = "${local.config_var_prefix}variance_offset_mins"
+  type      = "String"
+  value     = var.variance_offset_mins
   tags      = module.labels.tags
 }
 

@@ -24,7 +24,9 @@ data "aws_iam_policy_document" "push_ecs_task_policy" {
       aws_ssm_parameter.db_reader_host.arn,
       aws_ssm_parameter.db_ssl.arn,
       aws_ssm_parameter.default_country_code.arn,
+      aws_ssm_parameter.hsts_max_age.arn,
       aws_ssm_parameter.log_level.arn,
+      aws_ssm_parameter.onset_date_mandatory.arn,
       aws_ssm_parameter.push_host.arn,
       aws_ssm_parameter.push_port.arn,
       aws_ssm_parameter.security_code_charset.arn,
@@ -139,16 +141,18 @@ resource "aws_ecs_service" "push" {
 }
 
 module "push_autoscale" {
-  source                      = "./modules/ecs-autoscale-service"
-  ecs_cluster_resource_name   = aws_ecs_cluster.services.name
-  service_resource_name       = aws_ecs_service.push.name
-  ecs_autoscale_max_instances = var.push_ecs_autoscale_max_instances
-  ecs_autoscale_min_instances = var.push_ecs_autoscale_min_instances
-  ecs_as_cpu_high_threshold   = var.push_cpu_high_threshold
-  ecs_as_cpu_low_threshold    = var.push_cpu_low_threshold
-  ecs_as_mem_high_threshold   = var.push_mem_high_threshold
-  ecs_as_mem_low_threshold    = var.push_mem_low_threshold
-  tags                        = module.labels.tags
+  source                              = "./modules/ecs-autoscale-service"
+  ecs_cluster_resource_name           = aws_ecs_cluster.services.name
+  service_resource_name               = aws_ecs_service.push.name
+  ecs_autoscale_max_instances         = var.push_ecs_autoscale_max_instances
+  ecs_autoscale_min_instances         = var.push_ecs_autoscale_min_instances
+  ecs_autoscale_scale_down_adjustment = var.push_ecs_autoscale_scale_down_adjustment
+  ecs_autoscale_scale_up_adjustment   = var.push_ecs_autoscale_scale_up_adjustment
+  ecs_as_cpu_high_threshold           = var.push_cpu_high_threshold
+  ecs_as_cpu_low_threshold            = var.push_cpu_low_threshold
+  ecs_as_mem_high_threshold           = var.push_mem_high_threshold
+  ecs_as_mem_low_threshold            = var.push_mem_low_threshold
+  tags                                = module.labels.tags
 }
 
 # #########################################
