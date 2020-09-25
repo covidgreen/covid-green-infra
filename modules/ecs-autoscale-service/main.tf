@@ -21,6 +21,13 @@ variable "ecs_autoscale_min_instances" {
   default = 1
 }
 
+variable "ecs_autoscale_scale_down_adjustment" {	
+  default = -1	
+}	
+
+variable "ecs_autoscale_scale_up_adjustment" {	
+  default = 1	
+}
 variable "ecs_as_cpu_high_threshold" {
   default = 60
 }
@@ -70,7 +77,7 @@ resource "aws_appautoscaling_policy" "scale_up" {
 
     step_adjustment {
       metric_interval_lower_bound = 0
-      scaling_adjustment          = 5
+      scaling_adjustment          = var.ecs_autoscale_scale_up_adjustment
     }
   }
 }
@@ -89,7 +96,7 @@ resource "aws_appautoscaling_policy" "scale_down" {
 
     step_adjustment {
       metric_interval_upper_bound = 0
-      scaling_adjustment          = -1
+      scaling_adjustment          = var.ecs_autoscale_scale_down_adjustment
     }
   }
 }
