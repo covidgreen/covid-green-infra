@@ -21,13 +21,14 @@ variable "ecs_autoscale_min_instances" {
   default = 1
 }
 
-variable "ecs_autoscale_scale_down_adjustment" {	
-  default = -1	
-}	
-
-variable "ecs_autoscale_scale_up_adjustment" {	
-  default = 1	
+variable "ecs_autoscale_scale_down_adjustment" {
+  default = -1
 }
+
+variable "ecs_autoscale_scale_up_adjustment" {
+  default = 1
+}
+
 variable "ecs_as_cpu_high_threshold" {
   default = 60
 }
