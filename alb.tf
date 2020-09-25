@@ -162,7 +162,7 @@ resource "aws_lb_listener" "push_https" {
   load_balancer_arn = aws_lb.push.id
   port              = 443
   protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-FS-2018-06"
+  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
   certificate_arn   = local.alb_push_certificate_arn
 
   default_action {
