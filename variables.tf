@@ -37,6 +37,10 @@ variable "api_gateway_account_creation_enabled" {
   description = "APIGateway account creation flag, this is used for CloudWatch logging, should only have one of these per account/region, this flag allows disabling if one already exists"
   default     = true
 }
+variable "api_gateway_minimum_compression_size" {
+  description = "APIGateway minimum response size to compress for the REST API. Integer between -1 and 10485760 (10MB). Setting a value greater than -1 will enable compression, -1 disables compression (default)"
+  default     = -1
+}
 variable "api_gateway_throttling_burst_limit" {
   description = "APIGateway throttling burst limit, default is -1 which does not enforce a limit"
   default     = -1
@@ -191,6 +195,10 @@ variable "sms_monthly_spend_limit" {
 # #########################################
 # WAF
 # #########################################
+variable "attach_waf" {
+  type    = bool
+  default = true
+}
 # List of allowed country alpha 2 codes, see https://www.iso.org/obp/ui/#search
 # If this is empty then we do not restrict based on country
 variable "waf_geo_allowed_countries" {
@@ -223,6 +231,14 @@ variable "api_ecs_autoscale_max_instances" {
 }
 variable "api_ecs_autoscale_min_instances" {
   description = "ECS API service ASG min count"
+  default     = 1
+}
+variable "api_ecs_autoscale_scale_down_adjustment" {
+  description = "ECS API service ASG scaling scale down adjustment"
+  default     = -1
+}
+variable "api_ecs_autoscale_scale_up_adjustment" {
+  description = "ECS API service ASG scaling scale up adjustment"
   default     = 1
 }
 variable "api_image_tag" {
@@ -308,6 +324,10 @@ variable "default_region" {
   description = "Default region to use for exposure key uploads where the region is not provided"
   default     = ""
 }
+variable "disable_valid_key_check" {
+  description = "Flag to disable whether exposure keys which are still valid are ignored when generating export files"
+  default     = "false"
+}
 variable "download_schedule" {
   description = "download lambda CloudWatch schedule"
   default     = "cron(0 * * * ? *)"
@@ -358,6 +378,10 @@ variable "health_check_timeout" {
 variable "health_check_unhealthy_threshold" {
   description = "Health check unhealthy threshold for ALB health checks"
   default     = 2
+}
+variable "hsts_max_age" {
+  description = "The time, in seconds, that the browser should remember that a site is only to be accessed using HTTPS."
+  default     = "300" // 5 minutes
 }
 variable "lambda_authorizer_memory_size" {
   description = "authorizer lambda memory size"
@@ -537,6 +561,10 @@ variable "migrations_image_tag" {
   description = "Image tag for the ECS Migrations container"
   default     = "latest"
 }
+variable "onset_date_mandatory" {
+  description = "Flag whether onsetDate/symptomDate is mandatory"
+  default     = "false"
+}
 variable "optional_lambdas_to_include" {
   description = "List of optional lambdas to include"
   default     = []
@@ -571,6 +599,14 @@ variable "push_ecs_autoscale_max_instances" {
 }
 variable "push_ecs_autoscale_min_instances" {
   description = "ECS Push service ASG min count"
+  default     = 1
+}
+variable "push_ecs_autoscale_scale_down_adjustment" {
+  description = "ECS Push service ASG scaling scale down adjustment"
+  default     = -1
+}
+variable "push_ecs_autoscale_scale_up_adjustment" {
+  description = "ECS Push service ASG scaling scale up adjustment"
   default     = 1
 }
 variable "push_image_tag" {
@@ -654,6 +690,10 @@ variable "upload_token_lifetime_mins" {
 variable "use_test_date_as_onset_date" {
   description = "Flag to use the testDate as the onsetDate if the latter is omitted"
   default     = "false"
+}
+variable "variance_offset_mins" {
+  description = "Variance offset in minutes to add to lifetime of keys to check if they are still valid"
+  default     = "120"
 }
 variable "verify_rate_limit_secs" {
   description = "Time in seconds a user must wait before attempting to verify a one-time upload code"

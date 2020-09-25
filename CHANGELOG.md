@@ -3,7 +3,20 @@
 All notable changes to this project will be documented in this file.
 
 
-## [Unreleased]
+## [v0.1.8] 2020-09-23
+- Added: Added "attach_waf" variable to attach/detach WAF to ALB and API Gateway
+- Added: Added "disable_valid_key_check" variable to flag whether to disable check if key is still valid when generating export files
+- Added: Added "variance_offset_mins" variable to add to lifetime of keys to check if they are still valid
+- Added: Added "onset_date_mandatory" variable to control whether onsetDate/symptomDate is mandatory
+- Added: New "api_gateway_minimum_compression_size" to allow compression configuration on the APIGateway
+- Added: New variables to control ECS scaling adjustments
+	- api_ecs_autoscale_scale_down_adjustment
+	- api_ecs_autoscale_scale_up_adjustment
+	- push_ecs_autoscale_scale_down_adjustment
+	- push_ecs_autoscale_scale_up_adjustment
+- Added: SUPPORT_REQUESTS.md
+- Added: Headers Cache-Control, Pragma, Strict-Transport-Security
+- Changed: Push API TLS 1.2 enforcement
 
 
 ## [v0.1.7] 2020-09-17
@@ -16,7 +29,7 @@ All notable changes to this project will be documented in this file.
 - Added: Added "db_pool_size" variable to control pg max pool size - Can be used by ECS API and ECS Push services
 - Updated: Allow stats lambda to access "time_zone" parameter
 - Updated: Added additional resources to the operators group policy for MFA
-- Fix: Adjusted values displayed in the CloudWatch dashboard, so take into consideration doubled logs in ApiGateway logs 
+- Fix: Adjusted values displayed in the CloudWatch dashboard, so take into consideration doubled logs in ApiGateway logs
 
 
 ## [v0.1.6] 2020-09-10
