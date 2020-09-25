@@ -100,6 +100,13 @@ variable "default_ecr_max_image_count" {
   description = "Default ECR image retention count used for purging the ECR repositories"
   default     = 30
 }
+# #########################################
+# Load Balancer
+# #########################################
+variable "lb_push_ssl_policy" {
+  description = "Name of TLS policy in use"
+  default     = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
+}
 
 # #########################################
 # Log retention
