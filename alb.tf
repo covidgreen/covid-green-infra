@@ -4,7 +4,7 @@
 module "alb_api_sg" {
   source      = "./modules/security-group"
   open_egress = true
-  name        = "${module.labels.id}-alb-api"
+  name        = format("%s-%s", module.labels.id, "alb-api")
   environment = var.environment
   vpc_id      = module.vpc.vpc_id
   tags        = module.labels.tags
@@ -21,7 +21,7 @@ resource "aws_security_group_rule" "alb_api_http_ingress" {
 }
 
 resource "aws_lb" "api" {
-  name                             = "${module.labels.id}-api"
+  name                             = format("%s-%s", module.labels.id, "api")
   internal                         = false
   subnets                          = module.vpc.public_subnets
   security_groups                  = ["${module.alb_api_sg.id}"]
@@ -39,11 +39,11 @@ resource "aws_lb" "api" {
 }
 
 resource "aws_lb_target_group" "api" {
-  name                 = "${module.labels.id}-api"
+  name                 = format("%s-%s", module.labels.id, "api")
   port                 = var.api_listening_port
   protocol             = var.api_listening_protocol
   vpc_id               = module.vpc.vpc_id
-  deregistration_delay = "10"
+  deregistration_delay = 10
   target_type          = "ip"
 
   health_check {
@@ -100,7 +100,7 @@ resource "aws_lb_listener_rule" "header_check" {
 module "alb_push_sg" {
   source      = "./modules/security-group"
   open_egress = true
-  name        = "${module.labels.id}-alb-push"
+  name        = format("%s-%s", module.labels.id, "alb-push")
   environment = var.environment
   vpc_id      = module.vpc.vpc_id
   tags        = module.labels.tags
@@ -117,7 +117,7 @@ resource "aws_security_group_rule" "alb_push_https_ingress_all" {
 }
 
 resource "aws_lb" "push" {
-  name                             = "${module.labels.id}-push"
+  name                             = format("%s-%s", module.labels.id, "push")
   internal                         = false
   subnets                          = module.vpc.public_subnets
   security_groups                  = ["${module.alb_push_sg.id}"]
@@ -135,7 +135,7 @@ resource "aws_lb" "push" {
 }
 
 resource "aws_lb_target_group" "push" {
-  name                 = "${module.labels.id}-push"
+  name                 = format("%s-%s", module.labels.id, "push")
   port                 = var.push_listening_port
   protocol             = var.push_listening_protocol
   vpc_id               = module.vpc.vpc_id
