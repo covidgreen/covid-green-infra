@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 - Added: Push API TLS policy as a parameter
+- Changed: Modified lambda exposures default timeout
+- Changed: Modified lambda exposures default memory allocation
 
 ## [v0.1.8] 2020-09-23
 - Added: Added "attach_waf" variable to attach/detach WAF to ALB and API Gateway

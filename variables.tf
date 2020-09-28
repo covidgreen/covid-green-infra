@@ -472,7 +472,7 @@ variable "lambda_download_timeout" {
 }
 variable "lambda_exposures_memory_size" {
   description = "exposures lambda memory size"
-  default     = 128
+  default     = 256
 }
 variable "lambda_exposures_s3_key" {
   description = "exposures lambda S3 key if using - file path"
@@ -480,7 +480,7 @@ variable "lambda_exposures_s3_key" {
 }
 variable "lambda_exposures_timeout" {
   description = "exposures lambda timeout"
-  default     = 15
+  default     = 60
 }
 variable "lambda_provisioned_concurrencies" {
   description = "Map of lambdas to use provisioned concurrency i.e. { \"authorizer\" : 300 }"
