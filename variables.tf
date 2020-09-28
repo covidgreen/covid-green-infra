@@ -57,15 +57,15 @@ variable "bastion_asg_desired_count" {
   description = "Bastion ASG desired count"
   default     = 0
 }
-variable "bastion_instance_type" {
-  description = "Bastion EC2 instance type"
-  type        = string
-  default     = "t2.small" 
-}
 # This allows preventing bastion access, if this is enabled the default is to have an ASG with desired count = 0
 variable "bastion_enabled" {
   description = "Bastion enabled, does not provision the bastion, only allows using a bastion, see the bastion_asg_desired_count variable"
   default     = true
+}
+variable "bastion_instance_type" {
+  description = "Bastion EC2 instance type"
+  type        = string
+  default     = "t2.small"
 }
 
 # #########################################
@@ -208,8 +208,9 @@ variable "sms_monthly_spend_limit" {
 # WAF
 # #########################################
 variable "attach_waf" {
-  type    = bool
-  default = true
+  description = "Attach WAF to ALBs and API Gateway - Sometimes need to detach for pen testing"
+  default     = true
+  type        = bool
 }
 # List of allowed country alpha 2 codes, see https://www.iso.org/obp/ui/#search
 # If this is empty then we do not restrict based on country
