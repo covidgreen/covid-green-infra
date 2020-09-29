@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 
 
 ## [unreleased]
+- Removed: Cloudwatch dashboard
 - Added: Bastion "bastion_instance_type" variable
+- Added: Push API TLS policy as a parameter
 - Changed: Modified lambda exposures default timeout
 - Changed: Modified lambda exposures default memory allocation
 - Added: Added extra ci-user privs to add vertical annotations to cloudwatch graphs
