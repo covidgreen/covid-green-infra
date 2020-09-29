@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 
-## [unreleased]
+## [v0.1.9] 2020-09-29
 - Removed: Cloudwatch dashboard
 - Added: Bastion "bastion_instance_type" variable
 - Added: Push API TLS policy as a parameter
