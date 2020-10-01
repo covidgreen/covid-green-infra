@@ -20,7 +20,9 @@ data "aws_iam_policy_document" "ci_user" {
       "ecs:RegisterTaskDefinition",
       "iam:PassRole",
       "ecs:DescribeServices",
-      "lambda:*"
+      "lambda:*",
+      "cloudwatch:PutDashboard",
+      "cloudwatch:GetDashboard"
     ]
 
     resources = [
