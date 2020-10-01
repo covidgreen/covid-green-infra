@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [v0.1.10] Unreleased
+##  Unreleased
 - Added: "api_gateway_timeout_milliseconds" variable to control the API Gateway
 
 ## [v0.1.9] 2020-09-29
