@@ -102,6 +102,14 @@ variable "push_eu_certificate_arn" {
 }
 
 # #########################################
+# ECS Cluster Settings
+# #########################################
+variable "enable_ecs_container_insights" {
+  description = "Enable or disable Cloudwatch Container insights for the ECS cluster"
+  default     = false
+}
+
+# #########################################
 # ECR Settings
 # #########################################
 variable "default_ecr_max_image_count" {
