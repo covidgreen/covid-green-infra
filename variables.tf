@@ -66,6 +66,11 @@ variable "bastion_enabled" {
   description = "Bastion enabled, does not provision the bastion, only allows using a bastion, see the bastion_asg_desired_count variable"
   default     = true
 }
+variable "bastion_instance_type" {
+  description = "Bastion EC2 instance type"
+  type        = string
+  default     = "t2.small"
+}
 
 # #########################################
 # Cloudtrail
@@ -103,6 +108,13 @@ variable "push_eu_certificate_arn" {
 variable "default_ecr_max_image_count" {
   description = "Default ECR image retention count used for purging the ECR repositories"
   default     = 30
+}
+# #########################################
+# Load Balancer
+# #########################################
+variable "lb_push_ssl_policy" {
+  description = "Name of TLS policy in use"
+  default     = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
 }
 
 # #########################################
@@ -200,8 +212,9 @@ variable "sms_monthly_spend_limit" {
 # WAF
 # #########################################
 variable "attach_waf" {
-  type    = bool
-  default = true
+  description = "Attach WAF to ALBs and API Gateway - Sometimes need to detach for pen testing"
+  default     = true
+  type        = bool
 }
 # List of allowed country alpha 2 codes, see https://www.iso.org/obp/ui/#search
 # If this is empty then we do not restrict based on country
@@ -469,7 +482,7 @@ variable "lambda_download_timeout" {
 }
 variable "lambda_exposures_memory_size" {
   description = "exposures lambda memory size"
-  default     = 128
+  default     = 256
 }
 variable "lambda_exposures_s3_key" {
   description = "exposures lambda S3 key if using - file path"
@@ -477,7 +490,7 @@ variable "lambda_exposures_s3_key" {
 }
 variable "lambda_exposures_timeout" {
   description = "exposures lambda timeout"
-  default     = 15
+  default     = 60
 }
 variable "lambda_provisioned_concurrencies" {
   description = "Map of lambdas to use provisioned concurrency i.e. { \"authorizer\" : 300 }"
