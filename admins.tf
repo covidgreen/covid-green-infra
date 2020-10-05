@@ -29,19 +29,19 @@ data "aws_iam_policy_document" "admins_role" {
 }
 
 resource "aws_iam_group" "admins" {
-  name = format("%s-admins", module.labels.id)
+  name = format("%s-%s", module.labels.id, "admins")
   path = "/"
 }
 
 resource "aws_iam_group_policy" "admins" {
   group  = aws_iam_group.admins.id
-  name   = format("%s-admins", module.labels.id)
+  name   = format("%s-%s", module.labels.id, "admins")
   policy = data.aws_iam_policy_document.admins_group.json
 }
 
 resource "aws_iam_role" "admins" {
   assume_role_policy = data.aws_iam_policy_document.admins_role.json
-  name               = "${module.labels.id}-admins"
+  name               = format("%s-%s", module.labels.id, "admins")
   tags               = module.labels.tags
 }
 

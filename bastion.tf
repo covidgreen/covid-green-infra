@@ -17,7 +17,7 @@ resource "aws_autoscaling_group" "bastion" {
   desired_capacity    = var.bastion_asg_desired_count
   max_size            = 1
   min_size            = 0
-  name                = format("%s-bastion", module.labels.id)
+  name                = format("%s-%s", module.labels.id, "bastion")
   vpc_zone_identifier = module.vpc.private_subnets
 
   launch_template {
@@ -52,8 +52,8 @@ resource "aws_autoscaling_schedule" "bastion" {
 resource "aws_launch_template" "bastion" {
   count                  = local.bastion_enabled_count
   image_id               = data.aws_ami.amazon_linux_2.id
-  instance_type          = "t2.small"
-  name_prefix            = format("%s-bastion-", module.labels.id)
+  instance_type          = var.bastion_instance_type
+  name_prefix            = format("%s-%s-", module.labels.id, "bastion")
   vpc_security_group_ids = aws_security_group.bastion.*.id
   user_data              = base64encode("#!/bin/bash\nyum update -y\namazon-linux-extras install -y postgresql11")
 
@@ -68,7 +68,7 @@ resource "aws_launch_template" "bastion" {
 
 resource "aws_security_group" "bastion" {
   count  = local.bastion_enabled_count
-  name   = format("%s-bastion", module.labels.id)
+  name   = format("%s-%s", module.labels.id, "bastion")
   tags   = module.labels.tags
   vpc_id = module.vpc.vpc_id
 
@@ -86,13 +86,13 @@ resource "aws_security_group" "bastion" {
 
 resource "aws_iam_instance_profile" "bastion" {
   count = local.bastion_enabled_count
-  name  = format("%s-bastion", module.labels.id)
+  name  = format("%s-%s", module.labels.id, "bastion")
   role  = aws_iam_role.bastion[0].id
 }
 
 resource "aws_iam_role" "bastion" {
   count = local.bastion_enabled_count
-  name  = format("%s-bastion", module.labels.id)
+  name  = format("%s-%s", module.labels.id, "bastion")
   tags  = module.labels.tags
 
   assume_role_policy = jsonencode({
