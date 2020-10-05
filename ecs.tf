@@ -6,7 +6,7 @@ resource "aws_ecs_cluster" "services" {
   tags = module.labels.tags
 
   setting {
-    name = "containerInsights"
+    name  = "containerInsights"
     value = var.enable_ecs_container_insights ? "enabled" : "disabled"
   }
 }

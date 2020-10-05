@@ -3,10 +3,6 @@ resource "aws_iam_user" "ci_user" {
   tags = module.labels.tags
 }
 
-resource "aws_iam_access_key" "ci_user" {
-  user = aws_iam_user.ci_user.name
-}
-
 resource "aws_iam_user_policy_attachment" "ci_user_ecr" {
   user       = aws_iam_user.ci_user.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
