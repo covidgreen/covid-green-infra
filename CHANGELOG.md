@@ -3,7 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ##  Unreleased
-- Added: clouwatch container insights activation option
+- Deleted: ci-user security access key credentials, so they are not included in the statefile and output
+- Added: CloudWatch container insights activation option - default is disabled
 - Added: "api_gateway_timeout_milliseconds" variable to control the API Gateway
 
 ## [v0.1.9] 2020-09-29

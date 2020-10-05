@@ -105,7 +105,7 @@ variable "push_eu_certificate_arn" {
 # ECS Cluster Settings
 # #########################################
 variable "enable_ecs_container_insights" {
-  description = "Enable or disable Cloudwatch Container insights for the ECS cluster"
+  description = "Enable or disable CloudWatch Container insights for the ECS cluster"
   default     = false
 }
 
@@ -116,6 +116,7 @@ variable "default_ecr_max_image_count" {
   description = "Default ECR image retention count used for purging the ECR repositories"
   default     = 30
 }
+
 # #########################################
 # Load Balancer
 # #########################################

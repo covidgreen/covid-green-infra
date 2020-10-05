@@ -79,11 +79,11 @@ resource "aws_api_gateway_method" "root" {
 }
 
 resource "aws_api_gateway_integration" "root" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_rest_api.main.root_resource_id
-  http_method = aws_api_gateway_method.root.http_method
+  rest_api_id          = aws_api_gateway_rest_api.main.id
+  resource_id          = aws_api_gateway_rest_api.main.root_resource_id
+  http_method          = aws_api_gateway_method.root.http_method
   timeout_milliseconds = var.api_gateway_timeout_milliseconds
-  type        = "MOCK"
+  type                 = "MOCK"
   request_templates = {
     "application/json" = jsonencode({ statusCode : 404 })
   }
