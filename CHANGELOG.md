@@ -3,6 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 ##  Unreleased
+- Added: "cso_schedule" variable to control the cso lambda schedule
 - Deleted: ci-user security access key credentials, so they are not included in the statefile and output
 - Added: CloudWatch container insights activation option - default is disabled
 - Added: "api_gateway_timeout_milliseconds" variable to control the API Gateway
