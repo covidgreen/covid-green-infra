@@ -329,6 +329,10 @@ variable "code_removal_mins" {
   description = "Lifetime in minutes before a one-time upload code is removed from the database"
   default     = "10080"
 }
+variable "cso_schedule" {
+  description = "cso lambda CloudWatch schedule"
+  default     = "cron(0 0 * * ? *)"
+}
 variable "daily_registrations_reporter_email_subject" {
   description = "daily-registrations-reporter lambda email subject text"
   default     = ""

@@ -118,7 +118,7 @@ resource "aws_lambda_function" "cso" {
 
 resource "aws_cloudwatch_event_rule" "cso_schedule" {
   count               = local.lambda_cso_count
-  schedule_expression = "cron(0 0 * * ? *)"
+  schedule_expression = var.cso_schedule
 }
 
 resource "aws_cloudwatch_event_target" "cso_schedule" {
