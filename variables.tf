@@ -434,7 +434,7 @@ variable "lambda_callback_s3_key" {
 }
 variable "lambda_callback_timeout" {
   description = "callback lambda timeout"
-  default     = 15
+  default     = 180
 }
 variable "lambda_custom_runtimes" {
   description = "Map of lambdas to use custom runtimes, where the value is an object with the runtime and layers to use i.e. { \"authorizer\" : { \"runtime\": \"provided\", \"layers\": [\"some-arn\"] } }"
@@ -502,7 +502,7 @@ variable "lambda_exposures_s3_key" {
 }
 variable "lambda_exposures_timeout" {
   description = "exposures lambda timeout"
-  default     = 60
+  default     = 180
 }
 variable "lambda_provisioned_concurrencies" {
   description = "Map of lambdas to use provisioned concurrency i.e. { \"authorizer\" : 300 }"
@@ -530,7 +530,7 @@ variable "lambda_sms_s3_key" {
 }
 variable "lambda_sms_timeout" {
   description = "sms lambda timeout"
-  default     = 15
+  default     = 180
 }
 variable "lambda_stats_memory_size" {
   description = "stats lambda memory size"
