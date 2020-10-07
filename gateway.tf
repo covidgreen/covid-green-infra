@@ -79,10 +79,11 @@ resource "aws_api_gateway_method" "root" {
 }
 
 resource "aws_api_gateway_integration" "root" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_rest_api.main.root_resource_id
-  http_method = aws_api_gateway_method.root.http_method
-  type        = "MOCK"
+  rest_api_id          = aws_api_gateway_rest_api.main.id
+  resource_id          = aws_api_gateway_rest_api.main.root_resource_id
+  http_method          = aws_api_gateway_method.root.http_method
+  timeout_milliseconds = var.api_gateway_timeout_milliseconds
+  type                 = "MOCK"
   request_templates = {
     "application/json" = jsonencode({ statusCode : 404 })
   }
@@ -149,6 +150,7 @@ resource "aws_api_gateway_integration" "api_proxy_any_integration" {
   rest_api_id             = aws_api_gateway_rest_api.main.id
   resource_id             = aws_api_gateway_resource.api_proxy.id
   http_method             = aws_api_gateway_method.api_proxy_any.http_method
+  timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "ANY"
   type                    = "HTTP_PROXY"
   uri                     = "http://${aws_lb.api.dns_name}/{proxy}"
@@ -192,6 +194,7 @@ resource "aws_api_gateway_integration" "api_settings_get_integration" {
   rest_api_id             = aws_api_gateway_rest_api.main.id
   resource_id             = aws_api_gateway_resource.api_settings.id
   http_method             = aws_api_gateway_method.api_settings_get.http_method
+  timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
   uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/settings.json"
@@ -250,6 +253,7 @@ resource "aws_api_gateway_integration" "api_settings_exposures_get_integration" 
   rest_api_id             = aws_api_gateway_rest_api.main.id
   resource_id             = aws_api_gateway_resource.api_settings_exposures.id
   http_method             = aws_api_gateway_method.api_settings_exposures_get.http_method
+  timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
   uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/exposures.json"
@@ -307,6 +311,7 @@ resource "aws_api_gateway_integration" "api_settings_language_get_integration" {
   rest_api_id             = aws_api_gateway_rest_api.main.id
   resource_id             = aws_api_gateway_resource.api_settings_language.id
   http_method             = aws_api_gateway_method.api_settings_language_get.http_method
+  timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
   uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/language.json"
@@ -365,6 +370,7 @@ resource "aws_api_gateway_integration" "api_stats_get_integration" {
   rest_api_id             = aws_api_gateway_rest_api.main.id
   resource_id             = aws_api_gateway_resource.api_stats.id
   http_method             = aws_api_gateway_method.api_stats_get.http_method
+  timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
   uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/stats.json"
@@ -440,6 +446,7 @@ resource "aws_api_gateway_integration" "api_data_exposures_item_get_integration"
   rest_api_id             = aws_api_gateway_rest_api.main.id
   resource_id             = aws_api_gateway_resource.api_data_exposures_item.id
   http_method             = aws_api_gateway_method.api_data_exposures_item_get.http_method
+  timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
   uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/exposures/{item}"
