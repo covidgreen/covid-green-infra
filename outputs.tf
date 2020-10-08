@@ -31,10 +31,6 @@ output "intra_subnets" {
   value = module.vpc.intra_subnets
 }
 
-output "key" {
-  value = aws_iam_access_key.ci_user.id
-}
-
 output "lambda_authorizer_name" {
   value = aws_lambda_function.authorizer.function_name
 }
@@ -109,10 +105,6 @@ output "rds_endpoint" {
 
 output "rds_reader_endpoint" {
   value = module.rds_cluster_aurora_postgres.reader_endpoint
-}
-
-output "secret" {
-  value = aws_iam_access_key.ci_user.secret
 }
 
 output "vpc_id" {
