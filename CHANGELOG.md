@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
+- Added: Lambda options to manage S3 access content in the policy
 
 
 ## [v0.1.11] 2020-10-08

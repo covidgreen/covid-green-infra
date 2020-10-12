@@ -77,6 +77,14 @@ variable "s3_bucket" {
   default = ""
 }
 
+variable "s3_bucket_arns_to_read_from" {
+  default = []
+}
+
+variable "s3_bucket_arns_to_write_to" {
+  default = []
+}
+
 variable "s3_key" {
   default = ""
 }
@@ -201,6 +209,34 @@ data "aws_iam_policy_document" "this" {
     content {
       actions   = ["secretsmanager:GetSecretValue"]
       resources = var.aws_secret_arns
+    }
+  }
+
+  # See https://docs.aws.amazon.com/IAM/latest/UserGuide/list_amazons3.html
+  # Here one statement can cover the reads and writers
+  dynamic statement {
+    for_each = length(var.s3_bucket_arns_to_read_from) + length(var.s3_bucket_arns_to_write_to) > 0 ? { 1 : 1 } : {}
+    content {
+      actions   = ["s3:ListBucket"]
+      resources = concat(var.s3_bucket_arns_to_read_from, var.s3_bucket_arns_to_write_to)
+    }
+  }
+
+  # See https://docs.aws.amazon.com/IAM/latest/UserGuide/list_amazons3.html
+  dynamic statement {
+    for_each = length(var.s3_bucket_arns_to_read_from) > 0 ? { 1 : 1 } : {}
+    content {
+      actions   = ["s3:GetObject", "s3:GetObjectVersion"]
+      resources = [for bucket in var.s3_bucket_arns_to_read_from : format("%s/*", bucket)]
+    }
+  }
+
+  # See https://docs.aws.amazon.com/IAM/latest/UserGuide/list_amazons3.html
+  dynamic statement {
+    for_each = length(var.s3_bucket_arns_to_write_to) > 0 ? { 1 : 1 } : {}
+    content {
+      actions   = ["s3:DeleteObject", "s3:GetObject", "s3:GetObjectVersion", "s3:PutObject"]
+      resources = [for bucket in var.s3_bucket_arns_to_write_to : format("%s/*", bucket)]
     }
   }
 
