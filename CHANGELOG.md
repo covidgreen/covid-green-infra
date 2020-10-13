@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.1.11] 2020-10-08
 - Added: Optional parameters "security_callback_rate_limit_request_count" and "security_callback_rate_limit_secs"
+- Updated: Restricted ci-user permissions
 
 
 ## [v0.1.10] 2020-10-07

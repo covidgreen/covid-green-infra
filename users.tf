@@ -14,9 +14,7 @@ data "aws_iam_policy_document" "ci_user" {
       "ecs:UpdateService",
       "ecs:DescribeTaskDefinition",
       "ecs:RegisterTaskDefinition",
-      "iam:PassRole",
       "ecs:DescribeServices",
-      "lambda:*",
       "cloudwatch:PutDashboard",
       "cloudwatch:GetDashboard"
     ]
@@ -27,8 +25,48 @@ data "aws_iam_policy_document" "ci_user" {
   }
 }
 
-resource "aws_iam_user_policy" "ci_user" {
+data "aws_iam_policy_document" "ci_user_lambda" {
+  statement {
+    actions = [
+      "lambda:UpdateFunctionCode"
+    ]
+
+    resources = [
+      "*",
+    ]
+  }
+}
+
+
+data "aws_iam_policy_document" "ci_user_pass_role" {
+  statement {
+    actions = [
+      "iam:PassRole"
+    ]
+
+    resources = [
+      aws_iam_role.api_ecs_task_role.arn,
+      aws_iam_role.api_ecs_task_execution.arn
+    ]
+  }
+}
+
+resource "aws_iam_user_policy" "ci_user_general" {
   name   = "${module.labels.id}-ci-user"
   user   = aws_iam_user.ci_user.name
   policy = data.aws_iam_policy_document.ci_user.json
 }
+
+resource "aws_iam_user_policy" "ci_user_lambda" {
+  name   = "${module.labels.id}-ci-user_lambda"
+  user   = aws_iam_user.ci_user.name
+  policy = data.aws_iam_policy_document.ci_user_lambda.json
+}
+
+resource "aws_iam_user_policy" "ci_user_pass_role" {
+  name   = "${module.labels.id}-ci-user_pass_role"
+  user   = aws_iam_user.ci_user.name
+  policy = data.aws_iam_policy_document.ci_user_pass_role.json
+}
+
+
