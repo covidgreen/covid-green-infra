@@ -4,10 +4,11 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
+- Added: Lambda options to manage S3 access content in the policy
+- Updated: Restricted ci-user permissions
 
 
 ## [v0.1.11] 2020-10-08
-- Updated: Restricted ci-user permissions
 - Added: Optional parameters "security_callback_rate_limit_request_count" and "security_callback_rate_limit_secs"
 
 
