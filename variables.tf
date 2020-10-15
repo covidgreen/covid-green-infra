@@ -37,6 +37,11 @@ variable "api_gateway_account_creation_enabled" {
   description = "APIGateway account creation flag, this is used for CloudWatch logging, should only have one of these per account/region, this flag allows disabling if one already exists"
   default     = true
 }
+variable "api_gateway_customizations_binary_types" {
+  description = "Used to condfigure the api gateway to serve additional binary types"
+  type        = list(string)
+  default     = []
+}
 variable "api_gateway_customizations_md5" {
   description = "Used to trigger deployments of API Gateway default stage on changes that are external to this repo where we have custom rources/routes/etc"
   default     = ""
