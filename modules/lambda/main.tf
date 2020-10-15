@@ -89,6 +89,10 @@ variable "s3_key" {
   default = ""
 }
 
+variable "ses_send_emails_from_email_addresses" {
+  default = []
+}
+
 variable "sns_topic_arns_to_consume_from" {
   default = []
 }
@@ -209,6 +213,21 @@ data "aws_iam_policy_document" "this" {
     content {
       actions   = ["secretsmanager:GetSecretValue"]
       resources = var.aws_secret_arns
+    }
+  }
+
+  # See https://docs.aws.amazon.com/IAM/latest/UserGuide/list_amazonses.html
+  # See https://docs.aws.amazon.com/ses/latest/DeveloperGuide/control-user-access.html
+  dynamic statement {
+    for_each = length(var.ses_send_emails_from_email_addresses) > 0 ? { 1 : 1 } : {}
+    content {
+      actions = ["ses:SendEmail", "ses:SendRawEmail"]
+      condition {
+        test     = "StringLike"
+        values   = var.ses_send_emails_from_email_addresses
+        variable = "ses:FromAddress"
+      }
+      resources = ["*"]
     }
   }
 
