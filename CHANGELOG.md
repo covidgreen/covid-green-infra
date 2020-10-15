@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 - Added: Lambda policy option to allow sending SES emails based on a from whitelist
+- Updated: Increased default timeouts and memory size for lambdas
 - Added: Lambda options to manage S3 access content in the policy
 - Updated: Restricted ci-user permissions
 

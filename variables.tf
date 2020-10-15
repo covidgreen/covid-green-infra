@@ -442,7 +442,7 @@ variable "lambda_callback_s3_key" {
 }
 variable "lambda_callback_timeout" {
   description = "callback lambda timeout"
-  default     = 180
+  default     = 300
 }
 variable "lambda_custom_runtimes" {
   description = "Map of lambdas to use custom runtimes, where the value is an object with the runtime and layers to use i.e. { \"authorizer\" : { \"runtime\": \"provided\", \"layers\": [\"some-arn\"] } }"
@@ -462,7 +462,7 @@ variable "lambda_cleanup_s3_key" {
 }
 variable "lambda_cleanup_timeout" {
   description = "cleanup lambda timeout"
-  default     = 15
+  default     = 300
 }
 variable "lambda_cso_s3_key" {
   description = "cso lambda S3 key if using - file path"
@@ -482,7 +482,7 @@ variable "lambda_daily_registrations_reporter_s3_key" {
 }
 variable "lambda_daily_registrations_reporter_timeout" {
   description = "daily-registrations-reporter lambda timeout"
-  default     = 15
+  default     = 300
 }
 variable "lambda_default_runtime" {
   description = "Default lambda runtime"
@@ -490,7 +490,7 @@ variable "lambda_default_runtime" {
 }
 variable "lambda_download_memory_size" {
   description = "download lambda memory size"
-  default     = 128
+  default     = 256
 }
 variable "lambda_download_s3_key" {
   description = "download lambda S3 key if using - file path"
@@ -498,7 +498,7 @@ variable "lambda_download_s3_key" {
 }
 variable "lambda_download_timeout" {
   description = "download lambda timeout"
-  default     = 15
+  default     = 300
 }
 variable "lambda_exposures_memory_size" {
   description = "exposures lambda memory size"
@@ -510,7 +510,7 @@ variable "lambda_exposures_s3_key" {
 }
 variable "lambda_exposures_timeout" {
   description = "exposures lambda timeout"
-  default     = 180
+  default     = 300
 }
 variable "lambda_provisioned_concurrencies" {
   description = "Map of lambdas to use provisioned concurrency i.e. { \"authorizer\" : 300 }"
@@ -518,7 +518,7 @@ variable "lambda_provisioned_concurrencies" {
 }
 variable "lambda_settings_memory_size" {
   description = "settings lambda memory size"
-  default     = 128
+  default     = 256
 }
 variable "lambda_settings_s3_key" {
   description = "settings lambda S3 key if using - file path"
@@ -526,11 +526,11 @@ variable "lambda_settings_s3_key" {
 }
 variable "lambda_settings_timeout" {
   description = "settings lambda timeout"
-  default     = 15
+  default     = 300
 }
 variable "lambda_sms_memory_size" {
   description = "sms lambda memory size"
-  default     = 128
+  default     = 256
 }
 variable "lambda_sms_s3_key" {
   description = "sms lambda S3 key if using - file path"
@@ -538,7 +538,7 @@ variable "lambda_sms_s3_key" {
 }
 variable "lambda_sms_timeout" {
   description = "sms lambda timeout"
-  default     = 180
+  default     = 300
 }
 variable "lambda_stats_memory_size" {
   description = "stats lambda memory size"
@@ -550,11 +550,11 @@ variable "lambda_stats_s3_key" {
 }
 variable "lambda_stats_timeout" {
   description = "stats lambda timeout"
-  default     = 120
+  default     = 300
 }
 variable "lambda_token_memory_size" {
   description = "token lambda memory size"
-  default     = 128
+  default     = 256
 }
 variable "lambda_token_s3_key" {
   description = "token lambda S3 key if using - file path"
@@ -562,11 +562,11 @@ variable "lambda_token_s3_key" {
 }
 variable "lambda_token_timeout" {
   description = "token lambda timeout"
-  default     = 15
+  default     = 300
 }
 variable "lambda_upload_memory_size" {
   description = "upload lambda memory size"
-  default     = 128
+  default     = 256
 }
 variable "lambda_upload_s3_key" {
   description = "upload lambda S3 key if using - file path"
@@ -574,7 +574,7 @@ variable "lambda_upload_s3_key" {
 }
 variable "lambda_upload_timeout" {
   description = "upload lambda timeout"
-  default     = 15
+  default     = 300
 }
 variable "lambdas_custom_s3_bucket" {
   description = "Lambdas custom S3 bucket, overrides the default local file usage, assumes we can get content from the bucket as this module does not manage this bucket"
