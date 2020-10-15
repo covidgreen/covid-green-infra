@@ -38,7 +38,7 @@ variable "api_gateway_account_creation_enabled" {
   default     = true
 }
 variable "api_gateway_customizations_md5" {
-  description = "Used to trigger deployments of API Gateway defaulty stage on changes on default gateway setup or its customizations"
+  description = "Used to trigger deployments of API Gateway default stage on changes that are external to this repo where we have custom rources/routes/etc"
   default     = ""
 }
 variable "api_gateway_minimum_compression_size" {
