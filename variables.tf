@@ -37,6 +37,10 @@ variable "api_gateway_account_creation_enabled" {
   description = "APIGateway account creation flag, this is used for CloudWatch logging, should only have one of these per account/region, this flag allows disabling if one already exists"
   default     = true
 }
+variable "api_gateway_customizations_md5" {
+  description = "Used to trigger deployments of API Gateway default stage on changes that are external to this repo where we have custom rources/routes/etc"
+  default     = ""
+}
 variable "api_gateway_minimum_compression_size" {
   description = "APIGateway minimum response size to compress for the REST API. Integer between -1 and 10485760 (10MB). Setting a value greater than -1 will enable compression, -1 disables compression (default)"
   default     = -1

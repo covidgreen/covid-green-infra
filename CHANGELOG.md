@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
+- Added: "api_gateway_customizations_md5" variable to trigger api gateway stage deployments on both internal and external changes
 - Added: Lambda policy option to allow sending SES emails based on a from whitelist
 - Updated: Increased default timeouts and memory size for lambdas
 - Added: Lambda options to manage S3 access content in the policy
