@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
+- Updated: Set queue visibility timeout based on lambda timeout
 - Added: "api_gateway_customizations_binary_types" variable to configure api gateway to serve custom binary types
 - Added: "api_gateway_customizations_md5" variable to trigger api gateway stage deployments on both internal and external changes
 - Added: Lambda policy option to allow sending SES emails based on a from whitelist
