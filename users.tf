@@ -28,7 +28,10 @@ data "aws_iam_policy_document" "ci_user" {
 data "aws_iam_policy_document" "ci_user_lambda" {
   statement {
     actions = [
-      "lambda:UpdateFunctionCode"
+      "lambda:UpdateFunctionCode",
+      "lambda:ListAliases",
+      "lambda:ListVersionsByFunction",
+      "lambda:UpdateAlias"
     ]
 
     resources = [
