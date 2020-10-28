@@ -6,10 +6,10 @@ resource "aws_api_gateway_rest_api" "main" {
   minimum_compression_size = var.api_gateway_minimum_compression_size
   tags                     = module.labels.tags
 
-  binary_media_types = [
+  binary_media_types = concat([
     "application/zip",
-    "application/octet-stream"
-  ]
+    "application/octet-stream",
+  ], var.api_gateway_customizations_binary_types)
 
   endpoint_configuration {
     types = ["EDGE"]
@@ -609,9 +609,13 @@ resource "aws_api_gateway_integration_response" "api_healthcheck_head_integratio
 # #########################################
 # API Gateway Deployment
 # #########################################
+locals {
+  gw_stage_description = format("%s-%s", filemd5("${path.module}/gateway.tf"), var.api_gateway_customizations_md5)
+}
+
 resource "aws_api_gateway_deployment" "live" {
   rest_api_id       = aws_api_gateway_rest_api.main.id
-  stage_description = filemd5("${path.module}/gateway.tf")
+  stage_description = local.gw_stage_description
 
   lifecycle {
     create_before_destroy = true

@@ -30,7 +30,7 @@ resource "aws_iam_role" "api_ecs_task_role" {
 data "aws_iam_policy_document" "api_ecs_task_policy" {
   statement {
     actions = ["ssm:GetParameter"]
-    resources = [
+    resources = concat([
       aws_ssm_parameter.api_host.arn,
       aws_ssm_parameter.api_port.arn,
       aws_ssm_parameter.callback_url.arn,
@@ -59,7 +59,9 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
       aws_ssm_parameter.time_zone.arn,
       aws_ssm_parameter.upload_max_keys.arn,
       aws_ssm_parameter.upload_token_lifetime_mins.arn
-    ]
+      ],
+      aws_ssm_parameter.security_callback_rate_limit_request_count.*.arn,
+    aws_ssm_parameter.security_callback_rate_limit_secs.*.arn)
   }
 
   statement {
