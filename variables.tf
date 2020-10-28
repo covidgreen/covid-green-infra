@@ -178,7 +178,7 @@ variable "wildcard_domain" {
 # #########################################
 variable "rds_backup_retention" {
   description = "RDS backup retention in days"
-  default     = 14
+  default     = 30
 }
 variable "rds_db_name" {
   description = "RDS master DB name"
