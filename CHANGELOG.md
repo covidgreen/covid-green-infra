@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
+- Updated: Set default "download_schedule" to offset from "upload_schedule"
 
 
 ## [v0.1.12] 2020-10-28
