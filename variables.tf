@@ -744,3 +744,13 @@ variable "variance_offset_mins" {
 variable "verify_rate_limit_secs" {
   description = "Time in seconds a user must wait before attempting to verify a one-time upload code"
 }
+
+variable "self_isolation_notices_enabled" {
+  description = "Flag (string, required by SSM) to enable/disable self-isolation notices"
+  default     = "false"
+}
+
+variable "self_isolation_notices_url" {
+  description = "Self isolation notices target url. Empty by default, conditioned by self_isolation_notices_enabled"
+  default     = "NA"
+}

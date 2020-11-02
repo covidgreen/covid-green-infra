@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
-
+- Added: Added parameters enable_self_isolation_notices and self_isolation_notices_url to allow notifying users of self-isolation in some tenants.
 
 ## [v0.1.12] 2020-10-28
 - Updated: Set queue visibility timeout based on lambda timeout
