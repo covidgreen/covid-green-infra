@@ -61,7 +61,8 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
       aws_ssm_parameter.upload_token_lifetime_mins.arn
       ],
       aws_ssm_parameter.security_callback_rate_limit_request_count.*.arn,
-    aws_ssm_parameter.security_callback_rate_limit_secs.*.arn)
+      aws_ssm_parameter.enable_self_isolation_notices.*.arn,
+    aws_ssm_parameter.self_isolation_notices_url.*.arn)
   }
 
   statement {

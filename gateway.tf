@@ -132,6 +132,13 @@ resource "aws_api_gateway_integration" "api_proxy_options_integration" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   resource_id = aws_api_gateway_resource.api_proxy.id
   http_method = aws_api_gateway_method.api_proxy_options.http_method
+  request_templates = {
+    "application/json" = <<EOF
+{
+  "statusCode": 200
+}
+EOF
+  }
   type        = "MOCK"
 }
 
