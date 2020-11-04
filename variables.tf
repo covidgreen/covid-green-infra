@@ -754,3 +754,13 @@ variable "self_isolation_notices_url" {
   description = "Self isolation notices target url. Empty by default, conditioned by self_isolation_notices_enabled"
   default     = "NA"
 }
+
+variable "external_parameters_for_ecs_api_arns" {
+  description = "External parameters to grant access from ECS API"
+  default = []
+}
+
+variable "external_sqs_for_ecs_api_arns" {
+  description = "External SQS queues to grant access from ECS API"
+  default = []
+}

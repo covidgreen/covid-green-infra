@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
+- Added: Support for external parameters to be included in ECS API policy
+
 
 ## [v0.1.12] 2020-10-28
 - Updated: Set queue visibility timeout based on lambda timeout

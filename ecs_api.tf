@@ -61,7 +61,8 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
       aws_ssm_parameter.upload_token_lifetime_mins.arn
       ],
       aws_ssm_parameter.security_callback_rate_limit_request_count.*.arn,
-    aws_ssm_parameter.security_callback_rate_limit_secs.*.arn)
+      aws_ssm_parameter.security_callback_rate_limit_secs.*.arn,
+    var.external_parameters_for_ecs_api_arns)
   }
 
   statement {
@@ -84,9 +85,9 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
 
   statement {
     actions = ["sqs:*"]
-    resources = [
+    resources = concat([
       aws_sqs_queue.callback.arn
-    ]
+    ], var.external_sqs_for_ecs_api_arns)
   }
 }
 
