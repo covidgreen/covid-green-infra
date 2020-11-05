@@ -62,7 +62,7 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
       ],
       aws_ssm_parameter.security_callback_rate_limit_request_count.*.arn,
       aws_ssm_parameter.security_callback_rate_limit_secs.*.arn,
-    var.external_parameters_for_ecs_api_arns)
+      var.external_parameters_for_ecs_api_arns)
   }
 
   statement {

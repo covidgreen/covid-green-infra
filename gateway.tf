@@ -126,21 +126,36 @@ resource "aws_api_gateway_method" "api_proxy_options" {
   http_method      = "OPTIONS"
   authorization    = "NONE"
   api_key_required = false
+  request_parameters = {
+    "method.request.path.proxy" = true
+  }
 }
 
 resource "aws_api_gateway_integration" "api_proxy_options_integration" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   resource_id = aws_api_gateway_resource.api_proxy.id
   http_method = aws_api_gateway_method.api_proxy_options.http_method
-  type        = "MOCK"
-  request_templates = {
-    "application/json" = <<EOF
-{
-   "statusCode" : 200
-}
-EOF
+  integration_http_method = "OPTIONS"
+  type                    = "HTTP_PROXY"
+  uri                     = "http://${aws_lb.api.dns_name}/{proxy}"
+  request_parameters = {
+    "integration.request.path.proxy"              = "method.request.path.proxy",
+    "integration.request.header.X-Routing-Secret" = "'${jsondecode(data.aws_secretsmanager_secret_version.api_gateway_header.secret_string)["header-secret"]}'",
+    "integration.request.header.X-Forwarded-For"  = "'nope'"
   }
 }
+# resource "aws_api_gateway_method_response" "api_proxy_options" {
+#   rest_api_id = aws_api_gateway_rest_api.main.id
+#   resource_id = aws_api_gateway_resource.api_proxy.id
+#   http_method = aws_api_gateway_method.api_proxy_options.http_method
+#   status_code = "200"
+
+#   response_parameters = {
+#     "method.response.header.access-control-allow-headers" = true,
+#     "method.response.header.access-control-allow-methods" = true,
+#     "method.response.header.access-control-allow-origin" = true
+#   }
+# }
 
 resource "aws_api_gateway_method" "api_proxy_any" {
   rest_api_id      = aws_api_gateway_rest_api.main.id
