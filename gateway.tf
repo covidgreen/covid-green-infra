@@ -132,6 +132,13 @@ resource "aws_api_gateway_integration" "api_proxy_options_integration" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   resource_id = aws_api_gateway_resource.api_proxy.id
   http_method = aws_api_gateway_method.api_proxy_options.http_method
+  request_templates = {
+    "application/json" = <<EOF
+{
+  "statusCode": 200
+}
+EOF
+  }
   type        = "MOCK"
   request_templates = {
     "application/json" = <<EOF
@@ -139,6 +146,32 @@ resource "aws_api_gateway_integration" "api_proxy_options_integration" {
    "statusCode" : 200
 }
 EOF
+  }
+}
+
+resource "aws_api_gateway_integration_response" "api_proxy_options_integration_response" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.api_proxy.id
+  http_method = aws_api_gateway_method.api_proxy_options.http_method
+  status_code = aws_api_gateway_method_response.api_proxy_options_response.status_code
+  
+  response_parameters = {
+    "method.response.header.access-control-allow-headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+    "method.response.header.access-control-allow-methods" = "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+    "method.response.header.access-control-allow-origin" = "'*'"
+  }
+}
+
+resource "aws_api_gateway_method_response" "api_proxy_options_response" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.api_proxy.id
+  http_method = aws_api_gateway_method.api_proxy_options.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.access-control-allow-headers" = true,
+    "method.response.header.access-control-allow-methods" = true,
+    "method.response.header.access-control-allow-origin" = true
   }
 }
 
@@ -173,6 +206,12 @@ resource "aws_api_gateway_method_response" "api_proxy_any" {
   resource_id = aws_api_gateway_resource.api_proxy.id
   http_method = aws_api_gateway_method.api_proxy_any.http_method
   status_code = "200"
+
+  response_parameters = {
+    "method.response.header.access-control-allow-headers" = true,
+    "method.response.header.access-control-allow-methods" = true,
+    "method.response.header.access-control-allow-origin" = true
+  }
 }
 
 resource "aws_api_gateway_integration_response" "api_proxy_any_integration" {
@@ -180,6 +219,12 @@ resource "aws_api_gateway_integration_response" "api_proxy_any_integration" {
   resource_id = aws_api_gateway_resource.api_proxy.id
   http_method = aws_api_gateway_method.api_proxy_any.http_method
   status_code = aws_api_gateway_method_response.api_proxy_any.status_code
+  
+  response_parameters = {
+    "method.response.header.access-control-allow-headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+    "method.response.header.access-control-allow-methods" = "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+    "method.response.header.access-control-allow-origin" = "'*'"
+  }
 }
 
 ## /api/settings
