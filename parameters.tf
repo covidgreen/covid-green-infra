@@ -361,6 +361,13 @@ resource "aws_ssm_parameter" "variance_offset_mins" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "self_isolation_notice_lifetime_mins" {
+  name  = "${module.labels.id}-self_isolation_notice_lifetime_mins"
+  type  = "String"
+  value = var.self_isolation_notice_lifetime_mins
+}
+
+
 # #########################################
 # Optional parameters - These exist for some instances
 # #########################################
@@ -416,18 +423,4 @@ resource "aws_ssm_parameter" "security_callback_rate_limit_secs" {
   type      = "String"
   value     = var.callback_rate_limit_secs
   tags      = module.labels.tags
-}
-
-resource "aws_ssm_parameter" "enable_self_isolation_notices" {
-  count = contains(var.optional_parameters_to_include, "enable_self_isolation_notices") ? 1 : 0
-  name  = "${module.labels.id}-enable_self_isolation_notices"
-  type  = "String"
-  value = var.self_isolation_notices_enabled
-}
-
-resource "aws_ssm_parameter" "self_isolation_notices_url" {
-  count = contains(var.optional_parameters_to_include, "self_isolation_notices_url") ? 1 : 0
-  name  = "${module.labels.id}-self_isolation_notices_url"
-  type  = "String"
-  value = var.self_isolation_notices_url
 }

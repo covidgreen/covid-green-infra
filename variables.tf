@@ -745,16 +745,6 @@ variable "verify_rate_limit_secs" {
   description = "Time in seconds a user must wait before attempting to verify a one-time upload code"
 }
 
-variable "self_isolation_notices_enabled" {
-  description = "Flag (string, required by SSM) to enable/disable self-isolation notices"
-  default     = "false"
-}
-
-variable "self_isolation_notices_url" {
-  description = "Self isolation notices target url. Empty by default, conditioned by self_isolation_notices_enabled"
-  default     = "NA"
-}
-
 variable "external_parameters_for_ecs_api_arns" {
   description = "External parameters to grant access from ECS API"
   default = []
@@ -764,3 +754,8 @@ variable "external_sqs_for_ecs_api_arns" {
   description = "External SQS queues to grant access from ECS API"
   default = []
 }
+
+variable "self_isolation_notice_lifetime_mins" {
+  description = "Self isolation notice lifetime in minutes"
+  default = 20160
+} 
