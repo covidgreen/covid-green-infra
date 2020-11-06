@@ -25,11 +25,13 @@ data "aws_iam_policy_document" "ci_user" {
   }
   statement {
     actions = [
+      "s3:ListBucket",
       "s3:PutObject"
     ]
 
     resources = [
-      aws_s3_bucket.assets.arn
+      aws_s3_bucket.assets.arn,
+      "${aws_s3_bucket.assets.arn}/*"
     ]
   }
 }
