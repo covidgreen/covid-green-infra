@@ -105,6 +105,128 @@ resource "aws_api_gateway_integration_response" "root" {
   http_method = aws_api_gateway_method.root.http_method
   status_code = "404"
 }
+## /isolation
+resource "aws_api_gateway_resource" "isolation" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
+  path_part   = "isolation"
+}
+resource "aws_api_gateway_method" "isolation_get" {
+  rest_api_id      = aws_api_gateway_rest_api.main.id
+  resource_id      = aws_api_gateway_resource.isolation.id
+  http_method      = "GET"
+  authorization    = "NONE"
+  api_key_required = false
+}
+
+resource "aws_api_gateway_integration" "isolation_get_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.main.id
+  resource_id             = aws_api_gateway_resource.isolation.id
+  http_method             = aws_api_gateway_method.isolation_get.http_method
+  timeout_milliseconds    = var.api_gateway_timeout_milliseconds
+  integration_http_method = "GET"
+  type                    = "AWS"
+  uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/isolation/index.html"
+  credentials             = aws_iam_role.gateway.arn
+}
+resource "aws_api_gateway_method_response" "isolation_get_method_response" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.isolation.id
+  http_method = aws_api_gateway_method.isolation_get.http_method
+  status_code = "200"
+  response_models = {
+    "application/json" = "Empty"
+  }
+  response_parameters = {
+    "method.response.header.Content-Length"            = false,
+    "method.response.header.Content-Type"              = false,
+    "method.response.header.Cache-Control"             = true,
+    "method.response.header.Pragma"                    = true,
+    "method.response.header.Strict-Transport-Security" = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "isolation_get_integration_response" {
+  rest_api_id       = aws_api_gateway_rest_api.main.id
+  resource_id       = aws_api_gateway_resource.isolation.id
+  http_method       = aws_api_gateway_method.isolation_get.http_method
+  selection_pattern = aws_api_gateway_method_response.isolation_get_method_response.status_code
+  status_code       = aws_api_gateway_method_response.isolation_get_method_response.status_code
+  response_parameters = {
+    "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
+    "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
+    "method.response.header.Cache-Control"             = "'no-store'",
+    "method.response.header.Pragma"                    = "'no-cache'",
+    "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
+  }
+}
+
+
+
+## /isolation/{key+}
+
+resource "aws_api_gateway_resource" "isolation_key" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.isolation.id
+  path_part   = "{key+}"
+}
+
+resource "aws_api_gateway_method" "isolation_key_get" {
+  rest_api_id      = aws_api_gateway_rest_api.main.id
+  resource_id      = aws_api_gateway_resource.isolation_key.id
+  http_method      = "GET"
+  authorization    = "NONE"
+  api_key_required = false
+  request_parameters = {
+    "method.request.path.key" = true
+  }
+}
+resource "aws_api_gateway_integration" "isolation_key_get_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.main.id
+  resource_id             = aws_api_gateway_resource.isolation_key.id
+  http_method             = aws_api_gateway_method.isolation_key_get.http_method
+  timeout_milliseconds    = var.api_gateway_timeout_milliseconds
+  integration_http_method = "GET"
+  type                    = "AWS"
+  uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/isolation/{key}"
+  credentials             = aws_iam_role.gateway.arn
+  request_parameters = {
+    "integration.request.path.key"              = "method.request.path.key",
+  }
+}
+
+resource "aws_api_gateway_method_response" "isolation_key_get_method_response" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.isolation_key.id
+  http_method = aws_api_gateway_method.isolation_key_get.http_method
+  status_code = "200"
+  response_models = {
+    "application/json" = "Empty"
+  }
+  response_parameters = {
+    "method.response.header.Content-Length"            = false,
+    "method.response.header.Content-Type"              = false,
+    "method.response.header.Cache-Control"             = true,
+    "method.response.header.Pragma"                    = true,
+    "method.response.header.Strict-Transport-Security" = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "isolation_key_get_integration_response" {
+  rest_api_id       = aws_api_gateway_rest_api.main.id
+  resource_id       = aws_api_gateway_resource.isolation_key.id
+  http_method       = aws_api_gateway_method.isolation_key_get.http_method
+  selection_pattern = aws_api_gateway_method_response.isolation_key_get_method_response.status_code
+  status_code       = aws_api_gateway_method_response.isolation_key_get_method_response.status_code
+  response_parameters = {
+    "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
+    "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
+    "method.response.header.Cache-Control"             = "'no-store'",
+    "method.response.header.Pragma"                    = "'no-cache'",
+    "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
+  }
+}
+
 
 ## /api
 resource "aws_api_gateway_resource" "api" {
@@ -144,18 +266,6 @@ resource "aws_api_gateway_integration" "api_proxy_options_integration" {
     "integration.request.header.X-Forwarded-For"  = "'nope'"
   }
 }
-# resource "aws_api_gateway_method_response" "api_proxy_options" {
-#   rest_api_id = aws_api_gateway_rest_api.main.id
-#   resource_id = aws_api_gateway_resource.api_proxy.id
-#   http_method = aws_api_gateway_method.api_proxy_options.http_method
-#   status_code = "200"
-
-#   response_parameters = {
-#     "method.response.header.access-control-allow-headers" = true,
-#     "method.response.header.access-control-allow-methods" = true,
-#     "method.response.header.access-control-allow-origin" = true
-#   }
-# }
 
 resource "aws_api_gateway_method" "api_proxy_any" {
   rest_api_id      = aws_api_gateway_rest_api.main.id
@@ -657,6 +767,8 @@ resource "aws_api_gateway_deployment" "live" {
 
   depends_on = [
     aws_api_gateway_integration.root,
+    aws_api_gateway_integration.isolation_get_integration,
+    aws_api_gateway_integration.isolation_key_get_integration,
     aws_api_gateway_integration.api_proxy_options_integration,
     aws_api_gateway_integration.api_proxy_any_integration,
     aws_api_gateway_integration.api_settings_get_integration,
