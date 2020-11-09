@@ -126,7 +126,7 @@ resource "aws_api_gateway_integration" "isolation_get_integration" {
   timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
-  uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/isolation/index.html"
+  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/isolation/index.html", var.aws_region, aws_s3_bucket.assets.id)
   credentials             = aws_iam_role.gateway.arn
 }
 resource "aws_api_gateway_method_response" "isolation_get_method_response" {
@@ -188,10 +188,10 @@ resource "aws_api_gateway_integration" "isolation_key_get_integration" {
   timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
-  uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/isolation/{key}"
+  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/isolation/{key}", var.aws_region, aws_s3_bucket.assets.id)
   credentials             = aws_iam_role.gateway.arn
   request_parameters = {
-    "integration.request.path.key"              = "method.request.path.key",
+    "integration.request.path.key" = "method.request.path.key",
   }
 }
 
@@ -254,12 +254,13 @@ resource "aws_api_gateway_method" "api_proxy_options" {
 }
 
 resource "aws_api_gateway_integration" "api_proxy_options_integration" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.api_proxy.id
-  http_method = aws_api_gateway_method.api_proxy_options.http_method
+  rest_api_id             = aws_api_gateway_rest_api.main.id
+  resource_id             = aws_api_gateway_resource.api_proxy.id
+  http_method             = aws_api_gateway_method.api_proxy_options.http_method
   integration_http_method = "OPTIONS"
   type                    = "HTTP_PROXY"
-  uri                     = "http://${aws_lb.api.dns_name}/{proxy}"
+  uri                     = format("http://%s/{proxy}", aws_lb.api.dns_name)
+
   request_parameters = {
     "integration.request.path.proxy"              = "method.request.path.proxy",
     "integration.request.header.X-Routing-Secret" = "'${jsondecode(data.aws_secretsmanager_secret_version.api_gateway_header.secret_string)["header-secret"]}'",
@@ -285,7 +286,7 @@ resource "aws_api_gateway_integration" "api_proxy_any_integration" {
   timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "ANY"
   type                    = "HTTP_PROXY"
-  uri                     = "http://${aws_lb.api.dns_name}/{proxy}"
+  uri                     = format("http://%s/{proxy}", aws_lb.api.dns_name)
   request_parameters = {
     "integration.request.path.proxy"              = "method.request.path.proxy",
     "integration.request.header.X-Routing-Secret" = "'${jsondecode(data.aws_secretsmanager_secret_version.api_gateway_header.secret_string)["header-secret"]}'",
@@ -302,7 +303,7 @@ resource "aws_api_gateway_method_response" "api_proxy_any" {
   response_parameters = {
     "method.response.header.access-control-allow-headers" = true,
     "method.response.header.access-control-allow-methods" = true,
-    "method.response.header.access-control-allow-origin" = true
+    "method.response.header.access-control-allow-origin"  = true
   }
 }
 
@@ -311,12 +312,6 @@ resource "aws_api_gateway_integration_response" "api_proxy_any_integration" {
   resource_id = aws_api_gateway_resource.api_proxy.id
   http_method = aws_api_gateway_method.api_proxy_any.http_method
   status_code = aws_api_gateway_method_response.api_proxy_any.status_code
-  
-  response_parameters = {
-    "method.response.header.access-control-allow-headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-    "method.response.header.access-control-allow-methods" = "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
-    "method.response.header.access-control-allow-origin" = "'*'"
-  }
 }
 
 ## /api/settings
@@ -341,7 +336,7 @@ resource "aws_api_gateway_integration" "api_settings_get_integration" {
   timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
-  uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/settings.json"
+  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/settings.json", var.aws_region, aws_s3_bucket.assets.id)
   credentials             = aws_iam_role.gateway.arn
 }
 
@@ -400,7 +395,7 @@ resource "aws_api_gateway_integration" "api_settings_exposures_get_integration" 
   timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
-  uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/exposures.json"
+  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/exposures.json", var.aws_region, aws_s3_bucket.assets.id)
   credentials             = aws_iam_role.gateway.arn
 }
 
@@ -458,7 +453,7 @@ resource "aws_api_gateway_integration" "api_settings_language_get_integration" {
   timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
-  uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/language.json"
+  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/language.json", var.aws_region, aws_s3_bucket.assets.id)
   credentials             = aws_iam_role.gateway.arn
 }
 
@@ -517,7 +512,7 @@ resource "aws_api_gateway_integration" "api_stats_get_integration" {
   timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
-  uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/stats.json"
+  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/stats.json", var.aws_region, aws_s3_bucket.assets.id)
   credentials             = aws_iam_role.gateway.arn
 }
 
@@ -593,7 +588,7 @@ resource "aws_api_gateway_integration" "api_data_exposures_item_get_integration"
   timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
-  uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.assets.id}/exposures/{item}"
+  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/exposures/{item}", var.aws_region, aws_s3_bucket.assets.id)
   credentials             = aws_iam_role.gateway.arn
   request_parameters = {
     "integration.request.path.item" = "method.request.path.item"
