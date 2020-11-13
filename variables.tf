@@ -597,7 +597,7 @@ variable "native_regions" {
   default     = ""
 }
 variable "metrics_config" {
-  default = "{ \"CONTACT_UPLOAD\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"TOKEN_RENEWAL\": 60, \"CALLBACK_OPTIN\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60, \"LOG_ERROR\": 60, \"CALLBACK_REQUEST\": 60 }"
+  default = "{ \"CONTACT_UPLOAD\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"CALLBACK_OPTIN\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60, \"LOG_ERROR\": 60, \"CALLBACK_REQUEST\": 60 }"
 }
 variable "migrations_custom_image" {
   description = "Custom image for the ECS Migrations container, overrides the default ECR repo, assumes we can pull from the repository"
@@ -770,3 +770,4 @@ variable "self_isolation_notices_enabled" {
   description = "Enable/disable self isolation notices"
   default     = "false"
 }
+
