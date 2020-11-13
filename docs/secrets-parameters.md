@@ -14,6 +14,7 @@ Secrets use a prefix ENV-NAMESPACE- in their names.
 	- rds-read-write
 	- rds-read-write-create
 	- verify
+  - notice
 - Some are optional
 	- cct
 	- cso
@@ -203,3 +204,9 @@ The format of the secret is as follows:
   "privateKey": "-----BEGIN EC PRIVATE KEY-----\nKEY-VALUE\n-----END EC PRIVATE KEY-----",
   "publicKey": "-----BEGIN PUBLIC KEY-----\nKEY-VALUE\n-----END PUBLIC KEY-----"
 }
+```
+
+#### Notice Secret
+The `notice` secret contains the information required for self isolation notices. If the tenant is not using it, can be empty but needs to exist.
+The format varies depending on tenant as there are implementation specific details.
+

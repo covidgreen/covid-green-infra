@@ -41,6 +41,10 @@ data "aws_secretsmanager_secret_version" "verify" {
   secret_id = "${local.config_var_prefix}verify"
 }
 
+data "aws_secretsmanager_secret_version" "notice" {
+  secret_id = format("%snotice", local.config_var_prefix)
+}
+
 # #########################################
 # Optional secrets - These exist for some instances
 # #########################################

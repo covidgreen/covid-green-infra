@@ -58,11 +58,15 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
       aws_ssm_parameter.security_verify_rate_limit_secs.arn,
       aws_ssm_parameter.time_zone.arn,
       aws_ssm_parameter.upload_max_keys.arn,
-      aws_ssm_parameter.upload_token_lifetime_mins.arn
+      aws_ssm_parameter.upload_token_lifetime_mins.arn,
+      aws_ssm_parameter.self_isolation_notice_lifetime_mins.arn,
+      aws_ssm_parameter.notices_sqs_arn.arn,
+      aws_ssm_parameter.enable_self_isolation_notices.arn,
+      aws_ssm_parameter.self_isolation_notices_url.arn,
+      aws_ssm_parameter.security_self_isolation_notices_rate_limit_secs.arn
       ],
       aws_ssm_parameter.security_callback_rate_limit_request_count.*.arn,
-      aws_ssm_parameter.security_callback_rate_limit_secs.*.arn,
-      var.external_parameters_for_ecs_api_arns)
+      aws_ssm_parameter.security_callback_rate_limit_secs.*.arn)
   }
 
   statement {
@@ -85,9 +89,10 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
 
   statement {
     actions = ["sqs:*"]
-    resources = concat([
-      aws_sqs_queue.callback.arn
-    ], var.external_sqs_for_ecs_api_arns)
+    resources = [
+      aws_sqs_queue.callback.arn,
+      aws_sqs_queue.self_isolation.arn
+    ]
   }
 }
 

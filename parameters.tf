@@ -361,12 +361,37 @@ resource "aws_ssm_parameter" "variance_offset_mins" {
   tags      = module.labels.tags
 }
 
+
+# Self isolation specific parameters
 resource "aws_ssm_parameter" "self_isolation_notice_lifetime_mins" {
   name  = format("%s-self_isolation_notice_lifetime_mins", module.labels.id)
   type  = "String"
   value = var.self_isolation_notice_lifetime_mins
 }
 
+resource "aws_ssm_parameter" "notices_sqs_arn" {
+  name  = format("%s-%s", module.labels.id, "self_isolation_notices_sqs_arn")
+  type  = "String"
+  value = aws_sqs_queue.self_isolation.arn
+}
+
+resource "aws_ssm_parameter" "enable_self_isolation_notices" {
+  name  = format("%s-enable_self_isolation_notices", module.labels.id)
+  type  = "String"
+  value = var.self_isolation_notices_enabled
+}
+
+resource "aws_ssm_parameter" "self_isolation_notices_url" {
+  name  = format("%s-self_isolation_notices_url", module.labels.id)
+  type  = "String"
+  value = aws_sqs_queue.self_isolation.id
+}
+
+resource "aws_ssm_parameter" "security_self_isolation_notices_rate_limit_secs" {
+  name  = format("%s-security_self_isolation_notices_rate_limit_secs", module.labels.id)
+  type  = "String"
+  value = var.security_self_isolation_notices_rate_limit_secs
+}
 
 # #########################################
 # Optional parameters - These exist for some instances
