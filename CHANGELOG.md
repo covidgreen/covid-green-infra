@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
+- Added: self isolation notices support.
 - Updated: Remove "TOKEN_RENEWAL" from "metrics_config" to capture it on backend.
 - Update: Updated policies for CI user to allow required lambda access.
 

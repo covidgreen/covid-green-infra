@@ -187,7 +187,7 @@ variable "wildcard_domain" {
 # #########################################
 variable "rds_backup_retention" {
   description = "RDS backup retention in days"
-  default     = 14
+  default     = 30
 }
 variable "rds_db_name" {
   description = "RDS master DB name"
@@ -744,3 +744,30 @@ variable "variance_offset_mins" {
 variable "verify_rate_limit_secs" {
   description = "Time in seconds a user must wait before attempting to verify a one-time upload code"
 }
+
+variable "self_isolation_notice_lifetime_mins" {
+  description = "Self isolation notice lifetime in minutes"
+  default     = 20160
+}
+
+variable "lambda_self_isolation_timeout" {
+  description = "Self isolation lambda timeout in seconds"
+  default     = 600
+}
+variable "lambda_self_isolation_memory_size" {
+  description = "Self isolation lambda memory size"
+  default     = 512
+}
+
+variable "security_self_isolation_notices_rate_limit_secs" {
+  type        = number
+  description = "Self isolation notices rate limit in seconds"
+  default     = 86400
+}
+
+variable "self_isolation_notices_enabled" {
+  type        = string
+  description = "Enable/disable self isolation notices"
+  default     = "false"
+}
+
