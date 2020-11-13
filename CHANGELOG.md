@@ -4,8 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
-- Added: Support for external parameters to be included in ECS API policy
-- Added: Parameter for clean up lambda to clean self-isolation notices after a period of time
+- Added: self isolation notices support.
 
 
 ## [v0.1.12] 2020-10-28
