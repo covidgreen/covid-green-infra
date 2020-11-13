@@ -4,13 +4,13 @@ resource "aws_lambda_event_source_mapping" "sqs_lambda_mapping" {
 }
 
 module "self_isolation_notices" {
-  source = "github.com/nearform/covid-green-infra//modules/lambda?ref=v0.1.12"
+  source = "./modules/lambda"
   name   = format("%s-%s", module.labels.id, "self-isolation-notices")
 
   handler                        = "notices.handler"
   sqs_queue_arns_to_consume_from = [aws_sqs_queue.self_isolation.arn]
   sqs_queue_arns_to_publish_to   = [aws_sqs_queue.self_isolation.arn]
-  aws_secret_arns                = [data.aws_secretsmanager_secret_version.notice.arn, data.aws_secretsmanager_secret_version.rds_read_write.arn]
+  aws_secret_arns                = concat([data.aws_secretsmanager_secret_version.rds_read_write.arn], data.aws_secretsmanager_secret_version.notice.*.arn)
   config_var_prefix              = format("%s-", module.labels.id)
   aws_parameter_arns = [
     aws_ssm_parameter.notices_sqs_arn.arn,

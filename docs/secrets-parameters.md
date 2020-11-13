@@ -14,12 +14,12 @@ Secrets use a prefix ENV-NAMESPACE- in their names.
 	- rds-read-write
 	- rds-read-write-create
 	- verify
-  - notice
 - Some are optional
 	- cct
 	- cso
 	- interop
 	- sms
+  - notice
 
 Optional secrets need to be added to the option_secrets variable.
 
@@ -207,6 +207,5 @@ The format of the secret is as follows:
 ```
 
 #### Notice Secret
-The `notice` secret contains the information required for self isolation notices. If the tenant is not using it, can be empty but needs to exist.
+The `notice` secret contains the information required for self isolation notices.
 The format varies depending on tenant as there are implementation specific details.
-
