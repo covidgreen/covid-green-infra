@@ -21,6 +21,7 @@ module "self_isolation_notices" {
     aws_ssm_parameter.db_database.arn,
     aws_ssm_parameter.self_isolation_notices_url.arn
   ]
+  kms_writer_arns = [aws_kms_key.sqs.arn]
 
   #Memory and timeout
   memory_size = var.lambda_self_isolation_memory_size

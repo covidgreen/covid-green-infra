@@ -46,7 +46,7 @@ data "aws_secretsmanager_secret_version" "verify" {
 # #########################################
 
 data "aws_secretsmanager_secret_version" "notice" {
-  count = contains(var.optional_secrets_to_include, "notice") ? 1 : 0
+  count     = contains(var.optional_secrets_to_include, "notice") ? 1 : 0
   secret_id = format("%snotice", local.config_var_prefix)
 }
 
