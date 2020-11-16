@@ -51,8 +51,7 @@ variable "api_gateway_throttling_rate_limit" {
 }
 variable "api_gateway_timeout_milliseconds" {
   description = "APIGateway integration request timeout (in milliseconds)"
-  default     = 6000
-}
+  default     = 29000
 
 # #########################################
 # Bastion
@@ -103,12 +102,21 @@ variable "push_eu_certificate_arn" {
 }
 
 # #########################################
+# ECS Cluster Settings
+# #########################################
+variable "enable_ecs_container_insights" {
+  description = "Enable or disable CloudWatch Container insights for the ECS cluster"
+  default     = false
+}
+
+# #########################################
 # ECR Settings
 # #########################################
 variable "default_ecr_max_image_count" {
   description = "Default ECR image retention count used for purging the ECR repositories"
   default     = 30
 }
+
 # #########################################
 # Load Balancer
 # #########################################
@@ -321,6 +329,10 @@ variable "code_removal_mins" {
   description = "Lifetime in minutes before a one-time upload code is removed from the database"
   default     = "10080"
 }
+variable "cso_schedule" {
+  description = "cso lambda CloudWatch schedule"
+  default     = "cron(0 0 * * ? *)"
+}
 variable "daily_registrations_reporter_email_subject" {
   description = "daily-registrations-reporter lambda email subject text"
   default     = ""
@@ -422,7 +434,7 @@ variable "lambda_callback_s3_key" {
 }
 variable "lambda_callback_timeout" {
   description = "callback lambda timeout"
-  default     = 15
+  default     = 180
 }
 variable "lambda_custom_runtimes" {
   description = "Map of lambdas to use custom runtimes, where the value is an object with the runtime and layers to use i.e. { \"authorizer\" : { \"runtime\": \"provided\", \"layers\": [\"some-arn\"] } }"
@@ -490,7 +502,7 @@ variable "lambda_exposures_s3_key" {
 }
 variable "lambda_exposures_timeout" {
   description = "exposures lambda timeout"
-  default     = 60
+  default     = 180
 }
 variable "lambda_provisioned_concurrencies" {
   description = "Map of lambdas to use provisioned concurrency i.e. { \"authorizer\" : 300 }"
@@ -518,7 +530,7 @@ variable "lambda_sms_s3_key" {
 }
 variable "lambda_sms_timeout" {
   description = "sms lambda timeout"
-  default     = 15
+  default     = 180
 }
 variable "lambda_stats_memory_size" {
   description = "stats lambda memory size"
