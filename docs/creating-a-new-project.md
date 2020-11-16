@@ -136,6 +136,8 @@ Will need to create the following targets.
 
 
 ## Post standup tasks
+- Create the ci-user's access key if needed for CI/CD
+	- `aws iam create-access-key --user-name dev-xyz`
 - Enable PostgreSQL extensions and create DB users - see [here](./db.md)
 - Seed the DB setting(s) tables
 - Complete DNS config if needed - with external party
