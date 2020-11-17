@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
+- Updated: Remove "CALLBACK_REQUEST" from "metrics_config".
 
 ## [0.1.14] 2020-11-13
 - Added: self isolation notices support.
