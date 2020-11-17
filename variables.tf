@@ -51,8 +51,8 @@ variable "api_gateway_throttling_rate_limit" {
 }
 variable "api_gateway_timeout_milliseconds" {
   description = "APIGateway integration request timeout (in milliseconds)"
-  default     = 29000
-
+  default = 29000
+}
 # #########################################
 # Bastion
 # #########################################
