@@ -68,6 +68,8 @@ data "aws_iam_policy_document" "ci_user_pass_role" {
     ]
 
     resources = [
+      aws_iam_role.admin_ecs_task_role.arn,
+      aws_iam_role.admin_ecs_task_execution.arn,
       aws_iam_role.api_ecs_task_role.arn,
       aws_iam_role.api_ecs_task_execution.arn,
       aws_iam_role.push_ecs_task_role.arn,

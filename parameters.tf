@@ -1,6 +1,46 @@
 # #########################################
 # Parameters
 # #########################################
+resource "aws_ssm_parameter" "admin_cognito_user_pool_id" {
+  overwrite = true
+  name      = format("%sadmin_cognito_user_pool_id", local.config_var_prefix)
+  type      = "String"
+  value     = aws_cognito_user_pool.admin_user_pool.id
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "admin_cognito_region" {
+  overwrite = true
+  name      = format("%sadmin_cognito_region", local.config_var_prefix)
+  type      = "String"
+  value     = var.aws_region
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "admin_cors_origin" {
+  overwrite = true
+  name      = format("%sadmin_cors_origin", local.config_var_prefix)
+  type      = "String"
+  value     = var.admin_cors_origin
+  tags      = module.labels.tags
+}
+resource "aws_ssm_parameter" "admin_host" {
+  overwrite = true
+  name      = format("%sadmin_host", local.config_var_prefix)
+  type      = "String"
+  value     = "0.0.0.0"
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "admin_port" {
+  overwrite = true
+  name      = format("%sadmin_port", local.config_var_prefix)
+  type      = "String"
+  value     = var.admin_listening_port
+  tags      = module.labels.tags
+}
+
+
 resource "aws_ssm_parameter" "api_host" {
   overwrite = true
   name      = format("%sapi_host", local.config_var_prefix)
@@ -198,6 +238,14 @@ resource "aws_ssm_parameter" "onset_date_mandatory" {
   name      = format("%sonset_date_mandatory", local.config_var_prefix)
   type      = "String"
   value     = var.onset_date_mandatory
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "push_service_url" {
+  overwrite = true
+  name      = format("%spush_service_url", local.config_var_prefix)
+  type      = "String"
+  value     = format("https://%s", aws_lb.push.dns_name)
   tags      = module.labels.tags
 }
 
@@ -408,6 +456,16 @@ resource "aws_ssm_parameter" "security_self_isolation_notices_rate_limit_secs" {
   type  = "String"
   value = var.security_self_isolation_notices_rate_limit_secs
 }
+
+resource "aws_ssm_parameter" "settings_lambda" {
+  overwrite = true
+  name      = format("%ssettings_lambda", local.config_var_prefix)
+  type      = "String"
+  value     = aws_lambda_function.settings.arn
+  tags      = module.labels.tags
+}
+
+
 
 # #########################################
 # Optional parameters - These exist for some instances

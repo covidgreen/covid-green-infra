@@ -1,4 +1,100 @@
 # #########################################
+# ALB ADMIN
+# #########################################
+module "alb_admin_sg" {
+  source      = "./modules/security-group"
+  open_egress = true
+  name        = format("%s-%s", module.labels.id, "alb-admin")
+  environment = var.environment
+  vpc_id      = module.vpc.vpc_id
+  tags        = module.labels.tags
+}
+
+resource "aws_security_group_rule" "alb_admin_http_ingress" {
+  description       = "Allows connection on port 80 from anywhere"
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = module.alb_admin_sg.id
+}
+
+resource "aws_lb" "admin" {
+  name                             = format("%s-%s", module.labels.id, "admin")
+  internal                         = false
+  subnets                          = module.vpc.public_subnets
+  security_groups                  = ["${module.alb_admin_sg.id}"]
+  enable_cross_zone_load_balancing = true
+  enable_http2                     = true
+  ip_address_type                  = "dualstack"
+  enable_deletion_protection       = true
+  tags                             = module.labels.tags
+
+  access_logs {
+    bucket  = module.alb_logs.aws_logs_bucket
+    prefix  = "admin"
+    enabled = true
+  }
+}
+
+resource "aws_lb_target_group" "admin" {
+  name                 = format("%s-%s", module.labels.id, "admin")
+  port                 = var.admin_listening_port
+  protocol             = var.admin_listening_protocol
+  vpc_id               = module.vpc.vpc_id
+  deregistration_delay = 10
+  target_type          = "ip"
+
+  health_check {
+    path                = var.health_check_path
+    matcher             = var.health_check_matcher
+    interval            = var.health_check_interval
+    timeout             = var.health_check_timeout
+    healthy_threshold   = var.health_check_healthy_threshold
+    unhealthy_threshold = var.health_check_unhealthy_threshold
+  }
+
+  tags = module.labels.tags
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_lb_listener" "admin_http" {
+  load_balancer_arn = aws_lb.admin.id
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Forbidden"
+      status_code  = "403"
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "admin_header_check" {
+  listener_arn = aws_lb_listener.admin_http.arn
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.admin.arn
+  }
+
+  condition {
+    http_header {
+      http_header_name = "X-Routing-Secret"
+      values           = [jsondecode(data.aws_secretsmanager_secret_version.api_gateway_header.secret_string)["header-secret"]]
+    }
+  }
+}
+
+# #########################################
 # ALB API
 # #########################################
 module "alb_api_sg" {
@@ -178,7 +274,7 @@ module "alb_logs" {
   source  = "trussworks/logs/aws"
   version = "8.2.0"
 
-  alb_logs_prefixes       = ["api", "push"]
+  alb_logs_prefixes       = ["admin", "api", "push"]
   allow_alb               = true
   default_allow           = false
   force_destroy           = true
