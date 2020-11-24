@@ -627,6 +627,10 @@ variable "push_allowed_ips" {
   description = "ECS Push service ALB allowed ingress CIDRs"
   default     = ["0.0.0.0/0"]
 }
+variable "push_cors_origin" {
+  description = "Push service CORS header value"
+  default     = "*"
+}
 variable "push_cpu_high_threshold" {
   description = "ECS Push service ASG scaling CPU high threshold"
   default     = 15
