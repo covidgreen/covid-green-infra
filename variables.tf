@@ -187,7 +187,7 @@ variable "wildcard_domain" {
 # #########################################
 variable "rds_backup_retention" {
   description = "RDS backup retention in days"
-  default     = 14
+  default     = 30
 }
 variable "rds_db_name" {
   description = "RDS master DB name"
@@ -597,7 +597,7 @@ variable "native_regions" {
   default     = ""
 }
 variable "metrics_config" {
-  default = "{ \"CONTACT_UPLOAD\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"TOKEN_RENEWAL\": 60, \"CALLBACK_OPTIN\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60, \"LOG_ERROR\": 60, \"CALLBACK_REQUEST\": 60 }"
+  default = "{ \"CONTACT_UPLOAD\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"CALLBACK_OPTIN\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60, \"LOG_ERROR\": 60 }"
 }
 variable "migrations_custom_image" {
   description = "Custom image for the ECS Migrations container, overrides the default ECR repo, assumes we can pull from the repository"
@@ -626,6 +626,10 @@ variable "optional_secrets_to_include" {
 variable "push_allowed_ips" {
   description = "ECS Push service ALB allowed ingress CIDRs"
   default     = ["0.0.0.0/0"]
+}
+variable "push_cors_origin" {
+  description = "Push service CORS header value"
+  default     = "*"
 }
 variable "push_cpu_high_threshold" {
   description = "ECS Push service ASG scaling CPU high threshold"
@@ -744,3 +748,30 @@ variable "variance_offset_mins" {
 variable "verify_rate_limit_secs" {
   description = "Time in seconds a user must wait before attempting to verify a one-time upload code"
 }
+
+variable "self_isolation_notice_lifetime_mins" {
+  description = "Self isolation notice lifetime in minutes"
+  default     = 20160
+}
+
+variable "lambda_self_isolation_timeout" {
+  description = "Self isolation lambda timeout in seconds"
+  default     = 600
+}
+variable "lambda_self_isolation_memory_size" {
+  description = "Self isolation lambda memory size"
+  default     = 512
+}
+
+variable "security_self_isolation_notices_rate_limit_secs" {
+  type        = number
+  description = "Self isolation notices rate limit in seconds"
+  default     = 86400
+}
+
+variable "self_isolation_notices_enabled" {
+  type        = string
+  description = "Enable/disable self isolation notices"
+  default     = "false"
+}
+

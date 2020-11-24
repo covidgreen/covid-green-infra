@@ -23,12 +23,35 @@ data "aws_iam_policy_document" "ci_user" {
       "*",
     ]
   }
+  statement {
+    actions = [
+      "s3:ListBucket",
+      "s3:PutObject"
+    ]
+
+    resources = [
+      aws_s3_bucket.assets.arn,
+      format("%s/*", aws_s3_bucket.assets.arn)
+    ]
+  }
+
+  statement {
+    actions = [
+      "route53:GetChange"
+    ]
+    resources = [
+      "*"
+    ]
+  }
 }
 
 data "aws_iam_policy_document" "ci_user_lambda" {
   statement {
     actions = [
-      "lambda:UpdateFunctionCode"
+      "lambda:UpdateFunctionCode",
+      "lambda:ListAliases",
+      "lambda:ListVersionsByFunction",
+      "lambda:UpdateAlias"
     ]
 
     resources = [
@@ -46,7 +69,9 @@ data "aws_iam_policy_document" "ci_user_pass_role" {
 
     resources = [
       aws_iam_role.api_ecs_task_role.arn,
-      aws_iam_role.api_ecs_task_execution.arn
+      aws_iam_role.api_ecs_task_execution.arn,
+      aws_iam_role.push_ecs_task_role.arn,
+      aws_iam_role.push_ecs_task_execution.arn
     ]
   }
 }
