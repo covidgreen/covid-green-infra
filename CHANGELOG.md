@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
+- Updated: Remove "CALLBACK_REQUEST" from "metrics_config".
 - Added: New parameter "push_cors_origin" to control CORS headers in push service
 
 
