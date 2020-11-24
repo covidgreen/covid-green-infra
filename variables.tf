@@ -376,7 +376,7 @@ variable "disable_valid_key_check" {
 }
 variable "download_schedule" {
   description = "download lambda CloudWatch schedule"
-  default     = "cron(0 * * * ? *)"
+  default     = "cron(30 * * * ? *)"
 }
 variable "enable_callback" {
   description = "Flag to determine whether the API service should enable callback endpoints"
