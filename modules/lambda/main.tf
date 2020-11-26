@@ -121,6 +121,9 @@ variable "timeout" {
   default = 15
 }
 
+variable "concurrency" {
+  default = -1
+}
 
 # #########################################
 # Module content
@@ -350,9 +353,13 @@ resource "aws_lambda_function" "this" {
   runtime       = var.runtime
   tags          = var.tags
   timeout       = var.timeout
-
+  
   depends_on = [aws_cloudwatch_log_group.this]
 
+  # See https://docs.aws.amazon.com/lambda/latest/dg/invocation-scaling.html
+  # Use default `concurrency` value for no limit
+  reserved_concurrent_executions = var.concurrency
+  
   environment {
     variables = {
       CONFIG_VAR_PREFIX = var.config_var_prefix,

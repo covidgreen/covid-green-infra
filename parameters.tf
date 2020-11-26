@@ -201,6 +201,14 @@ resource "aws_ssm_parameter" "onset_date_mandatory" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "push_cors_origin" {
+  overwrite = true
+  name      = format("%spush_cors_origin", local.config_var_prefix)
+  type      = "String"
+  value     = var.push_cors_origin
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "push_host" {
   overwrite = true
   name      = format("%spush_host", local.config_var_prefix)

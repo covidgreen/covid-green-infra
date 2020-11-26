@@ -376,7 +376,7 @@ variable "disable_valid_key_check" {
 }
 variable "download_schedule" {
   description = "download lambda CloudWatch schedule"
-  default     = "cron(0 * * * ? *)"
+  default     = "cron(30 * * * ? *)"
 }
 variable "enable_callback" {
   description = "Flag to determine whether the API service should enable callback endpoints"
@@ -597,7 +597,7 @@ variable "native_regions" {
   default     = ""
 }
 variable "metrics_config" {
-  default = "{ \"CONTACT_UPLOAD\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"CALLBACK_OPTIN\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60, \"LOG_ERROR\": 60, \"CALLBACK_REQUEST\": 60 }"
+  default = "{ \"CONTACT_UPLOAD\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"CALLBACK_OPTIN\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60, \"LOG_ERROR\": 60 }"
 }
 variable "migrations_custom_image" {
   description = "Custom image for the ECS Migrations container, overrides the default ECR repo, assumes we can pull from the repository"
@@ -626,6 +626,10 @@ variable "optional_secrets_to_include" {
 variable "push_allowed_ips" {
   description = "ECS Push service ALB allowed ingress CIDRs"
   default     = ["0.0.0.0/0"]
+}
+variable "push_cors_origin" {
+  description = "Push service CORS header value"
+  default     = "*"
 }
 variable "push_cpu_high_threshold" {
   description = "ECS Push service ASG scaling CPU high threshold"
