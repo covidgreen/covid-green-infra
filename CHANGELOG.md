@@ -2,7 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+
 ## Unreleased
+
+## [0.1.14] 2020-11-13
+- Added: self isolation notices support.
+- Updated: Remove "TOKEN_RENEWAL" from "metrics_config" to capture it on backend.
+- Update: Updated policies for CI user to allow required lambda access.
+
+
+## [v0.1.12] 2020-10-28
+- Updated: Set queue visibility timeout based on lambda timeout
+- Added: "api_gateway_customizations_binary_types" variable to configure api gateway to serve custom binary types
+- Added: "api_gateway_customizations_md5" variable to trigger api gateway stage deployments on both internal and external changes
+- Added: Lambda policy option to allow sending SES emails based on a from whitelist
+- Updated: Increased default timeouts and memory size for lambdas
+- Added: Lambda options to manage S3 access content in the policy
+- Updated: Restricted ci-user permissions
+
+
+## [v0.1.11] 2020-10-08
+- Added: Optional parameters "security_callback_rate_limit_request_count" and "security_callback_rate_limit_secs"
 
 
 ## [v0.1.10] 2020-10-07
