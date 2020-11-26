@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
+
+
+## [0.1.15] 2020-11-26
 - Updated: Set default "download_schedule" to offset from "upload_schedule"
 - Updated: Give access to "time_zone" parameter to all services that write metrics
 - Updated: Remove "CALLBACK_REQUEST" from "metrics_config".
