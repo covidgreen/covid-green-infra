@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
+- Added: New parameter "reduced_metrics_whitelist"
 
 
 ## [0.1.15] 2020-11-26

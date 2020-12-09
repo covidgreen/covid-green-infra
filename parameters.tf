@@ -225,6 +225,14 @@ resource "aws_ssm_parameter" "push_port" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "reduced_metrics_whitelist" {
+  overwrite = true
+  name      = format("%sreduced_metrics_whitelist", local.config_var_prefix)
+  type      = "String"
+  value     = var.reduced_metrics_whitelist
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "s3_assets_bucket" {
   overwrite = true
   name      = format("%ss3_assets_bucket", local.config_var_prefix)

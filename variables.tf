@@ -691,6 +691,10 @@ variable "push_services_task_memory" {
   description = "ECS Push service task memory"
   default     = 512
 }
+variable "reduced_metrics_whitelist" {
+  description = "Comma separated list of metrics the reduced metrics role can access"
+  default     = "CALLBACK_OPTIN,CALLBACK_SENT,CASES,CHECK_IN,DEATHS,FORGET,INTEROP_KEYS_DOWNLOADED,INTEROP_KEYS_UPLOADED,UPLOAD"
+}
 variable "refresh_token_expiry" {
   description = "Lifetime of refresh tokens generated after a user registers"
   default     = "10y"
