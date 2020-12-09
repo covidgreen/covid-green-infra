@@ -19,6 +19,7 @@ Secrets use a prefix ENV-NAMESPACE- in their names.
 	- cso
 	- interop
 	- sms
+  - notice
 
 Optional secrets need to be added to the option_secrets variable.
 
@@ -203,3 +204,8 @@ The format of the secret is as follows:
   "privateKey": "-----BEGIN EC PRIVATE KEY-----\nKEY-VALUE\n-----END EC PRIVATE KEY-----",
   "publicKey": "-----BEGIN PUBLIC KEY-----\nKEY-VALUE\n-----END PUBLIC KEY-----"
 }
+```
+
+#### Notice Secret
+The `notice` secret contains the information required for self isolation notices.
+The format varies depending on tenant as there are implementation specific details.
