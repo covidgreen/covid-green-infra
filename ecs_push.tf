@@ -15,7 +15,7 @@ data "aws_iam_policy_document" "push_ecs_assume_role_policy" {
 data "aws_iam_policy_document" "push_ecs_task_policy" {
   statement {
     actions = ["ssm:GetParameter"]
-    resources = [
+    resources = concat([
       aws_ssm_parameter.cors_origin.arn,
       aws_ssm_parameter.db_database.arn,
       aws_ssm_parameter.db_host.arn,
@@ -37,15 +37,19 @@ data "aws_iam_policy_document" "push_ecs_task_policy" {
       aws_ssm_parameter.symptom_date_offset.arn,
       aws_ssm_parameter.time_zone.arn,
       aws_ssm_parameter.use_test_date_as_onset_date.arn
-    ]
+      ],
+      aws_ssm_parameter.issue_proxy_url.*.arn
+    )
   }
 
   statement {
     actions = ["secretsmanager:GetSecretValue"]
-    resources = [
+    resources = concat([
       data.aws_secretsmanager_secret_version.jwt.arn,
       data.aws_secretsmanager_secret_version.rds_read_write.arn
-    ]
+      ],
+      data.aws_secretsmanager_secret_version.verify_proxy.*.arn
+    )
   }
 
   statement {
