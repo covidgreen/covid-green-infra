@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 - Added: Missing variables for proxy URLs
+- Added: New parameter "reduced_metrics_whitelist"
 - Added: New optional parameters and secret to proxy verification requests to a third party
 
 

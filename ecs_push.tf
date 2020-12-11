@@ -30,6 +30,7 @@ data "aws_iam_policy_document" "push_ecs_task_policy" {
       aws_ssm_parameter.push_cors_origin.arn,
       aws_ssm_parameter.push_host.arn,
       aws_ssm_parameter.push_port.arn,
+      aws_ssm_parameter.reduced_metrics_whitelist.arn,
       aws_ssm_parameter.security_code_charset.arn,
       aws_ssm_parameter.security_code_length.arn,
       aws_ssm_parameter.security_code_lifetime_mins.arn,
