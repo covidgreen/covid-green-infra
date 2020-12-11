@@ -61,6 +61,16 @@ resource "aws_cognito_user_group" "otc-send" {
   user_pool_id = aws_cognito_user_pool.admin_user_pool.id
 }
 
+resource "aws_cognito_user_group" "qr-admin" {
+  name         = "qr-admin"
+  user_pool_id = aws_cognito_user_pool.admin_user_pool.id
+}
+
+resource "aws_cognito_user_group" "qr-user" {
+  name         = "qr-user"
+  user_pool_id = aws_cognito_user_pool.admin_user_pool.id
+}
+
 resource "aws_cognito_user_group" "manage_users" {
   name         = "manage-users"
   user_pool_id = aws_cognito_user_pool.admin_user_pool.id
