@@ -429,6 +429,10 @@ variable "hsts_max_age" {
   description = "The time, in seconds, that the browser should remember that a site is only to be accessed using HTTPS."
   default     = "300" // 5 minutes
 }
+variable "issue_proxy_url" {
+  description = "URL to proxy OTC issue requests if necessary"
+  default     = ""
+}
 variable "lambda_authorizer_memory_size" {
   description = "authorizer lambda memory size"
   default     = 512 # Since this is on the hot path and we get faster CPUs with higher memory
@@ -748,6 +752,10 @@ variable "use_test_date_as_onset_date" {
 variable "variance_offset_mins" {
   description = "Variance offset in minutes to add to lifetime of keys to check if they are still valid"
   default     = "120"
+}
+variable "verify_proxy_url" {
+  description = "URL to code verification requests if necessary"
+  default     = ""
 }
 variable "verify_rate_limit_secs" {
   description = "Time in seconds a user must wait before attempting to verify a one-time upload code"
