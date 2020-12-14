@@ -69,3 +69,8 @@ data "aws_secretsmanager_secret_version" "sms" {
   count     = contains(var.optional_secrets_to_include, "sms") ? 1 : 0
   secret_id = "${local.config_var_prefix}sms"
 }
+
+data "aws_secretsmanager_secret_version" "verify_proxy" {
+  count     = contains(var.optional_secrets_to_include, "verify-proxy") ? 1 : 0
+  secret_id = "${local.config_var_prefix}verify-proxy"
+}

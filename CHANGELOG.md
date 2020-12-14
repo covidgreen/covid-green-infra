@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+
+## [0.1.16] 2020-12-14
+- Added: Missing variables for proxy URLs
+- Added: New parameter "reduced_metrics_whitelist"
+- Added: New optional parameters and secret to proxy verification requests to a third party
+
+
+
+## [0.1.15] 2020-11-26
+- Updated: Set default "download_schedule" to offset from "upload_schedule"
+- Updated: Give access to "time_zone" parameter to all services that write metrics
+- Updated: Remove "CALLBACK_REQUEST" from "metrics_config".
+- Added: New parameter "push_cors_origin" to control CORS headers in push service
+
+
 ## [0.1.14] 2020-11-13
 - Added: self isolation notices support.
 - Updated: Remove "TOKEN_RENEWAL" from "metrics_config" to capture it on backend.

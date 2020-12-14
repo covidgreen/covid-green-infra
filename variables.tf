@@ -376,7 +376,7 @@ variable "disable_valid_key_check" {
 }
 variable "download_schedule" {
   description = "download lambda CloudWatch schedule"
-  default     = "cron(0 * * * ? *)"
+  default     = "cron(30 * * * ? *)"
 }
 variable "enable_callback" {
   description = "Flag to determine whether the API service should enable callback endpoints"
@@ -428,6 +428,10 @@ variable "health_check_unhealthy_threshold" {
 variable "hsts_max_age" {
   description = "The time, in seconds, that the browser should remember that a site is only to be accessed using HTTPS."
   default     = "300" // 5 minutes
+}
+variable "issue_proxy_url" {
+  description = "URL to proxy OTC issue requests if necessary"
+  default     = ""
 }
 variable "lambda_authorizer_memory_size" {
   description = "authorizer lambda memory size"
@@ -597,7 +601,7 @@ variable "native_regions" {
   default     = ""
 }
 variable "metrics_config" {
-  default = "{ \"CONTACT_UPLOAD\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"CALLBACK_OPTIN\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60, \"LOG_ERROR\": 60, \"CALLBACK_REQUEST\": 60 }"
+  default = "{ \"CONTACT_UPLOAD\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"CALLBACK_OPTIN\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60, \"LOG_ERROR\": 60 }"
 }
 variable "migrations_custom_image" {
   description = "Custom image for the ECS Migrations container, overrides the default ECR repo, assumes we can pull from the repository"
@@ -626,6 +630,10 @@ variable "optional_secrets_to_include" {
 variable "push_allowed_ips" {
   description = "ECS Push service ALB allowed ingress CIDRs"
   default     = ["0.0.0.0/0"]
+}
+variable "push_cors_origin" {
+  description = "Push service CORS header value"
+  default     = "*"
 }
 variable "push_cpu_high_threshold" {
   description = "ECS Push service ASG scaling CPU high threshold"
@@ -687,6 +695,10 @@ variable "push_services_task_memory" {
   description = "ECS Push service task memory"
   default     = 512
 }
+variable "reduced_metrics_whitelist" {
+  description = "Comma separated list of metrics the reduced metrics role can access"
+  default     = "CALLBACK_OPTIN,CALLBACK_SENT,CASES,CHECK_IN,DEATHS,FORGET,INTEROP_KEYS_DOWNLOADED,INTEROP_KEYS_UPLOADED,UPLOAD"
+}
 variable "refresh_token_expiry" {
   description = "Lifetime of refresh tokens generated after a user registers"
   default     = "10y"
@@ -740,6 +752,10 @@ variable "use_test_date_as_onset_date" {
 variable "variance_offset_mins" {
   description = "Variance offset in minutes to add to lifetime of keys to check if they are still valid"
   default     = "120"
+}
+variable "verify_proxy_url" {
+  description = "URL to code verification requests if necessary"
+  default     = ""
 }
 variable "verify_rate_limit_secs" {
   description = "Time in seconds a user must wait before attempting to verify a one-time upload code"

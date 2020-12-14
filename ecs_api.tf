@@ -66,18 +66,22 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
       aws_ssm_parameter.security_self_isolation_notices_rate_limit_secs.arn
       ],
       aws_ssm_parameter.security_callback_rate_limit_request_count.*.arn,
-    aws_ssm_parameter.security_callback_rate_limit_secs.*.arn)
+      aws_ssm_parameter.security_callback_rate_limit_secs.*.arn,
+      aws_ssm_parameter.verify_proxy_url.*.arn
+    )
   }
 
   statement {
     actions = ["secretsmanager:GetSecretValue"]
-    resources = [
+    resources = concat([
       data.aws_secretsmanager_secret_version.device_check.arn,
       data.aws_secretsmanager_secret_version.encrypt.arn,
       data.aws_secretsmanager_secret_version.jwt.arn,
       data.aws_secretsmanager_secret_version.rds_read_write_create.arn,
       data.aws_secretsmanager_secret_version.verify.arn
-    ]
+      ],
+      data.aws_secretsmanager_secret_version.verify_proxy.*.arn
+    )
   }
 
   statement {
