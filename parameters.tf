@@ -225,6 +225,14 @@ resource "aws_ssm_parameter" "push_port" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "reduced_metrics_whitelist" {
+  overwrite = true
+  name      = format("%sreduced_metrics_whitelist", local.config_var_prefix)
+  type      = "String"
+  value     = var.reduced_metrics_whitelist
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "s3_assets_bucket" {
   overwrite = true
   name      = format("%ss3_assets_bucket", local.config_var_prefix)
@@ -440,6 +448,15 @@ resource "aws_ssm_parameter" "daily_registrations_reporter_sns_arn" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "issue_proxy_url" {
+  count     = contains(var.optional_parameters_to_include, "issue_proxy_url") ? 1 : 0
+  overwrite = true
+  name      = format("%sissue_proxy_url", local.config_var_prefix)
+  type      = "String"
+  value     = var.issue_proxy_url
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "security_callback_rate_limit_request_count" {
   count     = contains(var.optional_parameters_to_include, "security_callback_rate_limit_request_count") ? 1 : 0
   overwrite = true
@@ -455,5 +472,14 @@ resource "aws_ssm_parameter" "security_callback_rate_limit_secs" {
   name      = format("%ssecurity_callback_rate_limit_secs", local.config_var_prefix)
   type      = "String"
   value     = var.callback_rate_limit_secs
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "verify_proxy_url" {
+  count     = contains(var.optional_parameters_to_include, "verify_proxy_url") ? 1 : 0
+  overwrite = true
+  name      = format("%sverify_proxy_url", local.config_var_prefix)
+  type      = "String"
+  value     = var.verify_proxy_url
   tags      = module.labels.tags
 }

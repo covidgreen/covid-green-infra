@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 
 
+## [0.1.16] 2020-12-14
+- Added: Missing variables for proxy URLs
+- Added: New parameter "reduced_metrics_whitelist"
+- Added: New optional parameters and secret to proxy verification requests to a third party
+
+
+
 ## [0.1.15] 2020-11-26
 - Updated: Set default "download_schedule" to offset from "upload_schedule"
 - Updated: Give access to "time_zone" parameter to all services that write metrics
