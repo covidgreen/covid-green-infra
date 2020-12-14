@@ -56,7 +56,8 @@ data "aws_iam_policy_document" "admin_ecs_task_policy" {
     resources = [
       data.aws_secretsmanager_secret_version.rds_read_only.arn,
       data.aws_secretsmanager_secret_version.rds_read_write.arn,
-      data.aws_secretsmanager_secret_version.admin_push_service_token.arn
+      data.aws_secretsmanager_secret_version.admin_push_service_token.arn,
+      data.aws_secretsmanager_secret_version.google_maps_api_key.arn
     ]
   }
 
