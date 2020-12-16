@@ -159,7 +159,6 @@ resource "aws_api_gateway_integration_response" "isolation_get_integration_respo
     "method.response.header.Cache-Control"             = "'no-store'",
     "method.response.header.Pragma"                    = "'no-cache'",
     "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
-    "method.response.header.X-Frame-Options"           = "'SAMEORIGIN'"
   }
 }
 
@@ -259,7 +258,7 @@ resource "aws_api_gateway_method_response" "admin_ui_get" {
   resource_id = aws_api_gateway_resource.admin_ui.id
   http_method = aws_api_gateway_method.admin_ui_get.http_method
   status_code = "200"
-  
+
   response_parameters = {
     "method.response.header.Content-Length"            = true,
     "method.response.header.Content-Type"              = true,
@@ -1056,6 +1055,6 @@ resource "aws_api_gateway_gateway_response" "test" {
   response_type = "DEFAULT_4XX"
 
   response_parameters = {
-    "gatewayresponse.header.access-control-allow-origin"  = "'*'"
+    "gatewayresponse.header.access-control-allow-origin" = "'*'"
   }
 }
