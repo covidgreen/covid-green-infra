@@ -14,7 +14,7 @@ output "cloudtrail_log_group_name" {
 }
 
 output "cognito_user_pool_domain" {
-  value = format("https://%s", aws_route53_record.auth-cognito-A.fqdn)
+  value = format("https://%s", aws_route53_record.auth_cognito_A_record.fqdn)
 }
 
 output "cognito_user_pool_endpoint" {

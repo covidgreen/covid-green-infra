@@ -29,7 +29,7 @@ resource "aws_route53_record" "root_record" {
   ttl      = 300
 }
 
-resource "aws_route53_record" "auth-cognito-A" {
+resource "aws_route53_record" "auth_cognito_A_record" {
   provider = aws.dns
   name     = aws_cognito_user_pool_domain.main.domain
   type     = "A"
@@ -56,17 +56,17 @@ resource "aws_cognito_user_group" "settings_write" {
   user_pool_id = aws_cognito_user_pool.admin_user_pool.id
 }
 
-resource "aws_cognito_user_group" "otc-send" {
+resource "aws_cognito_user_group" "otc_send" {
   name         = "otc-send"
   user_pool_id = aws_cognito_user_pool.admin_user_pool.id
 }
 
-resource "aws_cognito_user_group" "qr-admin" {
+resource "aws_cognito_user_group" "qr_admin" {
   name         = "qr-admin"
   user_pool_id = aws_cognito_user_pool.admin_user_pool.id
 }
 
-resource "aws_cognito_user_group" "qr-user" {
+resource "aws_cognito_user_group" "qr_user" {
   name         = "qr-user"
   user_pool_id = aws_cognito_user_pool.admin_user_pool.id
 }
