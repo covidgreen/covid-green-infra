@@ -58,6 +58,11 @@ data "aws_secretsmanager_secret_version" "notice" {
   secret_id = format("%snotice", local.config_var_prefix)
 }
 
+data "aws_secretsmanager_secret_version" "quicksight_dashboard" {
+  count     = contains(var.optional_secrets_to_include, "quicksight-dashboard") ? 1 : 0
+  secret_id = format("%squicksight-dashboard", local.config_var_prefix)
+}
+
 data "aws_secretsmanager_secret_version" "cct" {
   count     = contains(var.optional_secrets_to_include, "cct") ? 1 : 0
   secret_id = "${local.config_var_prefix}cct"
