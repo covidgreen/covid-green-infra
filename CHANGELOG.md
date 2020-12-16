@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## Unreleased
+- Updated: API Gateway route "/settings/exposures" handled by ecs_api
 
 
 ## [0.1.16] 2020-12-14

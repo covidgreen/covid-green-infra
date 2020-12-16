@@ -372,65 +372,6 @@ resource "aws_api_gateway_integration_response" "api_settings_get_integration" {
   }
 }
 
-## /api/settings/exposures
-resource "aws_api_gateway_resource" "api_settings_exposures" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  parent_id   = aws_api_gateway_resource.api_settings.id
-  path_part   = "exposures"
-}
-
-resource "aws_api_gateway_method" "api_settings_exposures_get" {
-  rest_api_id      = aws_api_gateway_rest_api.main.id
-  resource_id      = aws_api_gateway_resource.api_settings_exposures.id
-  http_method      = "GET"
-  authorization    = "CUSTOM"
-  authorizer_id    = aws_api_gateway_authorizer.main.id
-  api_key_required = false
-}
-
-resource "aws_api_gateway_integration" "api_settings_exposures_get_integration" {
-  rest_api_id             = aws_api_gateway_rest_api.main.id
-  resource_id             = aws_api_gateway_resource.api_settings_exposures.id
-  http_method             = aws_api_gateway_method.api_settings_exposures_get.http_method
-  timeout_milliseconds    = var.api_gateway_timeout_milliseconds
-  integration_http_method = "GET"
-  type                    = "AWS"
-  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/exposures.json", var.aws_region, aws_s3_bucket.assets.id)
-  credentials             = aws_iam_role.gateway.arn
-}
-
-resource "aws_api_gateway_method_response" "api_settings_exposures_get" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.api_settings_exposures.id
-  http_method = aws_api_gateway_method.api_settings_exposures_get.http_method
-  status_code = "200"
-  response_models = {
-    "application/json" = "Empty"
-  }
-  response_parameters = {
-    "method.response.header.Content-Length"            = false,
-    "method.response.header.Content-Type"              = false,
-    "method.response.header.Cache-Control"             = true,
-    "method.response.header.Pragma"                    = true,
-    "method.response.header.Strict-Transport-Security" = true
-  }
-}
-
-resource "aws_api_gateway_integration_response" "api_settings_exposures_get_integration" {
-  rest_api_id       = aws_api_gateway_rest_api.main.id
-  resource_id       = aws_api_gateway_resource.api_settings_exposures.id
-  http_method       = aws_api_gateway_method.api_settings_exposures_get.http_method
-  selection_pattern = aws_api_gateway_method_response.api_settings_exposures_get.status_code
-  status_code       = aws_api_gateway_method_response.api_settings_exposures_get.status_code
-  response_parameters = {
-    "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
-    "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
-    "method.response.header.Cache-Control"             = "'no-store'",
-    "method.response.header.Pragma"                    = "'no-cache'",
-    "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
-  }
-}
-
 ## /api/settings/language
 resource "aws_api_gateway_resource" "api_settings_language" {
   rest_api_id = aws_api_gateway_rest_api.main.id
@@ -487,6 +428,58 @@ resource "aws_api_gateway_integration_response" "api_settings_language_get_integ
     "method.response.header.Pragma"                    = "'no-cache'",
     "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
   }
+}
+
+## /api/settings/{proxy}
+resource "aws_api_gateway_resource" "api_settings_proxy" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.api_settings.id
+  path_part   = "{proxy+}"
+}
+
+resource "aws_api_gateway_method" "api_settings_proxy_get" {
+  rest_api_id      = aws_api_gateway_rest_api.main.id
+  resource_id      = aws_api_gateway_resource.api_settings_proxy.id
+  http_method      = "GET"
+  authorization    = "CUSTOM"
+  authorizer_id    = aws_api_gateway_authorizer.main.id
+  api_key_required = false
+}
+
+resource "aws_api_gateway_integration" "api_settings_proxy_get_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.main.id
+  resource_id             = aws_api_gateway_resource.api_settings_proxy.id
+  http_method             = aws_api_gateway_method.api_settings_proxy_get.http_method
+  timeout_milliseconds    = var.api_gateway_timeout_milliseconds
+  integration_http_method = "GET"
+  type                    = "HTTP_PROXY"
+  uri                     = format("http://%s/settings/{proxy}", aws_lb.api.dns_name)
+
+  request_parameters = {
+    "integration.request.path.proxy"              = "method.request.path.proxy",
+    "integration.request.header.X-Routing-Secret" = "'${jsondecode(data.aws_secretsmanager_secret_version.api_gateway_header.secret_string)["header-secret"]}'",
+    "integration.request.header.X-Forwarded-For"  = "'nope'"
+  }
+}
+
+resource "aws_api_gateway_method_response" "api_settings_proxy_get" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.api_settings_proxy.id
+  http_method = aws_api_gateway_method.api_settings_proxy_get.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.access-control-allow-headers" = true,
+    "method.response.header.access-control-allow-methods" = true,
+    "method.response.header.access-control-allow-origin"  = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "api_settings_proxy_get_integration" {
+  rest_api_id       = aws_api_gateway_rest_api.main.id
+  resource_id       = aws_api_gateway_resource.api_settings_proxy.id
+  http_method       = aws_api_gateway_method.api_settings_proxy_get.http_method
+  status_code       = aws_api_gateway_method_response.api_settings_proxy_get.status_code
 }
 
 ## /api/stats
@@ -767,8 +760,8 @@ resource "aws_api_gateway_deployment" "live" {
     aws_api_gateway_integration.api_proxy_options_integration,
     aws_api_gateway_integration.api_proxy_any_integration,
     aws_api_gateway_integration.api_settings_get_integration,
-    aws_api_gateway_integration.api_settings_exposures_get_integration,
     aws_api_gateway_integration.api_settings_language_get_integration,
+    aws_api_gateway_integration.api_settings_proxy_get_integration,
     aws_api_gateway_integration.api_stats_get_integration,
     aws_api_gateway_integration.api_data_exposures_item_get_integration
   ]
