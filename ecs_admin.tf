@@ -60,14 +60,6 @@ data "aws_iam_policy_document" "admin_ecs_task_policy" {
       data.aws_secretsmanager_secret_version.google_maps_api_key.arn
     ]
   }
-
-  statement {
-    actions = ["kms:*"]
-    resources = [
-      aws_kms_key.sqs.arn
-    ]
-  }
-
   statement {
     actions = [
       "cognito-idp:AdminCreateUser",
@@ -79,14 +71,6 @@ data "aws_iam_policy_document" "admin_ecs_task_policy" {
     ]
     resources = [
       aws_cognito_user_pool.admin_user_pool.arn
-    ]
-  }
-
-  statement {
-    actions = ["sqs:*"]
-    resources = [
-      aws_sqs_queue.callback.arn,
-      aws_sqs_queue.self_isolation.arn
     ]
   }
 
