@@ -37,6 +37,7 @@ data "aws_iam_policy_document" "write" {
     ]
 
     resources = [
+      aws_ecr_repository.admin.arn,
       aws_ecr_repository.api.arn,
       aws_ecr_repository.push.arn
     ]
@@ -59,6 +60,7 @@ data "aws_iam_policy_document" "read" {
     ]
 
     resources = [
+      aws_ecr_repository.admin.arn,
       aws_ecr_repository.api.arn,
       aws_ecr_repository.push.arn
     ]
@@ -117,6 +119,22 @@ locals {
   ]
 }
 EOF
+}
+
+resource "aws_ecr_repository" "admin" {
+  name = "${var.namespace}/admin"
+
+  tags = module.labels.tags
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
+resource "aws_ecr_lifecycle_policy" "admin_policy" {
+  repository = aws_ecr_repository.admin.name
+
+  policy = local.image_rotation_policy
 }
 
 resource "aws_ecr_repository" "api" {

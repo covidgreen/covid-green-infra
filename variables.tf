@@ -243,6 +243,70 @@ variable "waf_geo_allowed_countries" {
 # #########################################
 # API & Lambda - Settings & Env vars
 # #########################################
+variable "admin_cors_origin" {
+  description = "ADMIN service CORS header value"
+  default     = "*"
+}
+variable "admin_cpu_high_threshold" {
+  description = "ECS ADMIN service ASG scaling CPU high threshold"
+  default     = 15
+}
+variable "admin_cpu_low_threshold" {
+  description = "ECS ADMIN service ASG scaling CPU low threshold"
+  default     = 10
+}
+variable "admin_custom_image" {
+  description = "Custom image for the ECS ADMIN container, overrides the default ECR repo, assumes we can pull from the repository"
+  default     = ""
+}
+variable "admin_ecs_autoscale_max_instances" {
+  description = "ECS ADMIN service ASG max count"
+  default     = 2
+}
+variable "admin_ecs_autoscale_min_instances" {
+  description = "ECS ADMIN service ASG min count"
+  default     = 1
+}
+variable "admin_ecs_autoscale_scale_down_adjustment" {
+  description = "ECS ADMIN service ASG scaling scale down adjustment"
+  default     = -1
+}
+variable "admin_ecs_autoscale_scale_up_adjustment" {
+  description = "ECS ADMIN service ASG scaling scale up adjustment"
+  default     = 1
+}
+variable "admin_image_tag" {
+  description = "Image tag for the ECS ADMIN container"
+  default     = "latest"
+}
+variable "admin_listening_port" {
+  description = "ECS ADMIN container port"
+  default     = 5000
+}
+variable "admin_listening_protocol" {
+  description = "API service ALB protocol"
+  default     = "HTTP"
+}
+variable "admin_mem_high_threshold" {
+  description = "ECS ADMIN service ASG scaling memory high threshold"
+  default     = 25
+}
+variable "admin_mem_low_threshold" {
+  description = "ECS ADMIN service ASG scaling memory low threshold"
+  default     = 15
+}
+variable "admin_service_desired_count" {
+  description = "ECS ADMIN service ASG desired count"
+  default     = 1
+}
+variable "admin_services_task_cpu" {
+  description = "ECS ADMIN service task CPU"
+  default     = 256
+}
+variable "admin_services_task_memory" {
+  description = "ECS ADMIN service task memory"
+  default     = 512
+}
 variable "api_cors_origin" {
   description = "API service CORS header value"
   default     = "*"

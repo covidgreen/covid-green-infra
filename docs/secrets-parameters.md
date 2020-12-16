@@ -160,7 +160,7 @@ The format of the secret is as follows:
 }
 ```
 
-#### jwt Secret
+#### jwt Secretdevice_check
 The `jwt` secret is used for signing the JSON Web Tokens with the HMAC algorithm. These are issued to users for API authentication,
 and the signature is checked by the service to ensure their legitimacy.
 
@@ -209,3 +209,7 @@ The format of the secret is as follows:
 #### Notice Secret
 The `notice` secret contains the information required for self isolation notices.
 The format varies depending on tenant as there are implementation specific details.
+
+### Push Service Token
+Token used by the backend to authenticate on the push service.
+This is used when the admin backend needs to send an OTC to users

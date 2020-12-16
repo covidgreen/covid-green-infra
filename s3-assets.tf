@@ -24,3 +24,9 @@ resource "aws_s3_bucket_public_access_block" "assets" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+
+resource "aws_s3_bucket_object" "admin_ui_directory" {
+    bucket = aws_s3_bucket.assets.id
+    key    = "admin-ui/"
+    source = "/dev/null"
+}

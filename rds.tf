@@ -49,7 +49,7 @@ module "rds_cluster_aurora_postgres" {
   storage_encrypted   = true
   skip_final_snapshot = var.environment == "dev" ? true : false
   backup_window       = "04:00-06:00"
-  security_groups     = concat([module.api_sg.id, module.push_sg.id, module.lambda_sg.id], aws_security_group.bastion.*.id)
+  security_groups     = concat([module.admin_sg.id, module.api_sg.id, module.push_sg.id, module.lambda_sg.id], aws_security_group.bastion.*.id)
   retention_period    = var.rds_backup_retention
   deletion_protection = true
 

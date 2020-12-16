@@ -25,6 +25,14 @@ data "aws_secretsmanager_secret_version" "rds" {
   secret_id = "${local.config_var_prefix}rds"
 }
 
+data "aws_secretsmanager_secret_version" "admin_push_service_token" {
+  secret_id = "${local.config_var_prefix}admin-push-service-token"
+}
+
+data "aws_secretsmanager_secret_version" "google_maps_api_key" {
+  secret_id = "${local.config_var_prefix}google-maps-api-key"
+}
+
 data "aws_secretsmanager_secret_version" "rds_read_only" {
   secret_id = "${local.config_var_prefix}rds-read-only"
 }
