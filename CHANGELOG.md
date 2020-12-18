@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 
 
+## [0.1.17] 2020-12-18
+- Added: optional SMS cleanup lambda
+
 ## [0.1.16] 2020-12-14
 - Added: Missing variables for proxy URLs
 - Added: New parameter "reduced_metrics_whitelist"
