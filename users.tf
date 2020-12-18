@@ -34,6 +34,15 @@ data "aws_iam_policy_document" "ci_user" {
       format("%s/*", aws_s3_bucket.assets.arn)
     ]
   }
+
+  statement {
+    actions = [
+      "route53:GetChange"
+    ]
+    resources = [
+      "*"
+    ]
+  }
 }
 
 data "aws_iam_policy_document" "ci_user_lambda" {
