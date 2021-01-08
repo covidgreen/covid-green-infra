@@ -528,7 +528,7 @@ resource "aws_ssm_parameter" "security_allow_no_token" {
   overwrite = true
   name      = format("%ssecurity_allow_no_token", local.config_var_prefix)
   type      = "String"
-  value     = var.security_allow_no_token
+  value     = var.allow_no_token
   tags      = module.labels.tags
 }
 
