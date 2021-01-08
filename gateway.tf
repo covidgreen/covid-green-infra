@@ -959,6 +959,71 @@ resource "aws_api_gateway_integration_response" "api_healthcheck_head_integratio
   depends_on = [aws_api_gateway_integration.api_healthcheck_head_integration]
 }
 
+## .well-known - GET
+
+resource "aws_api_gateway_resource" "well_known" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
+  path_part   = ".well-known"
+}
+
+## .well-known/apple-app-site-association
+resource "aws_api_gateway_resource" "apple_site_association" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.well_known.id
+  path_part   = "apple-app-site-association"
+}
+resource "aws_api_gateway_method" "apple_site_association_get" {
+  rest_api_id      = aws_api_gateway_rest_api.main.id
+  resource_id      = aws_api_gateway_resource.apple_site_association.id
+  http_method      = "GET"
+  authorization    = "NONE"
+  api_key_required = false
+}
+
+resource "aws_api_gateway_integration" "apple_site_association_get_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.main.id
+  resource_id             = aws_api_gateway_resource.apple_site_association.id
+  http_method             = aws_api_gateway_method.apple_site_association_get.http_method
+  timeout_milliseconds    = var.api_gateway_timeout_milliseconds
+  integration_http_method = "GET"
+  type                    = "AWS"
+  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/well-known/apple-app-site-association.json", var.aws_region, aws_s3_bucket.assets.id)
+  credentials             = aws_iam_role.gateway.arn
+}
+resource "aws_api_gateway_method_response" "apple_site_association_get_method_response" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.apple_site_association.id
+  http_method = aws_api_gateway_method.apple_site_association_get.http_method
+  status_code = "200"
+  response_models = {
+    "application/json" = "Empty"
+  }
+  response_parameters = {
+    "method.response.header.Content-Length"            = false,
+    "method.response.header.Content-Type"              = false,
+    "method.response.header.Cache-Control"             = true,
+    "method.response.header.Pragma"                    = true,
+    "method.response.header.Strict-Transport-Security" = true
+    "method.response.header.X-Frame-Options"           = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "apple_site_association_get_integration_response" {
+  rest_api_id       = aws_api_gateway_rest_api.main.id
+  resource_id       = aws_api_gateway_resource.apple_site_association.id
+  http_method       = aws_api_gateway_method.apple_site_association_get.http_method
+  selection_pattern = aws_api_gateway_method_response.apple_site_association_get_method_response.status_code
+  status_code       = aws_api_gateway_method_response.apple_site_association_get_method_response.status_code
+  response_parameters = {
+    "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
+    "method.response.header.Content-Type"              = "'application/json'",
+    "method.response.header.Cache-Control"             = "'no-store'",
+    "method.response.header.Pragma"                    = "'no-cache'",
+    "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
+  }
+}
+
 # #########################################
 # API Gateway Deployment
 # #########################################
@@ -988,7 +1053,8 @@ resource "aws_api_gateway_deployment" "live" {
     aws_api_gateway_integration.api_settings_exposures_get_integration,
     aws_api_gateway_integration.api_settings_language_get_integration,
     aws_api_gateway_integration.api_stats_get_integration,
-    aws_api_gateway_integration.api_data_exposures_item_get_integration
+    aws_api_gateway_integration.api_data_exposures_item_get_integration,
+    aws_api_gateway_integration.apple_site_association_get_integration,
   ]
 }
 

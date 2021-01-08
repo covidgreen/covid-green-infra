@@ -19,16 +19,6 @@ resource "aws_cognito_user_pool_domain" "main" {
   certificate_arn = aws_acm_certificate.wildcard_cert_us[0].arn
 }
 
-### This  is needed by cognito to add domain informations
-resource "aws_route53_record" "root_record" {
-  provider = aws.dns
-  name     = var.route53_zone
-  type     = "A"
-  zone_id  = data.aws_route53_zone.primary[0].id
-  records  = ["1.1.1.1"]
-  ttl      = 300
-}
-
 resource "aws_route53_record" "auth_cognito_A_record" {
   provider = aws.dns
   name     = aws_cognito_user_pool_domain.main.domain
@@ -40,10 +30,6 @@ resource "aws_route53_record" "auth_cognito_A_record" {
     # This zone_id is fixed
     zone_id = "Z2FDTNDATAQYW2"
   }
-
-  depends_on = [
-    aws_route53_record.root_record
-  ]
 }
 
 resource "aws_cognito_user_group" "settings_read" {
