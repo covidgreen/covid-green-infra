@@ -345,11 +345,27 @@ resource "aws_ssm_parameter" "security_verify_rate_limit_secs" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "sms_quiet_time" {
+  overwrite = true
+  name      = format("%ssms_quiet_time", local.config_var_prefix)
+  type      = "String"
+  value     = var.sms_quiet_time
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "sms_region" {
   overwrite = true
   name      = format("%ssms_region", local.config_var_prefix)
   type      = "String"
   value     = var.sms_region
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "sms_scheduled_resends" {
+  overwrite = true
+  name      = format("%ssms_scheduled_resends", local.config_var_prefix)
+  type      = "String"
+  value     = var.sms_scheduled_resends
   tags      = module.labels.tags
 }
 
