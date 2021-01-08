@@ -419,7 +419,7 @@ variable "code_lifetime_mins" {
 }
 variable "code_removal_mins" {
   description = "Lifetime in minutes before a one-time upload code is removed from the database"
-  default     = "10080"
+  default     = "2880"
 }
 variable "cso_schedule" {
   description = "cso lambda CloudWatch schedule"
