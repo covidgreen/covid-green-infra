@@ -524,7 +524,6 @@ resource "aws_ssm_parameter" "issue_proxy_url" {
 }
 
 resource "aws_ssm_parameter" "security_allow_no_token" {
-  count     = contains(var.optional_parameters_to_include, "security_allow_no_token") ? 1 : 0
   overwrite = true
   name      = format("%ssecurity_allow_no_token", local.config_var_prefix)
   type      = "String"
