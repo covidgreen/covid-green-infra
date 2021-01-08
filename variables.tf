@@ -379,10 +379,21 @@ variable "arcgis_url" {
   description = "ArcGIS URL from which stats should be loaded"
   default     = ""
 }
+variable "allow_no_token" {
+  description = "Flag to indicate if refresh token rquired or not"
+  default     = "false"
+}
+
 variable "callback_rate_limit_request_count" {
   description = "Number of callback requests allowed within the defined window"
   default     = "1"
 }
+
+variable "token_lifetime_no_refresh" {
+  description = "Token lifetime to use when no refresh token"
+  default     = "1y"
+}
+
 variable "callback_rate_limit_secs" {
   description = "Rate limiting period for callback requests in seconds"
   default     = "60"

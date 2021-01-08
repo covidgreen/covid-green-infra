@@ -337,6 +337,14 @@ resource "aws_ssm_parameter" "security_token_lifetime_mins" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "security_token_lifetime_no_refresh" {
+  overwrite = true
+  name      = format("%ssecurity_token_lifetime_no_refresh", local.config_var_prefix)
+  type      = "String"
+  value     = var.token_lifetime_no_refresh
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "security_verify_rate_limit_secs" {
   overwrite = true
   name      = format("%ssecurity_verify_rate_limit_secs", local.config_var_prefix)
