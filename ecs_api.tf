@@ -68,6 +68,7 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
       aws_ssm_parameter.security_callback_rate_limit_request_count.*.arn,
       aws_ssm_parameter.security_callback_rate_limit_secs.*.arn,
       aws_ssm_parameter.security_allow_no_token.*.arn,
+      aws_ssm_parameter.security_token_lifetime_no_refresh.*.arn,
       aws_ssm_parameter.verify_proxy_url.*.arn
     )
   }

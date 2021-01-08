@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 - Added: Optional parameters "security_allow_no_token"
+- Added: Optional parameters "security_token_lifetime_no_refresh"
 
 ## [0.1.16] 2020-12-14
 - Added: Missing variables for proxy URLs
