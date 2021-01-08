@@ -30,10 +30,6 @@ resource "aws_route53_record" "auth_cognito_A_record" {
     # This zone_id is fixed
     zone_id = "Z2FDTNDATAQYW2"
   }
-
-  depends_on = [
-    aws_route53_record.root_record
-  ]
 }
 
 resource "aws_cognito_user_group" "settings_read" {
