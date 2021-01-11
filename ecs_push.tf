@@ -37,10 +37,10 @@ data "aws_iam_policy_document" "push_ecs_task_policy" {
       aws_ssm_parameter.sms_url.arn,
       aws_ssm_parameter.symptom_date_offset.arn,
       aws_ssm_parameter.time_zone.arn,
-      aws_ssm_parameter.use_test_date_as_onset_date.arn      
+      aws_ssm_parameter.use_test_date_as_onset_date.arn      ,
+      aws_ssm_parameter.sms_scheduling.arn
       ],
       aws_ssm_parameter.issue_proxy_url.*.arn,
-      aws_ssm_parameter.sms_scheduling.arn
     )
   }
 
