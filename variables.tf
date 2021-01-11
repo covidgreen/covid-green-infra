@@ -788,11 +788,7 @@ variable "sms_region" {
 variable "sms_scheduling_schedule" {
   description = "SMS scheduling lambda cloudwatch schedule"
   default     = "cron(*/5 * * * * *)"
-}
-variable "cleanup_schedule" {
-  description = "cleanup lambda CloudWatch schedule"
-  default     = "cron(0 * * * ? *)"
-}  
+} 
 variable "sms_quiet_time" {
   description = "SMS time windows not to send scheduled SMS OTCs"
   default     = ""
