@@ -793,7 +793,7 @@ variable "cleanup_schedule" {
   description = "cleanup lambda CloudWatch schedule"
   default     = "cron(0 * * * ? *)"
 }  
-}variable "sms_quiet_time" {
+variable "sms_quiet_time" {
   description = "SMS time windows not to send scheduled SMS OTCs"
   default     = ""
 }
