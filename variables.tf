@@ -774,9 +774,14 @@ variable "sms_region" {
   description = "AWS region to use when sending SMS messages"
   default     = ""
 }
-variable "sms_scheduling" {
-  description = "SMS scheduling if repeated OTCs are required"
-  default     = ""
+variable "sms_scheduling_schedule" {
+  description = "SMS scheduling lambda cloudwatch schedule"
+  default     = "cron(*/5 * * * * *)"
+}
+variable "cleanup_schedule" {
+  description = "cleanup lambda CloudWatch schedule"
+  default     = "cron(0 * * * ? *)"
+}  
 }variable "sms_quiet_time" {
   description = "SMS time windows not to send scheduled SMS OTCs"
   default     = ""
