@@ -361,6 +361,22 @@ resource "aws_ssm_parameter" "sms_region" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "sms_scheduling" {
+  overwrite = true
+  name      = format("%ssms_scheduling", local.config_var_prefix)
+  type      = "String"
+  value     = var.sms_scheduling
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "sms_quiet_time" {
+  overwrite = true
+  name      = format("%ssms_quiet_time", local.config_var_prefix)
+  type      = "String"
+  value     = var.sms_quiet_time
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "sms_sender" {
   overwrite = true
   name      = format("%ssms_sender", local.config_var_prefix)
