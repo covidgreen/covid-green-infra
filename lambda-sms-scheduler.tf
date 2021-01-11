@@ -31,4 +31,5 @@ module "sms-scheduler" {
   subnet_ids         = module.vpc.private_subnets
   tags               = module.labels.tags
   timeout            = 180
+  cloudwatch_schedule_expression = var.sms_scheduling_schedule
 }
