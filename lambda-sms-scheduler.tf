@@ -9,7 +9,7 @@ module "sms-scheduler" {
     aws_ssm_parameter.sms_region.arn,
     aws_ssm_parameter.sms_quiet_time.arn,
     aws_ssm_parameter.sms_scheduling.arn,
-    aws_ssm_parameter.code_lifetime_mins,
+    aws_ssm_parameter.security_code_lifetime_mins,
     aws_ssm_parameter.security_code_length,
     aws_ssm_parameter.security_code_charset,
     aws_ssm_parameter.db_database.arn,
