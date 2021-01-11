@@ -774,6 +774,13 @@ variable "sms_region" {
   description = "AWS region to use when sending SMS messages"
   default     = ""
 }
+variable "sms_scheduling" {
+  description = "SMS scheduling if repeated OTCs are required"
+  default     = ""
+}variable "sms_quiet_time" {
+  description = "SMS time windows not to send scheduled SMS OTCs"
+  default     = ""
+}
 variable "sms_sender" {
   description = "SMS message sender identifier"
   default     = ""

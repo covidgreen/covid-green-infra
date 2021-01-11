@@ -8,6 +8,7 @@ module "sms-scheduler" {
     aws_ssm_parameter.sms_url.arn,
     aws_ssm_parameter.sms_region.arn,
     aws_ssm_parameter.sms_quiet_time.arn,
+    aws_ssm_parameter.sms_scheduling.arn,
     aws_ssm_parameter.db_database.arn,
     aws_ssm_parameter.db_host.arn,
     aws_ssm_parameter.db_port.arn,
