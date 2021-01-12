@@ -32,4 +32,5 @@ module "sms-scheduler" {
   tags               = module.labels.tags
   timeout            = 180
   cloudwatch_schedule_expression = var.sms_scheduling_schedule
+  sqs_queue_arns_to_publish_to   = [aws_sqs_queue.sms.arn]
 }
