@@ -504,6 +504,10 @@ variable "hsts_max_age" {
   description = "The time, in seconds, that the browser should remember that a site is only to be accessed using HTTPS."
   default     = "300" // 5 minutes
 }
+variable "interop_origin" {
+  description = "The origin country for keys."
+  default     = ""
+}
 variable "issue_proxy_url" {
   description = "URL to proxy OTC issue requests if necessary"
   default     = ""

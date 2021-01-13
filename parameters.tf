@@ -201,6 +201,14 @@ resource "aws_ssm_parameter" "hsts_max_age" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "interop_origin" {
+  overwrite = true
+  name      = format("%sinterop_origin", local.config_var_prefix)
+  type      = "String"
+  value     = var.interop_origin
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "jwt_issuer" {
   overwrite = true
   name      = format("%sjwt_issuer", local.config_var_prefix)
