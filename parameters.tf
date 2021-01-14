@@ -202,6 +202,7 @@ resource "aws_ssm_parameter" "hsts_max_age" {
 }
 
 resource "aws_ssm_parameter" "interop_origin" {
+  count     = contains(var.optional_parameters_to_include, "interop_origin") ? 1 : 0
   overwrite = true
   name      = format("%sinterop_origin", local.config_var_prefix)
   type      = "String"
@@ -370,6 +371,7 @@ resource "aws_ssm_parameter" "sms_region" {
 }
 
 resource "aws_ssm_parameter" "sms_scheduling" {
+  count     = contains(var.optional_parameters_to_include, "sms_scheduling") ? 1 : 0
   overwrite = true
   name      = format("%ssms_scheduling", local.config_var_prefix)
   type      = "String"
@@ -378,6 +380,7 @@ resource "aws_ssm_parameter" "sms_scheduling" {
 }
 
 resource "aws_ssm_parameter" "sms_quiet_time" {
+  count     = contains(var.optional_parameters_to_include, "sms_quiet_time") ? 1 : 0
   overwrite = true
   name      = format("%ssms_quiet_time", local.config_var_prefix)
   type      = "String"
