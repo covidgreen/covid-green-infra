@@ -4,11 +4,9 @@ module "sms-scheduler" {
   enable = true
   name   = format("%s-sms-scheduler", module.labels.id)
 
-  aws_parameter_arns = [
+  aws_parameter_arns = concat([
     aws_ssm_parameter.sms_url.arn,
     aws_ssm_parameter.sms_region.arn,
-    aws_ssm_parameter.sms_quiet_time.arn,
-    aws_ssm_parameter.sms_scheduling.arn,
     aws_ssm_parameter.security_code_lifetime_mins.arn,
     aws_ssm_parameter.security_code_length.arn,
     aws_ssm_parameter.security_code_charset.arn,
@@ -18,7 +16,10 @@ module "sms-scheduler" {
     aws_ssm_parameter.db_reader_host.arn,
     aws_ssm_parameter.db_ssl.arn,
     aws_ssm_parameter.time_zone.arn
-  ]    
+    ],
+    aws_ssm_parameter.sms_quiet_time.*.arn,
+    aws_ssm_parameter.sms_scheduling.*.arn
+  )    
   aws_secret_arns    = concat([data.aws_secretsmanager_secret_version.rds_read_write.arn], data.aws_secretsmanager_secret_version.encrypt.*.arn)
   config_var_prefix  = local.config_var_prefix
   handler            = "sms-scheduler.handler"
