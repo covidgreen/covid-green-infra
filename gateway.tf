@@ -440,6 +440,10 @@ resource "aws_api_gateway_integration_response" "admin_proxy_any_integration" {
   resource_id = aws_api_gateway_resource.admin_proxy.id
   http_method = aws_api_gateway_method.admin_proxy_any.http_method
   status_code = aws_api_gateway_method_response.admin_proxy_any.status_code
+
+  depends_on = [ 
+    aws_api_gateway_integration.admin_proxy_any_integration
+   ]
 }
 
 ## /api
