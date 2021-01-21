@@ -49,7 +49,7 @@ module "rds_cluster_aurora_postgres" {
   storage_encrypted   = true
   skip_final_snapshot = var.environment == "dev" ? true : false
   backup_window       = "04:00-06:00"
-  security_groups     = concat([module.api_sg.id, module.push_sg.id, module.lambda_sg.id], aws_security_group.bastion.*.id)
+  security_groups     = concat([module.admin_sg.id, module.api_sg.id, module.push_sg.id, module.lambda_sg.id, aws_security_group.quicksight.id], aws_security_group.bastion.*.id)
   retention_period    = var.rds_backup_retention
   deletion_protection = true
 
@@ -64,4 +64,29 @@ module "rds_cluster_aurora_postgres" {
   # snapshot_identifier = "SNAPSHOT ID HERE"
 
   tags = module.labels.tags
+}
+
+resource "aws_security_group" "quicksight" {
+  name        = "${module.labels.id}-quicksight"
+  description = "Allow Quicksight to connect to RDS"
+  vpc_id      = module.vpc.vpc_id
+  tags = module.labels.tags
+
+    ingress {
+    description = "TLS from VPC"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    # Can't use security group of RDS as it might cause circular dependency
+    cidr_blocks = concat(var.intra_subnets_cidr, var.private_subnets_cidr)
+  }
+
+  egress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    # Can't use security group of RDS as it might cause circular dependency
+    cidr_blocks = concat(var.intra_subnets_cidr, var.private_subnets_cidr)
+  }
+
 }
