@@ -1,6 +1,46 @@
 # #########################################
 # Parameters
 # #########################################
+resource "aws_ssm_parameter" "admin_cognito_user_pool_id" {
+  overwrite = true
+  name      = format("%sadmin_cognito_user_pool_id", local.config_var_prefix)
+  type      = "String"
+  value     = aws_cognito_user_pool.admin_user_pool.id
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "admin_cognito_region" {
+  overwrite = true
+  name      = format("%sadmin_cognito_region", local.config_var_prefix)
+  type      = "String"
+  value     = var.aws_region
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "admin_cors_origin" {
+  overwrite = true
+  name      = format("%sadmin_cors_origin", local.config_var_prefix)
+  type      = "String"
+  value     = var.admin_cors_origin
+  tags      = module.labels.tags
+}
+resource "aws_ssm_parameter" "admin_host" {
+  overwrite = true
+  name      = format("%sadmin_host", local.config_var_prefix)
+  type      = "String"
+  value     = "0.0.0.0"
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "admin_port" {
+  overwrite = true
+  name      = format("%sadmin_port", local.config_var_prefix)
+  type      = "String"
+  value     = var.admin_listening_port
+  tags      = module.labels.tags
+}
+
+
 resource "aws_ssm_parameter" "api_host" {
   overwrite = true
   name      = format("%sapi_host", local.config_var_prefix)
@@ -161,6 +201,15 @@ resource "aws_ssm_parameter" "hsts_max_age" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "interop_origin" {
+  count     = contains(var.optional_parameters_to_include, "interop_origin") ? 1 : 0
+  overwrite = true
+  name      = format("%sinterop_origin", local.config_var_prefix)
+  type      = "String"
+  value     = var.interop_origin
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "jwt_issuer" {
   overwrite = true
   name      = format("%sjwt_issuer", local.config_var_prefix)
@@ -201,6 +250,22 @@ resource "aws_ssm_parameter" "onset_date_mandatory" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "push_service_url" {
+  overwrite = true
+  name      = format("%spush_service_url", local.config_var_prefix)
+  type      = "String"
+  value     = format("https://%s", aws_lb.push.dns_name)
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "push_cors_origin" {
+  overwrite = true
+  name      = format("%spush_cors_origin", local.config_var_prefix)
+  type      = "String"
+  value     = var.push_cors_origin
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "push_host" {
   overwrite = true
   name      = format("%spush_host", local.config_var_prefix)
@@ -214,6 +279,14 @@ resource "aws_ssm_parameter" "push_port" {
   name      = format("%spush_port", local.config_var_prefix)
   type      = "String"
   value     = var.push_listening_port
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "reduced_metrics_whitelist" {
+  overwrite = true
+  name      = format("%sreduced_metrics_whitelist", local.config_var_prefix)
+  type      = "String"
+  value     = var.reduced_metrics_whitelist
   tags      = module.labels.tags
 }
 
@@ -273,6 +346,14 @@ resource "aws_ssm_parameter" "security_token_lifetime_mins" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "security_token_lifetime_no_refresh" {
+  overwrite = true
+  name      = format("%ssecurity_token_lifetime_no_refresh", local.config_var_prefix)
+  type      = "String"
+  value     = var.token_lifetime_no_refresh
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "security_verify_rate_limit_secs" {
   overwrite = true
   name      = format("%ssecurity_verify_rate_limit_secs", local.config_var_prefix)
@@ -286,6 +367,24 @@ resource "aws_ssm_parameter" "sms_region" {
   name      = format("%ssms_region", local.config_var_prefix)
   type      = "String"
   value     = var.sms_region
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "sms_scheduling" {
+  count     = contains(var.optional_parameters_to_include, "sms_scheduling") ? 1 : 0
+  overwrite = true
+  name      = format("%ssms_scheduling", local.config_var_prefix)
+  type      = "String"
+  value     = var.sms_scheduling
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "sms_quiet_time" {
+  count     = contains(var.optional_parameters_to_include, "sms_quiet_time") ? 1 : 0
+  overwrite = true
+  name      = format("%ssms_quiet_time", local.config_var_prefix)
+  type      = "String"
+  value     = var.sms_quiet_time
   tags      = module.labels.tags
 }
 
@@ -393,6 +492,16 @@ resource "aws_ssm_parameter" "security_self_isolation_notices_rate_limit_secs" {
   value = var.security_self_isolation_notices_rate_limit_secs
 }
 
+resource "aws_ssm_parameter" "settings_lambda" {
+  overwrite = true
+  name      = format("%ssettings_lambda", local.config_var_prefix)
+  type      = "String"
+  value     = aws_lambda_function.settings.arn
+  tags      = module.labels.tags
+}
+
+
+
 # #########################################
 # Optional parameters - These exist for some instances
 # #########################################
@@ -432,6 +541,23 @@ resource "aws_ssm_parameter" "daily_registrations_reporter_sns_arn" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "issue_proxy_url" {
+  count     = contains(var.optional_parameters_to_include, "issue_proxy_url") ? 1 : 0
+  overwrite = true
+  name      = format("%sissue_proxy_url", local.config_var_prefix)
+  type      = "String"
+  value     = var.issue_proxy_url
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "security_allow_no_token" {
+  overwrite = true
+  name      = format("%ssecurity_allow_no_token", local.config_var_prefix)
+  type      = "String"
+  value     = var.allow_no_token
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "security_callback_rate_limit_request_count" {
   count     = contains(var.optional_parameters_to_include, "security_callback_rate_limit_request_count") ? 1 : 0
   overwrite = true
@@ -447,5 +573,14 @@ resource "aws_ssm_parameter" "security_callback_rate_limit_secs" {
   name      = format("%ssecurity_callback_rate_limit_secs", local.config_var_prefix)
   type      = "String"
   value     = var.callback_rate_limit_secs
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "verify_proxy_url" {
+  count     = contains(var.optional_parameters_to_include, "verify_proxy_url") ? 1 : 0
+  overwrite = true
+  name      = format("%sverify_proxy_url", local.config_var_prefix)
+  type      = "String"
+  value     = var.verify_proxy_url
   tags      = module.labels.tags
 }

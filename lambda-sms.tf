@@ -21,7 +21,8 @@ module "sms" {
     aws_ssm_parameter.sms_region.arn,
     aws_ssm_parameter.sms_sender.arn,
     aws_ssm_parameter.sms_template.arn,
-    aws_ssm_parameter.sms_url.arn
+    aws_ssm_parameter.sms_url.arn,
+    aws_ssm_parameter.time_zone.arn
   ]
   aws_secret_arns                            = concat([data.aws_secretsmanager_secret_version.rds_read_write.arn], data.aws_secretsmanager_secret_version.sms.*.arn)
   config_var_prefix                          = local.config_var_prefix

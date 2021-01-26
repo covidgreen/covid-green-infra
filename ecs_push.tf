@@ -15,7 +15,7 @@ data "aws_iam_policy_document" "push_ecs_assume_role_policy" {
 data "aws_iam_policy_document" "push_ecs_task_policy" {
   statement {
     actions = ["ssm:GetParameter"]
-    resources = [
+    resources = concat([
       aws_ssm_parameter.cors_origin.arn,
       aws_ssm_parameter.db_database.arn,
       aws_ssm_parameter.db_host.arn,
@@ -27,23 +27,32 @@ data "aws_iam_policy_document" "push_ecs_task_policy" {
       aws_ssm_parameter.hsts_max_age.arn,
       aws_ssm_parameter.log_level.arn,
       aws_ssm_parameter.onset_date_mandatory.arn,
+      aws_ssm_parameter.push_cors_origin.arn,
       aws_ssm_parameter.push_host.arn,
       aws_ssm_parameter.push_port.arn,
+      aws_ssm_parameter.reduced_metrics_whitelist.arn,
       aws_ssm_parameter.security_code_charset.arn,
       aws_ssm_parameter.security_code_length.arn,
       aws_ssm_parameter.security_code_lifetime_mins.arn,
       aws_ssm_parameter.sms_url.arn,
       aws_ssm_parameter.symptom_date_offset.arn,
-      aws_ssm_parameter.use_test_date_as_onset_date.arn
-    ]
+      aws_ssm_parameter.time_zone.arn,
+      aws_ssm_parameter.use_test_date_as_onset_date.arn      
+      ],
+      aws_ssm_parameter.issue_proxy_url.*.arn,
+      aws_ssm_parameter.sms_scheduling.*.arn
+    )
   }
 
   statement {
     actions = ["secretsmanager:GetSecretValue"]
-    resources = [
+    resources = concat([
       data.aws_secretsmanager_secret_version.jwt.arn,
+      data.aws_secretsmanager_secret_version.encrypt.arn,
       data.aws_secretsmanager_secret_version.rds_read_write.arn
-    ]
+      ],
+      data.aws_secretsmanager_secret_version.verify_proxy.*.arn
+    )
   }
 
   statement {
