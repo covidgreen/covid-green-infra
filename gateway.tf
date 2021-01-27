@@ -448,10 +448,16 @@ resource "aws_api_gateway_integration_response" "admin_proxy_any_integration" {
 
 
 ## /enxlogo/{key+}
-resource "aws_api_gateway_resource" "enxlogo" {
+resource "aws_api_gateway_resource" "enxlogoroot" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   parent_id   = aws_api_gateway_rest_api.main.root_resource_id
-  path_part   = "enxlogo/{key+}"
+  path_part   = "enxlogo"
+}
+
+resource "aws_api_gateway_resource" "enxlogo" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.enxlogoroot.id
+  path_part   = "{key+}"
 }
 
 resource "aws_api_gateway_method" "enxlogo_get" {
