@@ -448,21 +448,21 @@ resource "aws_api_gateway_integration_response" "admin_proxy_any_integration" {
 
 
 ## /enxlogo/{key+}
-resource "aws_api_gateway_resource" "enxlogoroot" {
+resource "aws_api_gateway_resource" "enxlogo" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   parent_id   = aws_api_gateway_rest_api.main.root_resource_id
   path_part   = "enxlogo"
 }
 
-resource "aws_api_gateway_resource" "enxlogo" {
+resource "aws_api_gateway_resource" "enxlogo_proxy" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  parent_id   = aws_api_gateway_resource.enxlogoroot.id
+  parent_id   = aws_api_gateway_resource.enxlogo.id
   path_part   = "{key+}"
 }
 
-resource "aws_api_gateway_method" "enxlogo_get" {
+resource "aws_api_gateway_method" "enxlogo_proxy_get" {
   rest_api_id      = aws_api_gateway_rest_api.main.id
-  resource_id      = aws_api_gateway_resource.enxlogo.id
+  resource_id      = aws_api_gateway_resource.enxlogo_proxy.id
   http_method      = "GET"
   authorization    = "NONE"
   api_key_required = false
@@ -471,10 +471,10 @@ resource "aws_api_gateway_method" "enxlogo_get" {
   }
 }
 
-resource "aws_api_gateway_integration" "enxlogo_get_integration" {
+resource "aws_api_gateway_integration" "enxlogo_proxy_get_integration" {
   rest_api_id             = aws_api_gateway_rest_api.main.id
-  resource_id             = aws_api_gateway_resource.enxlogo.id
-  http_method             = aws_api_gateway_method.enxlogo_get.http_method
+  resource_id             = aws_api_gateway_resource.enxlogo_proxy.id
+  http_method             = aws_api_gateway_method.enxlogo_proxy_get.http_method
   timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
@@ -485,10 +485,10 @@ resource "aws_api_gateway_integration" "enxlogo_get_integration" {
   }
 }
 
-resource "aws_api_gateway_method_response" "enxlogo_get_method_response" {
+resource "aws_api_gateway_method_response" "enxlogo_proxy_get_method_response" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.enxlogo.id
-  http_method = aws_api_gateway_method.enxlogo_get.http_method
+  resource_id = aws_api_gateway_resource.enxlogo_proxy.id
+  http_method = aws_api_gateway_method.enxlogo_proxy_get.http_method
   status_code = "200"
   response_models = {
     "application/json" = "Empty"
@@ -502,12 +502,12 @@ resource "aws_api_gateway_method_response" "enxlogo_get_method_response" {
   }
 }
 
-resource "aws_api_gateway_integration_response" "enxlogo_get_integration_response" {
+resource "aws_api_gateway_integration_response" "enxlogo_proxy_get_integration_response" {
   rest_api_id       = aws_api_gateway_rest_api.main.id
-  resource_id       = aws_api_gateway_resource.enxlogo.id
-  http_method       = aws_api_gateway_method.enxlogo_get.http_method
-  selection_pattern = aws_api_gateway_method_response.enxlogo_get_method_response.status_code
-  status_code       = aws_api_gateway_method_response.enxlogo_get_method_response.status_code
+  resource_id       = aws_api_gateway_resource.enxlogo_proxy.id
+  http_method       = aws_api_gateway_method.enxlogo_proxy_get.http_method
+  selection_pattern = aws_api_gateway_method_response.enxlogo_proxy_get_method_response.status_code
+  status_code       = aws_api_gateway_method_response.enxlogo_proxy_get_method_response.status_code
   response_parameters = {
     "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
     "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
@@ -1057,7 +1057,7 @@ resource "aws_api_gateway_deployment" "live" {
     aws_api_gateway_integration.admin_ui_key_get_integration,
     aws_api_gateway_integration.admin_proxy_options_integration,
     aws_api_gateway_integration.admin_proxy_any_integration,
-    aws_api_gateway_integration.enxlogo_get_integration,
+    aws_api_gateway_integration.enxlogo_proxy_get_integration,
     aws_api_gateway_integration.api_proxy_options_integration,
     aws_api_gateway_integration.api_proxy_any_integration,
     aws_api_gateway_integration.api_settings_get_integration,
