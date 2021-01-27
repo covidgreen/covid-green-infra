@@ -446,18 +446,23 @@ resource "aws_api_gateway_integration_response" "admin_proxy_any_integration" {
    ]
 }
 
-## /enxlogo
+
+## /enxlogo/{key+}
 resource "aws_api_gateway_resource" "enxlogo" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   parent_id   = aws_api_gateway_rest_api.main.root_resource_id
-  path_part   = "enxlogo"
+  path_part   = "enxlogo/{key+}"
 }
+
 resource "aws_api_gateway_method" "enxlogo_get" {
   rest_api_id      = aws_api_gateway_rest_api.main.id
   resource_id      = aws_api_gateway_resource.enxlogo.id
   http_method      = "GET"
   authorization    = "NONE"
   api_key_required = false
+  request_parameters = {
+    "method.request.path.key" = true
+  }
 }
 
 resource "aws_api_gateway_integration" "enxlogo_get_integration" {
@@ -467,9 +472,13 @@ resource "aws_api_gateway_integration" "enxlogo_get_integration" {
   timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
-  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/enxlogo/logo.png", var.aws_region, aws_s3_bucket.assets.id)
+  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/enxlogo/{key}", var.aws_region, aws_s3_bucket.assets.id)
   credentials             = aws_iam_role.gateway.arn
+  request_parameters = {
+    "integration.request.path.key" = "method.request.path.key",
+  }
 }
+
 resource "aws_api_gateway_method_response" "enxlogo_get_method_response" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   resource_id = aws_api_gateway_resource.enxlogo.id
@@ -487,7 +496,7 @@ resource "aws_api_gateway_method_response" "enxlogo_get_method_response" {
   }
 }
 
-resource "aws_api_gateway_integration_response" "enx_logo_get_integration_response" {
+resource "aws_api_gateway_integration_response" "enxlogo_get_integration_response" {
   rest_api_id       = aws_api_gateway_rest_api.main.id
   resource_id       = aws_api_gateway_resource.enxlogo.id
   http_method       = aws_api_gateway_method.enxlogo_get.http_method
@@ -501,7 +510,6 @@ resource "aws_api_gateway_integration_response" "enx_logo_get_integration_respon
     "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
   }
 }
-
 
 ## /api
 resource "aws_api_gateway_resource" "api" {
