@@ -1039,6 +1039,7 @@ resource "aws_api_gateway_deployment" "live" {
     aws_api_gateway_integration.admin_ui_key_get_integration,
     aws_api_gateway_integration.admin_proxy_options_integration,
     aws_api_gateway_integration.admin_proxy_any_integration,
+    aws_api_gateway_integration.enxlogo_get_integration,
     aws_api_gateway_integration.api_proxy_options_integration,
     aws_api_gateway_integration.api_proxy_any_integration,
     aws_api_gateway_integration.api_settings_get_integration,
