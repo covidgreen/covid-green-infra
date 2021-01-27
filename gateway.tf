@@ -485,29 +485,27 @@ resource "aws_api_gateway_integration" "enxlogo_proxy_get_integration" {
   }
 }
 
-resource "aws_api_gateway_method_response" "enxlogo_proxy_get_method_response" {
+resource "aws_api_gateway_method_response" "enxlogo_proxy_get" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   resource_id = aws_api_gateway_resource.enxlogo_proxy.id
   http_method = aws_api_gateway_method.enxlogo_proxy_get.http_method
   status_code = "200"
-  response_models = {
-    "application/json" = "Empty"
-  }
+
   response_parameters = {
-    "method.response.header.Content-Length"            = false,
-    "method.response.header.Content-Type"              = false,
+    "method.response.header.Content-Length"            = true,
+    "method.response.header.Content-Type"              = true,
     "method.response.header.Cache-Control"             = true,
     "method.response.header.Pragma"                    = true,
     "method.response.header.Strict-Transport-Security" = true
   }
 }
 
-resource "aws_api_gateway_integration_response" "enxlogo_proxy_get_integration_response" {
+resource "aws_api_gateway_integration_response" "enxlogo_proxy_get_integration" {
   rest_api_id       = aws_api_gateway_rest_api.main.id
   resource_id       = aws_api_gateway_resource.enxlogo_proxy.id
   http_method       = aws_api_gateway_method.enxlogo_proxy_get.http_method
-  selection_pattern = aws_api_gateway_method_response.enxlogo_proxy_get_method_response.status_code
-  status_code       = aws_api_gateway_method_response.enxlogo_proxy_get_method_response.status_code
+  selection_pattern = aws_api_gateway_method_response.enxlogo_proxy_get.status_code
+  status_code       = aws_api_gateway_method_response.enxlogo_proxy_get.status_code
   response_parameters = {
     "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
     "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
