@@ -448,22 +448,22 @@ resource "aws_api_gateway_integration_response" "admin_proxy_any_integration" {
 }
 
 
-## /enxlogo/{key+}
-resource "aws_api_gateway_resource" "enxlogo_root" {
+## /enx/{key+}
+resource "aws_api_gateway_resource" "enx_root" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   parent_id   = aws_api_gateway_rest_api.main.root_resource_id
-  path_part   = "enxlogo"
+  path_part   = "enx"
 }
 
-resource "aws_api_gateway_resource" "enxlogo_proxy" {
+resource "aws_api_gateway_resource" "enx_proxy" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  parent_id   = aws_api_gateway_resource.enxlogo_root.id
+  parent_id   = aws_api_gateway_resource.enx_root.id
   path_part   = "{key+}"
 }
 
-resource "aws_api_gateway_method" "enxlogo_proxy_get" {
+resource "aws_api_gateway_method" "enx_proxy_get" {
   rest_api_id      = aws_api_gateway_rest_api.main.id
-  resource_id      = aws_api_gateway_resource.enxlogo_proxy.id
+  resource_id      = aws_api_gateway_resource.enx_proxy.id
   http_method      = "GET"
   authorization    = "NONE"
   api_key_required = false
@@ -472,24 +472,24 @@ resource "aws_api_gateway_method" "enxlogo_proxy_get" {
   }
 }
 
-resource "aws_api_gateway_integration" "enxlogo_proxy_get_integration" {
+resource "aws_api_gateway_integration" "enx_proxy_get_integration" {
   rest_api_id             = aws_api_gateway_rest_api.main.id
-  resource_id             = aws_api_gateway_resource.enxlogo_proxy.id
-  http_method             = aws_api_gateway_method.enxlogo_proxy_get.http_method
+  resource_id             = aws_api_gateway_resource.enx_proxy.id
+  http_method             = aws_api_gateway_method.enx_proxy_get.http_method
   timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
-  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/enxlogo/{key}", var.aws_region, aws_s3_bucket.assets.id)
+  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/enx/{key}", var.aws_region, aws_s3_bucket.assets.id)
   credentials             = aws_iam_role.gateway.arn
   request_parameters = {
     "integration.request.path.key" = "method.request.path.key",
   }
 }
 
-resource "aws_api_gateway_method_response" "enxlogo_proxy_get" {
+resource "aws_api_gateway_method_response" "enx_proxy_get" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.enxlogo_proxy.id
-  http_method = aws_api_gateway_method.enxlogo_proxy_get.http_method
+  resource_id = aws_api_gateway_resource.enx_proxy.id
+  http_method = aws_api_gateway_method.enx_proxy_get.http_method
   status_code = "200"
 
   response_parameters = {
@@ -501,12 +501,12 @@ resource "aws_api_gateway_method_response" "enxlogo_proxy_get" {
   }
 }
 
-resource "aws_api_gateway_integration_response" "enxlogo_proxy_get_integration" {
+resource "aws_api_gateway_integration_response" "enx_proxy_get_integration" {
   rest_api_id       = aws_api_gateway_rest_api.main.id
-  resource_id       = aws_api_gateway_resource.enxlogo_proxy.id
-  http_method       = aws_api_gateway_method.enxlogo_proxy_get.http_method
-  selection_pattern = aws_api_gateway_method_response.enxlogo_proxy_get.status_code
-  status_code       = aws_api_gateway_method_response.enxlogo_proxy_get.status_code
+  resource_id       = aws_api_gateway_resource.enx_proxy.id
+  http_method       = aws_api_gateway_method.enx_proxy_get.http_method
+  selection_pattern = aws_api_gateway_method_response.enx_proxy_get.status_code
+  status_code       = aws_api_gateway_method_response.enx_proxy_get.status_code
   response_parameters = {
     "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
     "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
@@ -1056,7 +1056,7 @@ resource "aws_api_gateway_deployment" "live" {
     aws_api_gateway_integration.admin_ui_key_get_integration,
     aws_api_gateway_integration.admin_proxy_options_integration,
     aws_api_gateway_integration.admin_proxy_any_integration,
-    aws_api_gateway_integration.enxlogo_proxy_get_integration,
+    aws_api_gateway_integration.enx_proxy_get_integration,
     aws_api_gateway_integration.api_proxy_options_integration,
     aws_api_gateway_integration.api_proxy_any_integration,
     aws_api_gateway_integration.api_settings_get_integration,
@@ -1131,16 +1131,5 @@ resource "aws_api_gateway_gateway_response" "test" {
 
   response_parameters = {
     "gatewayresponse.header.access-control-allow-origin" = "'*'"
-  }
-}
-
-resource "aws_cloudwatch_log_metric_filter" "gw_enxlogo_filter" {
-  log_group_name = "${module.labels.id}-gw-access-logs"
-  name = "${module.labels.id}-enxlogo-filter"
-  pattern = "[timestamp, request, status_code = 400, bytes, ...]"
-  metric_transformation {
-    name = "enxlogorequests"
-    namespace = "ApiGateway"
-    value = "1"
   }
 }
