@@ -493,6 +493,7 @@ resource "aws_api_gateway_method_response" "enxlogo_proxy_get" {
 
   response_parameters = {
     "method.response.header.Content-Length"            = true,
+    "method.response.header.Accept-Ranges"             = true,
     "method.response.header.Content-Type"              = true,
     "method.response.header.Cache-Control"             = true,
     "method.response.header.Pragma"                    = true,
@@ -509,6 +510,7 @@ resource "aws_api_gateway_integration_response" "enxlogo_proxy_get_integration" 
   response_parameters = {
     "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
     "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
+    "method.response.header.Accept-Ranges"             = "integration.response.header.Accept-Ranges",
     "method.response.header.Cache-Control"             = "'no-store'",
     "method.response.header.Pragma"                    = "'no-cache'",
     "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
@@ -1130,5 +1132,16 @@ resource "aws_api_gateway_gateway_response" "test" {
 
   response_parameters = {
     "gatewayresponse.header.access-control-allow-origin" = "'*'"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "gw_enxlogo_filter" {
+  log_group_name = "${module.labels.id}-gw-access-logs"
+  name = "${module.labels.id}-enxlogo-filter"
+  pattern = "[timestamp, request, status_code = 400, bytes, ...]"
+  metric_transformation {
+    name = "enxlogorequests"
+    namespace = "ApiGateway"
+    value = "1"
   }
 }
