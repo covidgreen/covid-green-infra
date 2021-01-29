@@ -9,7 +9,7 @@ resource "aws_api_gateway_rest_api" "main" {
   binary_media_types = concat([
     "application/zip",
     "application/octet-stream",
-    "image/png",
+    "*/*",
   ], var.api_gateway_customizations_binary_types)
 
   endpoint_configuration {
