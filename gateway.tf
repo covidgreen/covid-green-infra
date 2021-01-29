@@ -1084,7 +1084,7 @@ resource "aws_api_gateway_stage" "live" {
   stage_name    = "live"
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.api_gateway.arn
-    format          = "[$context.requestTime] \"$context.httpMethod $context.resourcePath $context.protocol\" $context.status $context.responseLength $context.requestId"
+    format          = "[$context.requestTime] \"$context.httpMethod $context.identity.userAgent $context.path $context.resourcePath $context.protocol\" $context.status $context.responseLength $context.requestId"
   }
 
   lifecycle {
