@@ -507,7 +507,6 @@ resource "aws_api_gateway_integration_response" "enxlogo_proxy_get_integration" 
   selection_pattern = aws_api_gateway_method_response.enxlogo_proxy_get.status_code
   status_code       = aws_api_gateway_method_response.enxlogo_proxy_get.status_code
   response_parameters = {
-    "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
     "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
     "method.response.header.Cache-Control"             = "'no-store'",
     "method.response.header.Pragma"                    = "'no-cache'",
