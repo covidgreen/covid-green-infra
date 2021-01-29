@@ -493,7 +493,7 @@ resource "aws_api_gateway_method_response" "enxlogo_proxy_get" {
 
   response_parameters = {
     "method.response.header.Content-Length"            = false,
-    "method.response.header.Content-Type"              = true,
+    "method.response.header.Content-Type"              = false,
     "method.response.header.Cache-Control"             = true,
     "method.response.header.Pragma"                    = true,
     "method.response.header.Strict-Transport-Security" = true
@@ -507,6 +507,7 @@ resource "aws_api_gateway_integration_response" "enxlogo_proxy_get_integration" 
   selection_pattern = aws_api_gateway_method_response.enxlogo_proxy_get.status_code
   status_code       = aws_api_gateway_method_response.enxlogo_proxy_get.status_code
   response_parameters = {
+    "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
     "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
     "method.response.header.Cache-Control"             = "'no-store'",
     "method.response.header.Pragma"                    = "'no-cache'",
