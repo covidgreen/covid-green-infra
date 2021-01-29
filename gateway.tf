@@ -492,7 +492,7 @@ resource "aws_api_gateway_method_response" "enxlogo_proxy_get" {
   status_code = "200"
 
   response_parameters = {
-    "method.response.header.Content-Length"            = fase,
+    "method.response.header.Content-Length"            = false,
     "method.response.header.Content-Type"              = true,
     "method.response.header.Cache-Control"             = true,
     "method.response.header.Pragma"                    = true,
