@@ -492,8 +492,7 @@ resource "aws_api_gateway_method_response" "enxlogo_proxy_get" {
   status_code = "200"
 
   response_parameters = {
-    "method.response.header.Content-Length"            = true,
-    "method.response.header.Accept-Ranges"             = true,
+    "method.response.header.Content-Length"            = fase,
     "method.response.header.Content-Type"              = true,
     "method.response.header.Cache-Control"             = true,
     "method.response.header.Pragma"                    = true,
@@ -510,7 +509,6 @@ resource "aws_api_gateway_integration_response" "enxlogo_proxy_get_integration" 
   response_parameters = {
     "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
     "method.response.header.Content-Type"              = "integration.response.header.Content-Type",
-    "method.response.header.Accept-Ranges"             = "integration.response.header.Accept-Ranges",
     "method.response.header.Cache-Control"             = "'no-store'",
     "method.response.header.Pragma"                    = "'no-cache'",
     "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
