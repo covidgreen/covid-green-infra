@@ -1107,7 +1107,7 @@ resource "aws_cloudwatch_log_metric_filter" "enx_logo_all_filter" {
 
 resource "aws_cloudwatch_log_metric_filter" "enx_logo_200_filter" {
   log_group_name = "${module.labels.id}-gw-access-logs"
-  name = "${module.labels.id}-enxlogoall-filter"
+  name = "${module.labels.id}-enxlogo200-filter"
   pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"*CFNetwork*\"]"
   metric_transformation {
     name = "enxlogo200"
@@ -1118,7 +1118,7 @@ resource "aws_cloudwatch_log_metric_filter" "enx_logo_200_filter" {
 
 resource "aws_cloudwatch_log_metric_filter" "enx_logo_304_filter" {
   log_group_name = "${module.labels.id}-gw-access-logs"
-  name = "${module.labels.id}-enxlogoall-filter"
+  name = "${module.labels.id}-enxlogo304-filter"
   pattern = "[time ,method = \"*enx/logo*\", statusCode = 304,agent=\"*CFNetwork*\"]"
   metric_transformation {
     name = "enxlogo304"
@@ -1129,7 +1129,7 @@ resource "aws_cloudwatch_log_metric_filter" "enx_logo_304_filter" {
 
 resource "aws_cloudwatch_log_metric_filter" "enx_logo_settings_filter" {
   log_group_name = "${module.labels.id}-gw-access-logs"
-  name = "${module.labels.id}-enxlogoall-filter"
+  name = "${module.labels.id}-enxlogosettings-filter"
   pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"*Settings*CFNetwork*\"]"
   metric_transformation {
     name = "enxlogosettings"
@@ -1140,7 +1140,7 @@ resource "aws_cloudwatch_log_metric_filter" "enx_logo_settings_filter" {
 
 resource "aws_cloudwatch_log_metric_filter" "enx_logo_enbuddy_filter" {
   log_group_name = "${module.labels.id}-gw-access-logs"
-  name = "${module.labels.id}-enxlogoall-filter"
+  name = "${module.labels.id}-enxlogoenbuddy-filter"
   pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"*HealthENBuddy*CFNetwork*\"]"
   metric_transformation {
     name = "enxlogoenbuddy"
