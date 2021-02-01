@@ -1094,6 +1094,72 @@ resource "aws_api_gateway_stage" "live" {
   }
 }
 
+resource "aws_cloudwatch_log_metric_filter" "enx_logo_all_filter" {
+  log_group_name = "${module.labels.id}-gw-access-logs"
+  name = "${module.labels.id}-enxlogoall-filter"
+  pattern = "[time ,method = \"*enx/logo*\", statusCode ,agent=\"*CFNetwork*"]"
+  metric_transformation {
+    name = "enxlogoall"
+    namespace = "ApiGateway"
+    value = "1"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "enx_logo_all_filter" {
+  log_group_name = "${module.labels.id}-gw-access-logs"
+  name = "${module.labels.id}-enxlogoall-filter"
+  pattern = "[time ,method = \"*enx/logo*\", statusCode ,agent=\"*CFNetwork*"]"
+  metric_transformation {
+    name = "enxlogoall"
+    namespace = "ApiGateway"
+    value = "1"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "enx_logo_200_filter" {
+  log_group_name = "${module.labels.id}-gw-access-logs"
+  name = "${module.labels.id}-enxlogoall-filter"
+  pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"*CFNetwork*"]"
+  metric_transformation {
+    name = "enxlogo200"
+    namespace = "ApiGateway"
+    value = "1"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "enx_logo_304_filter" {
+  log_group_name = "${module.labels.id}-gw-access-logs"
+  name = "${module.labels.id}-enxlogoall-filter"
+  pattern = "[time ,method = \"*enx/logo*\", statusCode = 304,agent=\"*CFNetwork*"]"
+  metric_transformation {
+    name = "enxlogo304"
+    namespace = "ApiGateway"
+    value = "1"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "enx_logo_settings_filter" {
+  log_group_name = "${module.labels.id}-gw-access-logs"
+  name = "${module.labels.id}-enxlogoall-filter"
+  pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"*Settings*CFNetwork*"]"
+  metric_transformation {
+    name = "enxlogosettings"
+    namespace = "ApiGateway"
+    value = "1"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "enx_logo_enbuddy_filter" {
+  log_group_name = "${module.labels.id}-gw-access-logs"
+  name = "${module.labels.id}-enxlogoall-filter"
+  pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"*HealthENBuddy*CFNetwork*"]"
+  metric_transformation {
+    name = "enxlogoenbuddy"
+    namespace = "ApiGateway"
+    value = "1"
+  }
+}
+
 resource "aws_api_gateway_method_settings" "settings" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   stage_name  = aws_api_gateway_stage.live.stage_name
@@ -1121,6 +1187,7 @@ resource "aws_api_gateway_authorizer" "main" {
   authorizer_uri         = coalesce(join("", aws_lambda_alias.authorizer_live.*.invoke_arn), aws_lambda_function.authorizer.invoke_arn)
   authorizer_credentials = aws_iam_role.authorizer.arn
 }
+
 
 # #########################################
 # Default Responses
