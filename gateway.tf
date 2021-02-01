@@ -1105,17 +1105,6 @@ resource "aws_cloudwatch_log_metric_filter" "enx_logo_all_filter" {
   }
 }
 
-resource "aws_cloudwatch_log_metric_filter" "enx_logo_all_filter" {
-  log_group_name = "${module.labels.id}-gw-access-logs"
-  name = "${module.labels.id}-enxlogoall-filter"
-  pattern = "[time ,method = \"*enx/logo*\", statusCode ,agent=\"*CFNetwork*\"]"
-  metric_transformation {
-    name = "enxlogoall"
-    namespace = "ApiGateway"
-    value = "1"
-  }
-}
-
 resource "aws_cloudwatch_log_metric_filter" "enx_logo_200_filter" {
   log_group_name = "${module.labels.id}-gw-access-logs"
   name = "${module.labels.id}-enxlogoall-filter"
