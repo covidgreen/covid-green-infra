@@ -500,7 +500,12 @@ resource "aws_ssm_parameter" "settings_lambda" {
   tags      = module.labels.tags
 }
 
-
+# ENX Logo params
+resource "aws_ssm_parameter" "enx_logo_supported" {
+  name  = format("%s-enx_logo_supported", module.labels.id)
+  type  = "String"
+  value = var.enx_logo_supported
+}
 
 # #########################################
 # Optional parameters - These exist for some instances

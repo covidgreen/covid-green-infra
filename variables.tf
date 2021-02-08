@@ -878,3 +878,8 @@ variable "self_isolation_notices_enabled" {
   default     = "false"
 }
 
+variable "enx_logo_supported" {
+  type        = string
+  description = "Enable/disable reporting on enx logo metrics"
+  default     = "false"
+}
