@@ -66,3 +66,8 @@ resource "aws_cognito_user_group" "manage_users" {
   name         = "manage-users"
   user_pool_id = aws_cognito_user_pool.admin_user_pool.id
 }
+
+resource "aws_cognito_user_group" "dashboard-read" {
+  name         = "dashboard-read"
+  user_pool_id = aws_cognito_user_pool.admin_user_pool.id
+}
