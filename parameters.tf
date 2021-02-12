@@ -507,6 +507,13 @@ resource "aws_ssm_parameter" "enx_logo_supported" {
   value = var.enx_logo_supported
 }
 
+# Exposure Test Types
+resource "aws_ssm_parameter" "allowed_test_types" {
+  name  = format("%s-allowed_test_types", module.labels.id)
+  type  = "String"
+  value = var.allowed_test_types
+}
+
 # #########################################
 # Optional parameters - These exist for some instances
 # #########################################

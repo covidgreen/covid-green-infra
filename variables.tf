@@ -883,3 +883,9 @@ variable "enx_logo_supported" {
   description = "Enable/disable reporting on enx logo metrics"
   default     = "false"
 }
+
+variable "allowed_test_types" {
+  type        = string
+  description = "The test types to accept"
+  default     = "[1]"
+}
