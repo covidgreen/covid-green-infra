@@ -18,7 +18,7 @@ module "cleanup" {
     aws_ssm_parameter.db_ssl.arn,
     aws_ssm_parameter.security_code_removal_mins.arn,
     aws_ssm_parameter.upload_token_lifetime_mins.arn,
-    aws_ssm_parameter.self_isolation_notice_lifetime_mins.arn
+    aws_ssm_parameter.self_isolation_notice_lifetime_mins.arn,
     aws_ssm_parameter.enx_logo_supported.arn
   ]
   aws_secret_arns                = [data.aws_secretsmanager_secret_version.rds_read_write.arn]
