@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.12.29, < 0.14"
+  required_version = ">= 0.13"
 
   # Leaving this, even though we have moved towards using this repo as a module - will ignore in that case
   # Also need to cater for git submodule/subtree usage for existing infrastructure
@@ -7,9 +7,22 @@ terraform {
 
   # Providers
   required_providers {
-    archive = "~> 1.3.0"
-    aws     = "~> 2.70"
-    null    = "~> 2.1"
-    random  = "~> 2.0"
+    archive = {
+      source  = "hashicorp/archive"
+      version = "~> 1.3.0"
+    }
+    #aws     = "~> 2.70"
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 3.10"
+    }
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 2.1"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 2.0"
+    }
   }
 }
