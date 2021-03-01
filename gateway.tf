@@ -1131,7 +1131,7 @@ resource "aws_cloudwatch_log_metric_filter" "enx_logo_304_filter" {
 resource "aws_cloudwatch_log_metric_filter" "enx_logo_settings_filter" {
   log_group_name = "${module.labels.id}-gw-access-logs"
   name = "${module.labels.id}-enxlogosettings-filter"
-  pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"Settings*CFNetwork*\"]"
+  pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"[Settings*CFNetwork*\"]"
   metric_transformation {
     name = "enxlogosettings"
     namespace = "ApiGateway"
@@ -1142,7 +1142,7 @@ resource "aws_cloudwatch_log_metric_filter" "enx_logo_settings_filter" {
 resource "aws_cloudwatch_log_metric_filter" "enx_logo_settings2_filter" {
   log_group_name = "${module.labels.id}-gw-access-logs"
   name = "${module.labels.id}-enxlogosettings-filter"
-  pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"Settings2*CFNetwork*\"]"
+  pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"[Settings2*CFNetwork*\"]"
   metric_transformation {
     name = "enxlogosettings2"
     namespace = "ApiGateway"
@@ -1153,7 +1153,7 @@ resource "aws_cloudwatch_log_metric_filter" "enx_logo_settings2_filter" {
 resource "aws_cloudwatch_log_metric_filter" "enx_logo_enbuddy_filter" {
   log_group_name = "${module.labels.id}-gw-access-logs"
   name = "${module.labels.id}-enxlogoenbuddy-filter"
-  pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"ENBuddy*CFNetwork*\"]"
+  pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"[ENBuddy*CFNetwork*\"]"
   metric_transformation {
     name = "enxlogoenbuddy"
     namespace = "ApiGateway"
@@ -1164,7 +1164,7 @@ resource "aws_cloudwatch_log_metric_filter" "enx_logo_enbuddy_filter" {
 resource "aws_cloudwatch_log_metric_filter" "enx_logo_healthenbuddy_filter" {
   log_group_name = "${module.labels.id}-gw-access-logs"
   name = "${module.labels.id}-enxlogoenbuddy-filter"
-  pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"HealthENBuddy*CFNetwork*\"]"
+  pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"[HealthENBuddy*CFNetwork*\"]"
   metric_transformation {
     name = "enxlogohealthenbuddy"
     namespace = "ApiGateway"
