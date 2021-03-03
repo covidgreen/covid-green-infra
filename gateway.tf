@@ -1042,6 +1042,20 @@ resource "aws_api_gateway_resource" "well_known" {
   path_part   = ".well-known"
 }
 
+resource "aws_api_gateway_resource" "deeplink" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
+  path_part   = "v"
+}
+
+resource "aws_api_gateway_method" "deeplink_get" {
+  rest_api_id      = aws_api_gateway_rest_api.main.id
+  resource_id      = aws_api_gateway_resource.deeplink.id
+  http_method      = "GET"
+  authorization    = "NONE"
+  api_key_required = false
+}
+
 ## .well-known/apple-app-site-association
 resource "aws_api_gateway_resource" "apple_site_association" {
   rest_api_id = aws_api_gateway_rest_api.main.id
@@ -1094,6 +1108,22 @@ resource "aws_api_gateway_integration" "assetlinks_get_integration" {
   credentials             = aws_iam_role.gateway.arn
 }
 
+resource "aws_api_gateway_integration" "deeplink_get_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.main.id
+  resource_id             = aws_api_gateway_resource.deeplink.id
+  http_method             = aws_api_gateway_method.deeplink_get.http_method
+  timeout_milliseconds    = var.api_gateway_timeout_milliseconds
+  integration_http_method = "GET"
+  type                    = "HTTP_PROXY"
+  uri                     = format("http://%s/{proxy}", aws_lb.api.dns_name)
+  request_parameters = {
+    "integration.request.path.proxy"              = "method.request.path.proxy",
+    "integration.request.header.X-Routing-Secret" = "'${jsondecode(data.aws_secretsmanager_secret_version.api_gateway_header.secret_string)["header-secret"]}'",
+    "integration.request.header.X-Forwarded-For"  = "'nope'"
+  }
+}
+
+
 resource "aws_api_gateway_method_response" "apple_site_association_get_method_response" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   resource_id = aws_api_gateway_resource.apple_site_association.id
@@ -1130,6 +1160,22 @@ resource "aws_api_gateway_method_response" "assetlinks_get_method_response" {
   }
 }
 
+resource "aws_api_gateway_method_response" "deeplink_get_method_response" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.deeplink.id
+  http_method = aws_api_gateway_method.deeplink_get.http_method
+  status_code = "200"
+  
+  response_parameters = {
+    "method.response.header.Content-Length"            = false,
+    "method.response.header.Content-Type"              = false,
+    "method.response.header.Cache-Control"             = true,
+    "method.response.header.Pragma"                    = true,
+    "method.response.header.Strict-Transport-Security" = true
+    "method.response.header.X-Frame-Options"           = true
+  }
+}
+
 resource "aws_api_gateway_integration_response" "apple_site_association_get_integration_response" {
   rest_api_id       = aws_api_gateway_rest_api.main.id
   resource_id       = aws_api_gateway_resource.apple_site_association.id
@@ -1151,6 +1197,21 @@ resource "aws_api_gateway_integration_response" "assetlinks_get_integration_resp
   http_method       = aws_api_gateway_method.assetlinks_get.http_method
   selection_pattern = aws_api_gateway_method_response.assetlinks_get_method_response.status_code
   status_code       = aws_api_gateway_method_response.assetlinks_get_method_response.status_code
+  response_parameters = {
+    "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
+    "method.response.header.Content-Type"              = "'application/json'",
+    "method.response.header.Cache-Control"             = "'no-store'",
+    "method.response.header.Pragma"                    = "'no-cache'",
+    "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
+  }
+}
+
+resource "aws_api_gateway_integration_response" "deeplink_get_integration_response" {
+  rest_api_id       = aws_api_gateway_rest_api.main.id
+  resource_id       = aws_api_gateway_resource.deeplink.id
+  http_method       = aws_api_gateway_method.deeplink_get.http_method
+  selection_pattern = aws_api_gateway_method_response.deeplink_get_method_response.status_code
+  status_code       = aws_api_gateway_method_response.deeplink_get_method_response.status_code
   response_parameters = {
     "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
     "method.response.header.Content-Type"              = "'application/json'",
@@ -1192,7 +1253,8 @@ resource "aws_api_gateway_deployment" "live" {
     aws_api_gateway_integration.api_stats_get_integration,
     aws_api_gateway_integration.api_data_exposures_item_get_integration,
     aws_api_gateway_integration.apple_site_association_get_integration,
-    aws_api_gateway_integration.assetlinks_get_integration
+    aws_api_gateway_integration.assetlinks_get_integration,
+    aws_api_gateway_integration.deeplink_get_integration
   ]
 }
 
