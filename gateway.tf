@@ -1090,7 +1090,7 @@ resource "aws_api_gateway_integration" "assetlinks_get_integration" {
   timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "AWS"
-  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/well-known/assetlinks".json, var.aws_region, aws_s3_bucket.assets.id)
+  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/well-known/assetlinks.json", var.aws_region, aws_s3_bucket.assets.id)
   credentials             = aws_iam_role.gateway.arn
 }
 
@@ -1192,7 +1192,7 @@ resource "aws_api_gateway_deployment" "live" {
     aws_api_gateway_integration.api_stats_get_integration,
     aws_api_gateway_integration.api_data_exposures_item_get_integration,
     aws_api_gateway_integration.apple_site_association_get_integration,
-    aws_api_gateway_integration.assetlinks_get_integration,
+    aws_api_gateway_integration.assetlinks_get_integration
   ]
 }
 
