@@ -417,7 +417,7 @@ variable "code_length" {
 variable "code_lifetime_mins" {
   description = "Lifetime in minutes of the one-time upload codes"
 }
-variable "code_lifetime_deeplinks_mins" {
+variable "code_lifetime_deeplink_mins" {
   description = "Lifetime in minutes of the one-time deeplink upload codes"
   default     = "1440"
 }
