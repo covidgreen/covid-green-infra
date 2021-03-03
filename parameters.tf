@@ -322,6 +322,22 @@ resource "aws_ssm_parameter" "security_code_lifetime_mins" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "security_code_lifetime_deeplink_mins" {
+  overwrite = true
+  name      = format("%ssecurity_code_lifetime_deeplink_mins", local.config_var_prefix)
+  type      = "String"
+  value     = var.code_lifetime_deeplink_mins
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "security_code_deeplinks_allowed" {
+  overwrite = true
+  name      = format("%ssecurity_code_deeplinks_allowed", local.config_var_prefix)
+  type      = "String"
+  value     = var.code_deeplinks_allowed
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "security_code_removal_mins" {
   overwrite = true
   name      = format("%ssecurity_code_removal_mins", local.config_var_prefix)

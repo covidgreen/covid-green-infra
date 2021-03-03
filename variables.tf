@@ -417,6 +417,15 @@ variable "code_length" {
 variable "code_lifetime_mins" {
   description = "Lifetime in minutes of the one-time upload codes"
 }
+variable "code_lifetime_deeplinks_mins" {
+  description = "Lifetime in minutes of the one-time deeplink upload codes"
+  default     = "1440"
+}
+variable "code_deeplinks_allowed" {
+  description = "Are deeplink codes allowed"
+  default     = "false"
+}
+
 variable "code_removal_mins" {
   description = "Lifetime in minutes before a one-time upload code is removed from the database"
   default     = "2880"

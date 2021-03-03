@@ -53,6 +53,8 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
       aws_ssm_parameter.metrics_config.arn,
       aws_ssm_parameter.s3_assets_bucket.arn,
       aws_ssm_parameter.security_code_lifetime_mins.arn,
+      aws_ssm_parameter.security_code_lifetime_deeplink_mins.arn,
+      aws_ssm_parameter.code_deeplinks_allowed.arn,
       aws_ssm_parameter.security_refresh_token_expiry.arn,
       aws_ssm_parameter.security_token_lifetime_mins.arn,
       aws_ssm_parameter.security_verify_rate_limit_secs.arn,

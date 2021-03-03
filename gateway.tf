@@ -1117,34 +1117,12 @@ resource "aws_cloudwatch_log_metric_filter" "enx_logo_200_filter" {
   }
 }
 
-resource "aws_cloudwatch_log_metric_filter" "enx_logo_304_filter" {
-  log_group_name = "${module.labels.id}-gw-access-logs"
-  name = "${module.labels.id}-enxlogo304-filter"
-  pattern = "[time ,method = \"*enx/logo*\", statusCode = 304,agent=\"*CFNetwork*\"]"
-  metric_transformation {
-    name = "enxlogo304"
-    namespace = "ApiGateway"
-    value = "1"
-  }
-}
-
 resource "aws_cloudwatch_log_metric_filter" "enx_logo_settings_filter" {
   log_group_name = "${module.labels.id}-gw-access-logs"
   name = "${module.labels.id}-enxlogosettings-filter"
   pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"[Settings*CFNetwork*\"]"
   metric_transformation {
     name = "enxlogosettings"
-    namespace = "ApiGateway"
-    value = "1"
-  }
-}
-
-resource "aws_cloudwatch_log_metric_filter" "enx_logo_settings2_filter" {
-  log_group_name = "${module.labels.id}-gw-access-logs"
-  name = "${module.labels.id}-enxlogosettings-filter"
-  pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"[Settings2*CFNetwork*\"]"
-  metric_transformation {
-    name = "enxlogosettings2"
     namespace = "ApiGateway"
     value = "1"
   }
