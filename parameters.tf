@@ -201,6 +201,15 @@ resource "aws_ssm_parameter" "hsts_max_age" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "interop_origin" {
+  count     = contains(var.optional_parameters_to_include, "interop_origin") ? 1 : 0
+  overwrite = true
+  name      = format("%sinterop_origin", local.config_var_prefix)
+  type      = "String"
+  value     = var.interop_origin
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "jwt_issuer" {
   overwrite = true
   name      = format("%sjwt_issuer", local.config_var_prefix)
@@ -313,6 +322,22 @@ resource "aws_ssm_parameter" "security_code_lifetime_mins" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "security_code_lifetime_deeplink_mins" {
+  overwrite = true
+  name      = format("%ssecurity_code_lifetime_deeplink_mins", local.config_var_prefix)
+  type      = "String"
+  value     = var.code_lifetime_deeplink_mins
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "security_code_deeplinks_allowed" {
+  overwrite = true
+  name      = format("%ssecurity_code_deeplinks_allowed", local.config_var_prefix)
+  type      = "String"
+  value     = var.code_deeplinks_allowed
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "security_code_removal_mins" {
   overwrite = true
   name      = format("%ssecurity_code_removal_mins", local.config_var_prefix)
@@ -337,6 +362,14 @@ resource "aws_ssm_parameter" "security_token_lifetime_mins" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "security_token_lifetime_no_refresh" {
+  overwrite = true
+  name      = format("%ssecurity_token_lifetime_no_refresh", local.config_var_prefix)
+  type      = "String"
+  value     = var.token_lifetime_no_refresh
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "security_verify_rate_limit_secs" {
   overwrite = true
   name      = format("%ssecurity_verify_rate_limit_secs", local.config_var_prefix)
@@ -350,6 +383,24 @@ resource "aws_ssm_parameter" "sms_region" {
   name      = format("%ssms_region", local.config_var_prefix)
   type      = "String"
   value     = var.sms_region
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "sms_scheduling" {
+  count     = contains(var.optional_parameters_to_include, "sms_scheduling") ? 1 : 0
+  overwrite = true
+  name      = format("%ssms_scheduling", local.config_var_prefix)
+  type      = "String"
+  value     = var.sms_scheduling
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "sms_quiet_time" {
+  count     = contains(var.optional_parameters_to_include, "sms_quiet_time") ? 1 : 0
+  overwrite = true
+  name      = format("%ssms_quiet_time", local.config_var_prefix)
+  type      = "String"
+  value     = var.sms_quiet_time
   tags      = module.labels.tags
 }
 
@@ -465,7 +516,19 @@ resource "aws_ssm_parameter" "settings_lambda" {
   tags      = module.labels.tags
 }
 
+# ENX Logo params
+resource "aws_ssm_parameter" "enx_logo_supported" {
+  name  = format("%s-enx_logo_supported", module.labels.id)
+  type  = "String"
+  value = var.enx_logo_supported
+}
 
+# Exposure Test Types
+resource "aws_ssm_parameter" "allowed_test_types" {
+  name  = format("%s-allowed_test_types", module.labels.id)
+  type  = "String"
+  value = var.allowed_test_types
+}
 
 # #########################################
 # Optional parameters - These exist for some instances
@@ -512,6 +575,14 @@ resource "aws_ssm_parameter" "issue_proxy_url" {
   name      = format("%sissue_proxy_url", local.config_var_prefix)
   type      = "String"
   value     = var.issue_proxy_url
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "security_allow_no_token" {
+  overwrite = true
+  name      = format("%ssecurity_allow_no_token", local.config_var_prefix)
+  type      = "String"
+  value     = var.allow_no_token
   tags      = module.labels.tags
 }
 
