@@ -1192,6 +1192,7 @@ resource "aws_api_gateway_deployment" "live" {
     aws_api_gateway_integration.api_stats_get_integration,
     aws_api_gateway_integration.api_data_exposures_item_get_integration,
     aws_api_gateway_integration.apple_site_association_get_integration,
+    aws_api_gateway_integration.assetlinks_get_integration,
   ]
 }
 
