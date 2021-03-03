@@ -1048,9 +1048,25 @@ resource "aws_api_gateway_resource" "apple_site_association" {
   parent_id   = aws_api_gateway_resource.well_known.id
   path_part   = "apple-app-site-association"
 }
+
 resource "aws_api_gateway_method" "apple_site_association_get" {
   rest_api_id      = aws_api_gateway_rest_api.main.id
   resource_id      = aws_api_gateway_resource.apple_site_association.id
+  http_method      = "GET"
+  authorization    = "NONE"
+  api_key_required = false
+}
+
+## .well-known/assetlinks.json
+resource "aws_api_gateway_resource" "assetlinks" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.well_known.id
+  path_part   = "assetlinks.json"
+}
+
+resource "aws_api_gateway_method" "assetlinks_get" {
+  rest_api_id      = aws_api_gateway_rest_api.main.id
+  resource_id      = aws_api_gateway_resource.assetlinks.id
   http_method      = "GET"
   authorization    = "NONE"
   api_key_required = false
@@ -1066,10 +1082,40 @@ resource "aws_api_gateway_integration" "apple_site_association_get_integration" 
   uri                     = format("arn:aws:apigateway:%s:s3:path/%s/well-known/apple-app-site-association.json", var.aws_region, aws_s3_bucket.assets.id)
   credentials             = aws_iam_role.gateway.arn
 }
+
+resource "aws_api_gateway_integration" "assetlinks_get_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.main.id
+  resource_id             = aws_api_gateway_resource.assetlinks.id
+  http_method             = aws_api_gateway_method.assetlinks_get.http_method
+  timeout_milliseconds    = var.api_gateway_timeout_milliseconds
+  integration_http_method = "GET"
+  type                    = "AWS"
+  uri                     = format("arn:aws:apigateway:%s:s3:path/%s/well-known/assetlinks".json, var.aws_region, aws_s3_bucket.assets.id)
+  credentials             = aws_iam_role.gateway.arn
+}
+
 resource "aws_api_gateway_method_response" "apple_site_association_get_method_response" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   resource_id = aws_api_gateway_resource.apple_site_association.id
   http_method = aws_api_gateway_method.apple_site_association_get.http_method
+  status_code = "200"
+  response_models = {
+    "application/json" = "Empty"
+  }
+  response_parameters = {
+    "method.response.header.Content-Length"            = false,
+    "method.response.header.Content-Type"              = false,
+    "method.response.header.Cache-Control"             = true,
+    "method.response.header.Pragma"                    = true,
+    "method.response.header.Strict-Transport-Security" = true
+    "method.response.header.X-Frame-Options"           = true
+  }
+}
+
+resource "aws_api_gateway_method_response" "assetlinks_get_method_response" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.assetlinks.id
+  http_method = aws_api_gateway_method.assetlinks_get.http_method
   status_code = "200"
   response_models = {
     "application/json" = "Empty"
@@ -1090,6 +1136,21 @@ resource "aws_api_gateway_integration_response" "apple_site_association_get_inte
   http_method       = aws_api_gateway_method.apple_site_association_get.http_method
   selection_pattern = aws_api_gateway_method_response.apple_site_association_get_method_response.status_code
   status_code       = aws_api_gateway_method_response.apple_site_association_get_method_response.status_code
+  response_parameters = {
+    "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
+    "method.response.header.Content-Type"              = "'application/json'",
+    "method.response.header.Cache-Control"             = "'no-store'",
+    "method.response.header.Pragma"                    = "'no-cache'",
+    "method.response.header.Strict-Transport-Security" = format("'max-age=%s; includeSubDomains'", var.hsts_max_age)
+  }
+}
+
+resource "aws_api_gateway_integration_response" "assetlinks_get_integration_response" {
+  rest_api_id       = aws_api_gateway_rest_api.main.id
+  resource_id       = aws_api_gateway_resource.assetlinks.id
+  http_method       = aws_api_gateway_method.assetlinks_get.http_method
+  selection_pattern = aws_api_gateway_method_response.assetlinks_get_method_response.status_code
+  status_code       = aws_api_gateway_method_response.assetlinks_get_method_response.status_code
   response_parameters = {
     "method.response.header.Content-Length"            = "integration.response.header.Content-Length",
     "method.response.header.Content-Type"              = "'application/json'",
