@@ -1118,7 +1118,7 @@ resource "aws_api_gateway_integration" "deeplink_get_integration" {
   timeout_milliseconds    = var.api_gateway_timeout_milliseconds
   integration_http_method = "GET"
   type                    = "HTTP_PROXY"
-  uri                     = format("http://%s/{proxy}", aws_lb.api.dns_name)
+  uri                     = format("http://%s/v", aws_lb.api.dns_name)
   request_parameters = {
     "integration.request.path.proxy"              = "method.request.path.proxy",
     "integration.request.header.X-Routing-Secret" = "'${jsondecode(data.aws_secretsmanager_secret_version.api_gateway_header.secret_string)["header-secret"]}'",
