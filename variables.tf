@@ -446,6 +446,22 @@ variable "db_pool_size" {
   description = "Maximum number of clients the db pool should contain"
   default     = "30"
 }
+
+variable "deeplink_android_package_name" {
+  description = "Android package name used in deeplink redirects"
+  default     = "na"
+}
+
+variable "deeplink_appstore_link" {
+  description = "Appstore link used in deeplink redirects"
+  default     = "na"
+}
+
+variable "deeplink_default_webpage" {
+  description = "Default landing page used in deeplink redirects"
+  default     = "na"
+}
+
 variable "default_country_code" {
   description = "Default ISO country code to use for parsing mobile numbers provided to push service"
   default     = ""

@@ -81,6 +81,30 @@ resource "aws_ssm_parameter" "cors_origin" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "deeplink_android_package_name" {
+  overwrite = true
+  name      = format("%sdeeplink_android_package_name", local.config_var_prefix)
+  type      = "String"
+  value     = var.deeplink_android_package_name
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "deeplink_appstore_link" {
+  overwrite = true
+  name      = format("%sdeeplink_appstore_link", local.config_var_prefix)
+  type      = "String"
+  value     = var.deeplink_appstore_link
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "deeplink_default_webpage" {
+  overwrite = true
+  name      = format("%sdeeplink_default_webpage", local.config_var_prefix)
+  type      = "String"
+  value     = var.deeplink_default_webpage
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "db_database" {
   overwrite = true
   name      = format("%sdb_database", local.config_var_prefix)
