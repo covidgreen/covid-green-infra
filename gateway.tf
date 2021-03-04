@@ -1054,6 +1054,9 @@ resource "aws_api_gateway_method" "deeplink_get" {
   http_method      = "GET"
   authorization    = "NONE"
   api_key_required = false
+  request_parameters = {
+    "method.request.path.proxy" = true
+  }
 }
 
 ## .well-known/apple-app-site-association
