@@ -449,17 +449,17 @@ variable "db_pool_size" {
 
 variable "deeplink_android_package_name" {
   description = "Android package name used in deeplink redirects"
-  default     = ""
+  default     = "na"
 }
 
 variable "deeplink_appstore_link" {
   description = "Appstore link used in deeplink redirects"
-  default     = ""
+  default     = "na"
 }
 
 variable "deeplink_default_webpage" {
   description = "Default landing page used in deeplink redirects"
-  default     = ""
+  default     = "na"
 }
 
 variable "default_country_code" {
