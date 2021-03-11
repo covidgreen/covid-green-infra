@@ -8,7 +8,7 @@ terraform {
   # Providers
   required_providers {
     archive = "~> 1.3.0"
-    # aws     = "~> "
+    aws     = "~> 3.31.0"
     null    = "~> 2.1"
     random  = "~> 3.0.0"
   }
