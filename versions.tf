@@ -11,5 +11,6 @@ terraform {
     # aws     = "~> 3.30"
     null    = "~> 2.1"
     random  = "~> 3.0.0"
+    dns     = "~> 2.1.0"
   }
 }
