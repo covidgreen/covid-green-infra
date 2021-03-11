@@ -24,7 +24,7 @@ resource "aws_lb" "admin" {
   name                             = format("%s-%s", module.labels.id, "admin")
   internal                         = false
   subnets                          = module.vpc.public_subnets
-  security_groups                  = ["${module.alb_admin_sg.id}"]
+  security_groups                  = [module.alb_admin_sg.id]
   enable_cross_zone_load_balancing = true
   enable_http2                     = true
   ip_address_type                  = "dualstack"
