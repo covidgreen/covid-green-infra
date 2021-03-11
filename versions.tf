@@ -10,6 +10,6 @@ terraform {
     archive = "~> 1.3.0"
     # aws     = "~> 3.30"
     null    = "~> 2.1"
-    random  = "~> 2.0"
+    random  = "~> 3.0.0"
   }
 }
