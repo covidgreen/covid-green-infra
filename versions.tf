@@ -6,11 +6,11 @@ terraform {
   backend "s3" {}
 
   # Providers
-#   required_providers {
-#     archive = "~> 1.3.0"
-#     # aws     = "~> 3.30"
-#     null    = "~> 2.1"
-#     random  = "~> 3.0.0"
-#     # dns     = "~> 2.1.0"
-#   }
+  required_providers {
+    archive = "~> 1.3.0"
+    aws     = "~> 3.0"
+    null    = "~> 2.1"
+    random  = "~> 3.0.0"
+    # dns     = "~> 2.1.0"
+  }
 }
