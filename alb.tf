@@ -272,7 +272,7 @@ resource "aws_lb_listener" "push_https" {
 # #########################################
 module "alb_logs" {
   source  = "trussworks/logs/aws"
-  version = "10.3.0"
+  version = "10.2.0"
 
   alb_logs_prefixes       = ["admin", "api", "push"]
   allow_alb               = true
