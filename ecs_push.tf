@@ -128,7 +128,7 @@ resource "aws_ecs_service" "push" {
   desired_count   = var.push_service_desired_count
 
   network_configuration {
-    security_groups = ["${module.push_sg.id}"]
+    security_groups = [module.push_sg.id]
     subnets         = module.vpc.private_subnets
   }
 

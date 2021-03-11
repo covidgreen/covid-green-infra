@@ -152,7 +152,7 @@ resource "aws_ecs_service" "api" {
   desired_count   = var.api_service_desired_count
 
   network_configuration {
-    security_groups = ["${module.api_sg.id}"]
+    security_groups = [module.api_sg.id]
     subnets         = module.vpc.private_subnets
   }
 
