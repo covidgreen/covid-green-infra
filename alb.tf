@@ -120,7 +120,7 @@ resource "aws_lb" "api" {
   name                             = format("%s-%s", module.labels.id, "api")
   internal                         = false
   subnets                          = module.vpc.public_subnets
-  security_groups                  = ["${module.alb_api_sg.id}"]
+  security_groups                  = [module.alb_api_sg.id]
   enable_cross_zone_load_balancing = true
   enable_http2                     = true
   ip_address_type                  = "dualstack"
@@ -216,7 +216,7 @@ resource "aws_lb" "push" {
   name                             = format("%s-%s", module.labels.id, "push")
   internal                         = false
   subnets                          = module.vpc.public_subnets
-  security_groups                  = ["${module.alb_push_sg.id}"]
+  security_groups                  = [module.alb_push_sg.id]
   enable_cross_zone_load_balancing = true
   enable_http2                     = true
   ip_address_type                  = "dualstack"
@@ -272,7 +272,7 @@ resource "aws_lb_listener" "push_https" {
 # #########################################
 module "alb_logs" {
   source  = "trussworks/logs/aws"
-  version = "8.2.0"
+  version = "10.3.0"
 
   alb_logs_prefixes       = ["admin", "api", "push"]
   allow_alb               = true
