@@ -68,7 +68,7 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
       aws_ssm_parameter.security_self_isolation_notices_rate_limit_secs.arn,
       aws_ssm_parameter.deeplink_android_package_name.arn,
       aws_ssm_parameter.deeplink_appstore_link.arn,
-      aws_ssm_parameter.deeplink_default_webpage.arn
+      aws_ssm_parameter.deeplink_default_webpage.arn,
       aws_ssm_parameter.log_callback_request.arn
       ],
       aws_ssm_parameter.security_callback_rate_limit_request_count.*.arn,
