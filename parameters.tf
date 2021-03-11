@@ -250,6 +250,14 @@ resource "aws_ssm_parameter" "log_level" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "log_callback_request" {
+  overwrite = true
+  name      = format("%slog_callback_request", local.config_var_prefix)
+  type      = "String"
+  value     = var.log_callback_request
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "metrics_config" {
   overwrite = true
   name      = format("%smetrics_config", local.config_var_prefix)

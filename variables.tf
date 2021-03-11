@@ -700,6 +700,10 @@ variable "lambdas_custom_s3_bucket" {
 variable "log_level" {
   description = "Log level for ECS and lambdas"
 }
+variable "log_callback_request" {
+  description = "Log callback request payload"
+  default     = "false"
+}
 variable "native_regions" {
   description = "Comma separated list of regions to include with the default region when generating exposure export files"
   default     = ""
