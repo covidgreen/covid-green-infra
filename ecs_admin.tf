@@ -128,7 +128,7 @@ resource "aws_ecs_service" "admin" {
   desired_count   = var.admin_service_desired_count
 
   network_configuration {
-    security_groups = ["${module.admin_sg.id}"]
+    security_groups = [module.admin_sg.id]
     subnets         = module.vpc.private_subnets
   }
 
