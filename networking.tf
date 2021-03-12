@@ -4,8 +4,7 @@
 # #########################################
 module "vpc" {
   source  = "git::https://github.com/nearform/terraform-aws-vpc.git?ref=master"
-  version = "3.32.0"
-
+  
   name = module.labels.id
   cidr = var.vpc_cidr
 
