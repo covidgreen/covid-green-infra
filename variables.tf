@@ -389,6 +389,11 @@ variable "callback_rate_limit_request_count" {
   default     = "1"
 }
 
+variable "checkin_summary_enabled" {
+  description = "If checkin data is to be summarised"
+  default     = "false"
+}
+
 variable "token_lifetime_no_refresh" {
   description = "Token lifetime to use when no refresh token"
   default     = "1y"

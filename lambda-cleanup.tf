@@ -19,7 +19,8 @@ module "cleanup" {
       aws_ssm_parameter.security_code_removal_mins.arn,
       aws_ssm_parameter.upload_token_lifetime_mins.arn,
       aws_ssm_parameter.self_isolation_notice_lifetime_mins.arn,
-      aws_ssm_parameter.enx_logo_supported.arn,    
+      aws_ssm_parameter.enx_logo_supported.arn,  
+      aws_ssm_parameter.checkin_summary_enabled.arn  
     ],
     aws_ssm_parameter.issue_proxy_url.*.arn
   ) 

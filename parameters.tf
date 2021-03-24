@@ -73,6 +73,14 @@ resource "aws_ssm_parameter" "callback_url" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "checkin_summary_enabled" {
+  overwrite = true
+  name      = format("%scheckin_summary_enabled", local.config_var_prefix)
+  type      = "String"
+  value     = var.checkin_summary_enabled
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "cors_origin" {
   overwrite = true
   name      = format("%scors_origin", local.config_var_prefix)
