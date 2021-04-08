@@ -1334,7 +1334,7 @@ resource "aws_cloudwatch_log_metric_filter" "enx_logo_enbuddy_filter" {
 
 resource "aws_cloudwatch_log_metric_filter" "enx_logo_healthenbuddy_filter" {
   log_group_name = "${module.labels.id}-gw-access-logs"
-  name = "${module.labels.id}-enxlogoenbuddy-filter"
+  name = "${module.labels.id}-enxlogohealthenbuddy-filter"
   pattern = "[time ,method = \"*enx/logo*\", statusCode = 200,agent=\"[HealthENBuddy*CFNetwork*\"]"
   metric_transformation {
     name = "enxlogohealthenbuddy"
