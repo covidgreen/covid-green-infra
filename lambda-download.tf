@@ -16,7 +16,8 @@ module "download" {
     aws_ssm_parameter.db_port.arn,
     aws_ssm_parameter.db_reader_host.arn,
     aws_ssm_parameter.db_ssl.arn,
-    aws_ssm_parameter.time_zone.arn
+    aws_ssm_parameter.time_zone.arn,
+    aws_ssm_parameter.allowed_test_types.arn
     ],
     aws_ssm_parameter.interop_origin.*.arn
   )

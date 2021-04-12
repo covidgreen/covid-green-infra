@@ -389,6 +389,11 @@ variable "callback_rate_limit_request_count" {
   default     = "1"
 }
 
+variable "checkin_summary_enabled" {
+  description = "If checkin data is to be summarised"
+  default     = "false"
+}
+
 variable "token_lifetime_no_refresh" {
   description = "Token lifetime to use when no refresh token"
   default     = "1y"
@@ -417,6 +422,15 @@ variable "code_length" {
 variable "code_lifetime_mins" {
   description = "Lifetime in minutes of the one-time upload codes"
 }
+variable "code_lifetime_deeplink_mins" {
+  description = "Lifetime in minutes of the one-time deeplink upload codes"
+  default     = "1440"
+}
+variable "code_deeplinks_allowed" {
+  description = "Are deeplink codes allowed"
+  default     = "false"
+}
+
 variable "code_removal_mins" {
   description = "Lifetime in minutes before a one-time upload code is removed from the database"
   default     = "2880"
@@ -437,6 +451,22 @@ variable "db_pool_size" {
   description = "Maximum number of clients the db pool should contain"
   default     = "30"
 }
+
+variable "deeplink_android_package_name" {
+  description = "Android package name used in deeplink redirects"
+  default     = "na"
+}
+
+variable "deeplink_appstore_link" {
+  description = "Appstore link used in deeplink redirects"
+  default     = "na"
+}
+
+variable "deeplink_default_webpage" {
+  description = "Default landing page used in deeplink redirects"
+  default     = "na"
+}
+
 variable "default_country_code" {
   description = "Default ISO country code to use for parsing mobile numbers provided to push service"
   default     = ""
@@ -675,12 +705,16 @@ variable "lambdas_custom_s3_bucket" {
 variable "log_level" {
   description = "Log level for ECS and lambdas"
 }
+variable "log_callback_request" {
+  description = "Log callback request payload"
+  default     = "false"
+}
 variable "native_regions" {
   description = "Comma separated list of regions to include with the default region when generating exposure export files"
   default     = ""
 }
 variable "metrics_config" {
-  default = "{ \"CONTACT_UPLOAD\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"CALLBACK_OPTIN\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60, \"LOG_ERROR\": 60 }"
+  default = "{ \"UPLOAD_AFTER_CONTACT\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"CALLBACK_OPTIN\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60, \"LOG_ERROR\": 60 }"
 }
 variable "migrations_custom_image" {
   description = "Custom image for the ECS Migrations container, overrides the default ECR repo, assumes we can pull from the repository"
@@ -826,7 +860,7 @@ variable "token_lifetime_mins" {
 }
 variable "upload_max_keys" {
   description = "Maximum keys accepted in a single upload request"
-  default     = "15"
+  default     = "20"
 }
 variable "upload_schedule" {
   description = "upload lambda CloudWatch schedule"
@@ -878,3 +912,14 @@ variable "self_isolation_notices_enabled" {
   default     = "false"
 }
 
+variable "enx_logo_supported" {
+  type        = string
+  description = "Enable/disable reporting on enx logo metrics"
+  default     = "false"
+}
+
+variable "allowed_test_types" {
+  type        = string
+  description = "The test types to accept"
+  default     = "[1]"
+}

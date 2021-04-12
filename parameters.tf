@@ -73,11 +73,43 @@ resource "aws_ssm_parameter" "callback_url" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "checkin_summary_enabled" {
+  overwrite = true
+  name      = format("%scheckin_summary_enabled", local.config_var_prefix)
+  type      = "String"
+  value     = var.checkin_summary_enabled
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "cors_origin" {
   overwrite = true
   name      = format("%scors_origin", local.config_var_prefix)
   type      = "String"
   value     = var.api_cors_origin
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "deeplink_android_package_name" {
+  overwrite = true
+  name      = format("%sdeeplink_android_package_name", local.config_var_prefix)
+  type      = "String"
+  value     = var.deeplink_android_package_name
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "deeplink_appstore_link" {
+  overwrite = true
+  name      = format("%sdeeplink_appstore_link", local.config_var_prefix)
+  type      = "String"
+  value     = var.deeplink_appstore_link
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "deeplink_default_webpage" {
+  overwrite = true
+  name      = format("%sdeeplink_default_webpage", local.config_var_prefix)
+  type      = "String"
+  value     = var.deeplink_default_webpage
   tags      = module.labels.tags
 }
 
@@ -226,6 +258,14 @@ resource "aws_ssm_parameter" "log_level" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "log_callback_request" {
+  overwrite = true
+  name      = format("%slog_callback_request", local.config_var_prefix)
+  type      = "String"
+  value     = var.log_callback_request
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "metrics_config" {
   overwrite = true
   name      = format("%smetrics_config", local.config_var_prefix)
@@ -319,6 +359,22 @@ resource "aws_ssm_parameter" "security_code_lifetime_mins" {
   name      = format("%ssecurity_code_lifetime_mins", local.config_var_prefix)
   type      = "String"
   value     = var.code_lifetime_mins
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "security_code_lifetime_deeplink_mins" {
+  overwrite = true
+  name      = format("%ssecurity_code_lifetime_deeplink_mins", local.config_var_prefix)
+  type      = "String"
+  value     = var.code_lifetime_deeplink_mins
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "security_code_deeplinks_allowed" {
+  overwrite = true
+  name      = format("%ssecurity_code_deeplinks_allowed", local.config_var_prefix)
+  type      = "String"
+  value     = var.code_deeplinks_allowed
   tags      = module.labels.tags
 }
 
@@ -500,7 +556,19 @@ resource "aws_ssm_parameter" "settings_lambda" {
   tags      = module.labels.tags
 }
 
+# ENX Logo params
+resource "aws_ssm_parameter" "enx_logo_supported" {
+  name  = format("%s-enx_logo_supported", module.labels.id)
+  type  = "String"
+  value = var.enx_logo_supported
+}
 
+# Exposure Test Types
+resource "aws_ssm_parameter" "allowed_test_types" {
+  name  = format("%s-allowed_test_types", module.labels.id)
+  type  = "String"
+  value = var.allowed_test_types
+}
 
 # #########################################
 # Optional parameters - These exist for some instances
