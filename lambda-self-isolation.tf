@@ -26,7 +26,7 @@ module "self_isolation_notices" {
   #Memory and timeout
   memory_size = var.lambda_self_isolation_memory_size
   timeout     = var.lambda_self_isolation_timeout
-
+  log_retention_days = var.logs_retention_days
   security_group_ids = [module.lambda_sg.id]
   subnet_ids         = module.vpc.private_subnets
 

@@ -6,11 +6,26 @@ output "admins_role_arn" {
 output "api_aws_dns" {
   value = join("", aws_api_gateway_domain_name.main.*.cloudfront_domain_name)
 }
-
+output "ci_user_name" {
+  value = aws_iam_user.ci_user.name
+}
 output "cloudtrail_log_group_name" {
   value = join(" ", aws_cloudwatch_log_group.cloudtrail.*.name)
 }
 
+output "cognito_user_pool_domain" {
+  value = "${join("", aws_route53_record.auth_cognito_A_record.*.fqdn)}"
+
+  #value = format("https://%s", aws_route53_record.auth_cognito_A_record[0].fqdn)
+}
+
+output "cognito_user_pool_endpoint" {
+  value = aws_cognito_user_pool.admin_user_pool.endpoint
+}
+
+output "cognito_user_pool_id" {
+  value = aws_cognito_user_pool.admin_user_pool.id
+}
 output "default_tags" {
   value = module.labels.tags
 }

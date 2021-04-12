@@ -25,6 +25,14 @@ data "aws_secretsmanager_secret_version" "rds" {
   secret_id = "${local.config_var_prefix}rds"
 }
 
+data "aws_secretsmanager_secret_version" "admin_push_service_token" {
+  secret_id = "${local.config_var_prefix}admin-push-service-token"
+}
+
+data "aws_secretsmanager_secret_version" "google_maps_api_key" {
+  secret_id = "${local.config_var_prefix}google-maps-api-key"
+}
+
 data "aws_secretsmanager_secret_version" "rds_read_only" {
   secret_id = "${local.config_var_prefix}rds-read-only"
 }
@@ -48,6 +56,11 @@ data "aws_secretsmanager_secret_version" "verify" {
 data "aws_secretsmanager_secret_version" "notice" {
   count     = contains(var.optional_secrets_to_include, "notice") ? 1 : 0
   secret_id = format("%snotice", local.config_var_prefix)
+}
+
+data "aws_secretsmanager_secret_version" "quicksight_dashboard" {
+  count     = contains(var.optional_secrets_to_include, "quicksight-dashboard") ? 1 : 0
+  secret_id = format("%squicksight-dashboard", local.config_var_prefix)
 }
 
 data "aws_secretsmanager_secret_version" "cct" {

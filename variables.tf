@@ -243,6 +243,70 @@ variable "waf_geo_allowed_countries" {
 # #########################################
 # API & Lambda - Settings & Env vars
 # #########################################
+variable "admin_cors_origin" {
+  description = "ADMIN service CORS header value"
+  default     = "*"
+}
+variable "admin_cpu_high_threshold" {
+  description = "ECS ADMIN service ASG scaling CPU high threshold"
+  default     = 15
+}
+variable "admin_cpu_low_threshold" {
+  description = "ECS ADMIN service ASG scaling CPU low threshold"
+  default     = 10
+}
+variable "admin_custom_image" {
+  description = "Custom image for the ECS ADMIN container, overrides the default ECR repo, assumes we can pull from the repository"
+  default     = ""
+}
+variable "admin_ecs_autoscale_max_instances" {
+  description = "ECS ADMIN service ASG max count"
+  default     = 2
+}
+variable "admin_ecs_autoscale_min_instances" {
+  description = "ECS ADMIN service ASG min count"
+  default     = 1
+}
+variable "admin_ecs_autoscale_scale_down_adjustment" {
+  description = "ECS ADMIN service ASG scaling scale down adjustment"
+  default     = -1
+}
+variable "admin_ecs_autoscale_scale_up_adjustment" {
+  description = "ECS ADMIN service ASG scaling scale up adjustment"
+  default     = 1
+}
+variable "admin_image_tag" {
+  description = "Image tag for the ECS ADMIN container"
+  default     = "latest"
+}
+variable "admin_listening_port" {
+  description = "ECS ADMIN container port"
+  default     = 5000
+}
+variable "admin_listening_protocol" {
+  description = "API service ALB protocol"
+  default     = "HTTP"
+}
+variable "admin_mem_high_threshold" {
+  description = "ECS ADMIN service ASG scaling memory high threshold"
+  default     = 25
+}
+variable "admin_mem_low_threshold" {
+  description = "ECS ADMIN service ASG scaling memory low threshold"
+  default     = 15
+}
+variable "admin_service_desired_count" {
+  description = "ECS ADMIN service ASG desired count"
+  default     = 1
+}
+variable "admin_services_task_cpu" {
+  description = "ECS ADMIN service task CPU"
+  default     = 256
+}
+variable "admin_services_task_memory" {
+  description = "ECS ADMIN service task memory"
+  default     = 512
+}
 variable "api_cors_origin" {
   description = "API service CORS header value"
   default     = "*"
@@ -315,10 +379,26 @@ variable "arcgis_url" {
   description = "ArcGIS URL from which stats should be loaded"
   default     = ""
 }
+variable "allow_no_token" {
+  description = "Flag to indicate if refresh token rquired or not"
+  default     = "false"
+}
+
 variable "callback_rate_limit_request_count" {
   description = "Number of callback requests allowed within the defined window"
   default     = "1"
 }
+
+variable "checkin_summary_enabled" {
+  description = "If checkin data is to be summarised"
+  default     = "false"
+}
+
+variable "token_lifetime_no_refresh" {
+  description = "Token lifetime to use when no refresh token"
+  default     = "1y"
+}
+
 variable "callback_rate_limit_secs" {
   description = "Rate limiting period for callback requests in seconds"
   default     = "60"
@@ -342,9 +422,18 @@ variable "code_length" {
 variable "code_lifetime_mins" {
   description = "Lifetime in minutes of the one-time upload codes"
 }
+variable "code_lifetime_deeplink_mins" {
+  description = "Lifetime in minutes of the one-time deeplink upload codes"
+  default     = "1440"
+}
+variable "code_deeplinks_allowed" {
+  description = "Are deeplink codes allowed"
+  default     = "false"
+}
+
 variable "code_removal_mins" {
   description = "Lifetime in minutes before a one-time upload code is removed from the database"
-  default     = "10080"
+  default     = "2880"
 }
 variable "cso_schedule" {
   description = "cso lambda CloudWatch schedule"
@@ -362,6 +451,22 @@ variable "db_pool_size" {
   description = "Maximum number of clients the db pool should contain"
   default     = "30"
 }
+
+variable "deeplink_android_package_name" {
+  description = "Android package name used in deeplink redirects"
+  default     = "na"
+}
+
+variable "deeplink_appstore_link" {
+  description = "Appstore link used in deeplink redirects"
+  default     = "na"
+}
+
+variable "deeplink_default_webpage" {
+  description = "Default landing page used in deeplink redirects"
+  default     = "na"
+}
+
 variable "default_country_code" {
   description = "Default ISO country code to use for parsing mobile numbers provided to push service"
   default     = ""
@@ -428,6 +533,10 @@ variable "health_check_unhealthy_threshold" {
 variable "hsts_max_age" {
   description = "The time, in seconds, that the browser should remember that a site is only to be accessed using HTTPS."
   default     = "300" // 5 minutes
+}
+variable "interop_origin" {
+  description = "The origin country for keys."
+  default     = ""
 }
 variable "issue_proxy_url" {
   description = "URL to proxy OTC issue requests if necessary"
@@ -596,12 +705,16 @@ variable "lambdas_custom_s3_bucket" {
 variable "log_level" {
   description = "Log level for ECS and lambdas"
 }
+variable "log_callback_request" {
+  description = "Log callback request payload"
+  default     = "false"
+}
 variable "native_regions" {
   description = "Comma separated list of regions to include with the default region when generating exposure export files"
   default     = ""
 }
 variable "metrics_config" {
-  default = "{ \"CONTACT_UPLOAD\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"CALLBACK_OPTIN\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60, \"LOG_ERROR\": 60 }"
+  default = "{ \"UPLOAD_AFTER_CONTACT\": 60, \"CHECK_IN\": 60, \"FORGET\": 60, \"CALLBACK_OPTIN\": 60, \"DAILY_ACTIVE_TRACE\": 60, \"CONTACT_NOTIFICATION\": 60, \"LOG_ERROR\": 60 }"
 }
 variable "migrations_custom_image" {
   description = "Custom image for the ECS Migrations container, overrides the default ECR repo, assumes we can pull from the repository"
@@ -697,7 +810,7 @@ variable "push_services_task_memory" {
 }
 variable "reduced_metrics_whitelist" {
   description = "Comma separated list of metrics the reduced metrics role can access"
-  default     = "CALLBACK_OPTIN,CALLBACK_SENT,CASES,CHECK_IN,DEATHS,FORGET,INTEROP_KEYS_DOWNLOADED,INTEROP_KEYS_UPLOADED,UPLOAD"
+  default     = "CALLBACK_OPTIN,CALLBACK_SENT,CASES,CHECK_IN,DEATHS,FORGET,INTEROP_KEYS_DOWNLOADED,INTEROP_KEYS_UPLOADED,UPLOAD,SMS_SENT,CONTACT_NOTIFICATION"
 }
 variable "refresh_token_expiry" {
   description = "Lifetime of refresh tokens generated after a user registers"
@@ -708,6 +821,18 @@ variable "settings_schedule" {
 }
 variable "sms_region" {
   description = "AWS region to use when sending SMS messages"
+  default     = ""
+}
+variable "sms_scheduling_schedule" {
+  description = "SMS scheduling lambda cloudwatch schedule"
+  default     = "cron(*/5 * * * ? *)"
+} 
+variable "sms_scheduling" {
+  description = "SMS scheduling time windows, used to define schedukes for repeating OTC sends"
+  default     = ""
+}
+variable "sms_quiet_time" {
+  description = "SMS time windows during which not to send scheduled SMS OTCs"
   default     = ""
 }
 variable "sms_sender" {
@@ -735,7 +860,7 @@ variable "token_lifetime_mins" {
 }
 variable "upload_max_keys" {
   description = "Maximum keys accepted in a single upload request"
-  default     = "15"
+  default     = "20"
 }
 variable "upload_schedule" {
   description = "upload lambda CloudWatch schedule"
@@ -787,3 +912,14 @@ variable "self_isolation_notices_enabled" {
   default     = "false"
 }
 
+variable "enx_logo_supported" {
+  type        = string
+  description = "Enable/disable reporting on enx logo metrics"
+  default     = "false"
+}
+
+variable "allowed_test_types" {
+  type        = string
+  description = "The test types to accept"
+  default     = "[1]"
+}
