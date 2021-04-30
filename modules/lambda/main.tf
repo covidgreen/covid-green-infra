@@ -16,8 +16,8 @@ variable "aws_secret_arns" {
   default = []
 }
 
-variable "aws_cloudwatch_arns" {
-  default = []
+variable "aws_cloudwatch_metrics" {
+  default = false
 }
 
 variable "cloudwatch_schedule_expression" {
