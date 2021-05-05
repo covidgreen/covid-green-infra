@@ -248,7 +248,11 @@ variable "waf_geo_allowed_countries" {
 # #########################################
 variable "admin_cors_origin" {
   description = "ADMIN service CORS header value"
-  default     = "*"
+  default     = "false"
+}
+variable "admin_cors_credentials" {
+  description = "ADMIN service CORS credential header"
+  default     = "false"
 }
 variable "admin_cpu_high_threshold" {
   description = "ECS ADMIN service ASG scaling CPU high threshold"
@@ -312,7 +316,11 @@ variable "admin_services_task_memory" {
 }
 variable "api_cors_origin" {
   description = "API service CORS header value"
-  default     = "*"
+  default     = "false"
+}
+variable "api_cors_credentials" {
+  description = "API service CORS credentials header"
+  default     = "false"
 }
 variable "api_cpu_high_threshold" {
   description = "ECS API service ASG scaling CPU high threshold"
@@ -753,7 +761,11 @@ variable "push_allowed_ips" {
 }
 variable "push_cors_origin" {
   description = "Push service CORS header value"
-  default     = "*"
+  default     = "false"
+}
+variable "push_cors_credentials" {
+  description = "Push service CORS credentials header"
+  default     = "false"
 }
 variable "push_cpu_high_threshold" {
   description = "ECS Push service ASG scaling CPU high threshold"

@@ -24,6 +24,15 @@ resource "aws_ssm_parameter" "admin_cors_origin" {
   value     = var.admin_cors_origin
   tags      = module.labels.tags
 }
+
+resource "aws_ssm_parameter" "admin_cors_credentials" {
+  overwrite = true
+  name      = format("%sadmin_cors_credentials", local.config_var_prefix)
+  type      = "String"
+  value     = var.admin_cors_credentials
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "admin_host" {
   overwrite = true
   name      = format("%sadmin_host", local.config_var_prefix)
@@ -86,6 +95,14 @@ resource "aws_ssm_parameter" "cors_origin" {
   name      = format("%scors_origin", local.config_var_prefix)
   type      = "String"
   value     = var.api_cors_origin
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "cors_credentials" {
+  overwrite = true
+  name      = format("%scors_credentials", local.config_var_prefix)
+  type      = "String"
+  value     = var.api_cors_credentials
   tags      = module.labels.tags
 }
 
@@ -311,6 +328,14 @@ resource "aws_ssm_parameter" "push_cors_origin" {
   name      = format("%spush_cors_origin", local.config_var_prefix)
   type      = "String"
   value     = var.push_cors_origin
+  tags      = module.labels.tags
+}
+
+resource "aws_ssm_parameter" "push_cors_credentials" {
+  overwrite = true
+  name      = format("%spush_cors_credentials", local.config_var_prefix)
+  type      = "String"
+  value     = var.push_cors_credentials
   tags      = module.labels.tags
 }
 
