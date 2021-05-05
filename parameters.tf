@@ -290,6 +290,14 @@ resource "aws_ssm_parameter" "onset_date_mandatory" {
   tags      = module.labels.tags
 }
 
+resource "aws_ssm_parameter" "enforce_onset_date_range_error" {
+  overwrite = true
+  name      = format("%senforce_onset_date_range_error", local.config_var_prefix)
+  type      = "String"
+  value     = var.enforce_onset_date_range_error
+  tags      = module.labels.tags
+}
+
 resource "aws_ssm_parameter" "push_service_url" {
   overwrite = true
   name      = format("%spush_service_url", local.config_var_prefix)

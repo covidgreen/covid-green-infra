@@ -178,6 +178,9 @@ variable "push_dns" {
 variable "route53_zone" {
   description = "Route53 zone for DNS records"
 }
+variable "cognito_dns" {
+  description = "DNS for cognito"
+}
 variable "wildcard_domain" {
   description = "DNS wildcard domain"
 }
@@ -728,6 +731,10 @@ variable "onset_date_mandatory" {
   description = "Flag whether onsetDate/symptomDate is mandatory"
   default     = "false"
 }
+variable "enforce_onset_date_range_error" {
+  description = "Flag whether onsetDate/symptomDate outside of allowed range generates an error"
+  default     = "false"
+}
 variable "optional_lambdas_to_include" {
   description = "List of optional lambdas to include"
   default     = []
@@ -826,7 +833,7 @@ variable "sms_region" {
 variable "sms_scheduling_schedule" {
   description = "SMS scheduling lambda cloudwatch schedule"
   default     = "cron(*/5 * * * ? *)"
-} 
+}
 variable "sms_scheduling" {
   description = "SMS scheduling time windows, used to define schedukes for repeating OTC sends"
   default     = ""

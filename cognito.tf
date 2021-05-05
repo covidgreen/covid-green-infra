@@ -18,7 +18,7 @@ resource "aws_cognito_user_pool_client" "user_pool_client" {
 
 resource "aws_cognito_user_pool_domain" "main" {
   count           = local.enable_domain_count
-  domain          = format("%s-login.%s", module.labels.id, var.route53_zone)
+  domain          = format("%s-login.%s", module.labels.id, var.cognito_dns)
   user_pool_id    = aws_cognito_user_pool.admin_user_pool.id
   certificate_arn = aws_acm_certificate.wildcard_cert_us[0].arn
 }
