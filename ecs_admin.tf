@@ -36,7 +36,6 @@ data "aws_iam_policy_document" "admin_ecs_task_policy" {
       aws_ssm_parameter.admin_cors_origin.arn,
       aws_ssm_parameter.admin_host.arn,
       aws_ssm_parameter.admin_port.arn,
-      aws_ssm_parameter.cors_origin.arn,
       aws_ssm_parameter.db_database.arn,
       aws_ssm_parameter.db_host.arn,
       aws_ssm_parameter.db_pool_size.arn,

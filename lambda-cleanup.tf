@@ -11,19 +11,20 @@ module "cleanup" {
   name   = format("%s-cleanup", module.labels.id)
 
   aws_parameter_arns = concat([
-      aws_ssm_parameter.db_database.arn,
-      aws_ssm_parameter.db_host.arn,
-      aws_ssm_parameter.db_port.arn,
-      aws_ssm_parameter.db_reader_host.arn,
-      aws_ssm_parameter.db_ssl.arn,
-      aws_ssm_parameter.security_code_removal_mins.arn,
-      aws_ssm_parameter.upload_token_lifetime_mins.arn,
-      aws_ssm_parameter.self_isolation_notice_lifetime_mins.arn,
-      aws_ssm_parameter.enx_logo_supported.arn,  
-      aws_ssm_parameter.checkin_summary_enabled.arn  
+    aws_ssm_parameter.db_database.arn,
+    aws_ssm_parameter.db_host.arn,
+    aws_ssm_parameter.db_port.arn,
+    aws_ssm_parameter.db_reader_host.arn,
+    aws_ssm_parameter.db_ssl.arn,
+    aws_ssm_parameter.security_code_removal_mins.arn,
+    aws_ssm_parameter.upload_token_lifetime_mins.arn,
+    aws_ssm_parameter.self_isolation_notice_lifetime_mins.arn,
+    aws_ssm_parameter.enx_logo_supported.arn,
+    aws_ssm_parameter.checkin_summary_enabled.arn
     ],
     aws_ssm_parameter.issue_proxy_url.*.arn
-  ) 
+  )
+  aws_cloudwatch_metrics         = true
   aws_secret_arns                = concat([data.aws_secretsmanager_secret_version.rds_read_write.arn], data.aws_secretsmanager_secret_version.verify_proxy.*.arn)
   cloudwatch_schedule_expression = var.cleanup_schedule
   config_var_prefix              = local.config_var_prefix

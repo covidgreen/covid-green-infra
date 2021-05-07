@@ -178,6 +178,9 @@ variable "push_dns" {
 variable "route53_zone" {
   description = "Route53 zone for DNS records"
 }
+variable "cognito_dns" {
+  description = "DNS for cognito"
+}
 variable "wildcard_domain" {
   description = "DNS wildcard domain"
 }
@@ -245,7 +248,11 @@ variable "waf_geo_allowed_countries" {
 # #########################################
 variable "admin_cors_origin" {
   description = "ADMIN service CORS header value"
-  default     = "*"
+  default     = "false"
+}
+variable "admin_cors_credentials" {
+  description = "ADMIN service CORS credential header"
+  default     = "false"
 }
 variable "admin_cpu_high_threshold" {
   description = "ECS ADMIN service ASG scaling CPU high threshold"
@@ -309,7 +316,11 @@ variable "admin_services_task_memory" {
 }
 variable "api_cors_origin" {
   description = "API service CORS header value"
-  default     = "*"
+  default     = "false"
+}
+variable "api_cors_credentials" {
+  description = "API service CORS credentials header"
+  default     = "false"
 }
 variable "api_cpu_high_threshold" {
   description = "ECS API service ASG scaling CPU high threshold"
@@ -728,6 +739,10 @@ variable "onset_date_mandatory" {
   description = "Flag whether onsetDate/symptomDate is mandatory"
   default     = "false"
 }
+variable "enforce_onset_date_range_error" {
+  description = "Flag whether onsetDate/symptomDate outside of allowed range generates an error"
+  default     = "false"
+}
 variable "optional_lambdas_to_include" {
   description = "List of optional lambdas to include"
   default     = []
@@ -746,7 +761,11 @@ variable "push_allowed_ips" {
 }
 variable "push_cors_origin" {
   description = "Push service CORS header value"
-  default     = "*"
+  default     = "false"
+}
+variable "push_cors_credentials" {
+  description = "Push service CORS credentials header"
+  default     = "false"
 }
 variable "push_cpu_high_threshold" {
   description = "ECS Push service ASG scaling CPU high threshold"
@@ -826,7 +845,7 @@ variable "sms_region" {
 variable "sms_scheduling_schedule" {
   description = "SMS scheduling lambda cloudwatch schedule"
   default     = "cron(*/5 * * * ? *)"
-} 
+}
 variable "sms_scheduling" {
   description = "SMS scheduling time windows, used to define schedukes for repeating OTC sends"
   default     = ""
