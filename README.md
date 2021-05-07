@@ -132,6 +132,9 @@ All the infrastructure set up is automated but not secrets that need to be creat
 
 ### Contributors
 
+* @dennisgove - Dennis Gove <dgove1@bloomberg.net>
+* @dharding - David J Harding <davidjasonharding@gmail.com>
+* @fiacc - Fiac O'Brien Moran <fiacc.obrienmoran@nearform.com>
 * @segfault - Mark Guzman <segfault@hasno.info>
 
 ### Past Contributors
