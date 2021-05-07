@@ -16,6 +16,10 @@ variable "aws_secret_arns" {
   default = []
 }
 
+variable "aws_cloudwatch_metrics" {
+  default = false
+}
+
 variable "cloudwatch_schedule_expression" {
   default = ""
 }
@@ -216,6 +220,14 @@ data "aws_iam_policy_document" "this" {
     content {
       actions   = ["secretsmanager:GetSecretValue"]
       resources = var.aws_secret_arns
+    }
+  }
+
+  dynamic statement {
+    for_each = var.aws_cloudwatch_metrics ? { 1 : 1 } : {}
+    content {
+      actions   = ["cloudwatch:GetMetricsData"]
+      resources = ["*"]
     }
   }
 

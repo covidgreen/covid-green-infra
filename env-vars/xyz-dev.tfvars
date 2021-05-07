@@ -10,6 +10,7 @@ rds_backup_retention = 3
 # R53 Settings
 api_dns         = "api.dev.somewhere.com"
 push_dns        = "push.dev.somewhere.com"
+cognito_dns     = "dev.somewhere.com"
 route53_zone    = "somewhere.com"
 wildcard_domain = "*.somewhere.com"
 
