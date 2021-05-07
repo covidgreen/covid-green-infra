@@ -29,35 +29,67 @@ resource "aws_iam_role" "api_ecs_task_role" {
 
 data "aws_iam_policy_document" "api_ecs_task_policy" {
   statement {
-    actions = ["ssm:GetParameter", "secretsmanager:GetSecretValue"]
-    resources = [
-      aws_ssm_parameter.log_level.arn,
-      aws_ssm_parameter.api_port.arn,
+    actions = ["ssm:GetParameter"]
+    resources = concat([
       aws_ssm_parameter.api_host.arn,
-      aws_ssm_parameter.cors_origin.arn,
-      aws_ssm_parameter.db_host.arn,
-      aws_ssm_parameter.db_reader_host.arn,
-      aws_ssm_parameter.db_port.arn,
-      aws_ssm_parameter.db_database.arn,
-      aws_ssm_parameter.db_ssl.arn,
-      aws_ssm_parameter.security_exposure_limit.arn,
-      aws_ssm_parameter.security_refresh_token_expiry.arn,
-      aws_ssm_parameter.security_code_lifetime_mins.arn,
-      aws_ssm_parameter.security_token_lifetime_mins.arn,
-      aws_ssm_parameter.metrics_config.arn,
-      aws_ssm_parameter.security_verify_rate_limit_secs.arn,
+      aws_ssm_parameter.api_port.arn,
       aws_ssm_parameter.callback_url.arn,
-      aws_ssm_parameter.upload_token_lifetime_mins.arn,
-      aws_ssm_parameter.s3_assets_bucket.arn,
+      aws_ssm_parameter.certificate_audience.arn,
+      aws_ssm_parameter.cors_origin.arn,
+      aws_ssm_parameter.db_database.arn,
+      aws_ssm_parameter.db_host.arn,
+      aws_ssm_parameter.db_pool_size.arn,
+      aws_ssm_parameter.db_port.arn,
+      aws_ssm_parameter.db_reader_host.arn,
+      aws_ssm_parameter.db_ssl.arn,
+      aws_ssm_parameter.default_region.arn,
       aws_ssm_parameter.enable_callback.arn,
       aws_ssm_parameter.enable_check_in.arn,
+      aws_ssm_parameter.enable_legacy_settings.arn,
       aws_ssm_parameter.enable_metrics.arn,
-      aws_ssm_parameter.default_region.arn,
-      data.aws_secretsmanager_secret_version.rds.arn,
+      aws_ssm_parameter.hsts_max_age.arn,
+      aws_ssm_parameter.jwt_issuer.arn,
+      aws_ssm_parameter.log_level.arn,
+      aws_ssm_parameter.metrics_config.arn,
+      aws_ssm_parameter.s3_assets_bucket.arn,
+      aws_ssm_parameter.security_code_lifetime_mins.arn,
+      aws_ssm_parameter.security_code_lifetime_deeplink_mins.arn,
+      aws_ssm_parameter.security_code_deeplinks_allowed.arn,
+      aws_ssm_parameter.security_refresh_token_expiry.arn,
+      aws_ssm_parameter.security_token_lifetime_mins.arn,
+      aws_ssm_parameter.security_verify_rate_limit_secs.arn,
+      aws_ssm_parameter.time_zone.arn,
+      aws_ssm_parameter.upload_max_keys.arn,
+      aws_ssm_parameter.upload_token_lifetime_mins.arn,
+      aws_ssm_parameter.self_isolation_notice_lifetime_mins.arn,
+      aws_ssm_parameter.notices_sqs_arn.arn,
+      aws_ssm_parameter.enable_self_isolation_notices.arn,
+      aws_ssm_parameter.self_isolation_notices_url.arn,
+      aws_ssm_parameter.security_self_isolation_notices_rate_limit_secs.arn,
+      aws_ssm_parameter.deeplink_android_package_name.arn,
+      aws_ssm_parameter.deeplink_appstore_link.arn,
+      aws_ssm_parameter.deeplink_default_webpage.arn,
+      aws_ssm_parameter.log_callback_request.arn
+      ],
+      aws_ssm_parameter.security_callback_rate_limit_request_count.*.arn,
+      aws_ssm_parameter.security_callback_rate_limit_secs.*.arn,
+      aws_ssm_parameter.security_allow_no_token.*.arn,
+      aws_ssm_parameter.security_token_lifetime_no_refresh.*.arn,
+      aws_ssm_parameter.verify_proxy_url.*.arn
+    )
+  }
+
+  statement {
+    actions = ["secretsmanager:GetSecretValue"]
+    resources = concat([
+      data.aws_secretsmanager_secret_version.device_check.arn,
       data.aws_secretsmanager_secret_version.encrypt.arn,
       data.aws_secretsmanager_secret_version.jwt.arn,
-      data.aws_secretsmanager_secret_version.device-check.arn
-    ]
+      data.aws_secretsmanager_secret_version.rds_read_write_create.arn,
+      data.aws_secretsmanager_secret_version.verify.arn
+      ],
+      data.aws_secretsmanager_secret_version.verify_proxy.*.arn
+    )
   }
 
   statement {
@@ -70,7 +102,8 @@ data "aws_iam_policy_document" "api_ecs_task_policy" {
   statement {
     actions = ["sqs:*"]
     resources = [
-      aws_sqs_queue.callback.arn
+      aws_sqs_queue.callback.arn,
+      aws_sqs_queue.self_isolation.arn
     ]
   }
 }
@@ -89,21 +122,6 @@ resource "aws_iam_role_policy_attachment" "api_ecs_task_policy" {
 # #########################################
 # API Service
 # #########################################
-data "template_file" "api_service_container_definitions" {
-  template = file("templates/api_service_task_definition.tpl")
-
-  vars = {
-    api_image_uri        = "${aws_ecr_repository.api.repository_url}:latest"
-    config_var_prefix    = local.config_var_prefix
-    migrations_image_uri = "${aws_ecr_repository.migrations.repository_url}:latest"
-    listening_port       = var.api_listening_port
-    logs_service_name    = aws_cloudwatch_log_group.api.name
-    log_group_region     = var.aws_region
-    node_env             = "production"
-    aws_region           = var.aws_region
-  }
-}
-
 resource "aws_ecs_task_definition" "api" {
   family                   = "${module.labels.id}-api"
   requires_compatibilities = ["FARGATE"]
@@ -112,9 +130,19 @@ resource "aws_ecs_task_definition" "api" {
   memory                   = var.api_services_task_memory
   execution_role_arn       = aws_iam_role.api_ecs_task_execution.arn
   task_role_arn            = aws_iam_role.api_ecs_task_role.arn
-  container_definitions    = data.template_file.api_service_container_definitions.rendered
+  tags                     = module.labels.tags
 
-  tags = module.labels.tags
+  container_definitions = templatefile(format("%s/templates/api_service_task_definition.tpl", path.module),
+    {
+      api_image_uri        = local.ecs_api_image
+      aws_region           = var.aws_region
+      config_var_prefix    = local.config_var_prefix
+      migrations_image_uri = local.ecs_migrations_image
+      listening_port       = var.api_listening_port
+      logs_service_name    = aws_cloudwatch_log_group.api.name
+      log_group_region     = var.aws_region
+      node_env             = "production"
+  })
 }
 
 resource "aws_ecs_service" "api" {
@@ -148,16 +176,18 @@ resource "aws_ecs_service" "api" {
 }
 
 module "api_autoscale" {
-  source                      = "./modules/ecs-autoscale-service"
-  ecs_cluster_resource_name   = aws_ecs_cluster.services.name
-  service_resource_name       = aws_ecs_service.api.name
-  ecs_autoscale_max_instances = var.api_ecs_autoscale_max_instances
-  ecs_autoscale_min_instances = var.api_ecs_autoscale_min_instances
-  ecs_as_cpu_high_threshold   = var.api_cpu_high_threshold
-  ecs_as_cpu_low_threshold    = var.api_cpu_low_threshold
-  ecs_as_mem_high_threshold   = var.api_mem_high_threshold
-  ecs_as_mem_low_threshold    = var.api_mem_low_threshold
-  tags                        = module.labels.tags
+  source                              = "./modules/ecs-autoscale-service"
+  ecs_cluster_resource_name           = aws_ecs_cluster.services.name
+  service_resource_name               = aws_ecs_service.api.name
+  ecs_autoscale_max_instances         = var.api_ecs_autoscale_max_instances
+  ecs_autoscale_min_instances         = var.api_ecs_autoscale_min_instances
+  ecs_autoscale_scale_down_adjustment = var.api_ecs_autoscale_scale_down_adjustment
+  ecs_autoscale_scale_up_adjustment   = var.api_ecs_autoscale_scale_up_adjustment
+  ecs_as_cpu_high_threshold           = var.api_cpu_high_threshold
+  ecs_as_cpu_low_threshold            = var.api_cpu_low_threshold
+  ecs_as_mem_high_threshold           = var.api_mem_high_threshold
+  ecs_as_mem_low_threshold            = var.api_mem_low_threshold
+  tags                                = module.labels.tags
 }
 
 # #########################################

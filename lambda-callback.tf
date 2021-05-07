@@ -8,22 +8,56 @@ data "aws_iam_policy_document" "callback_policy" {
   statement {
     actions = [
       "s3:*",
-      "ec2:CreateNetworkInterface",
-      "ec2:DescribeNetworkInterfaces",
-      "ec2:DetachNetworkInterface",
-      "ec2:DeleteNetworkInterface",
-      "secretsmanager:GetSecretValue",
-      "ssm:GetParameter",
       "sqs:*"
     ]
     resources = ["*"]
   }
 
   statement {
-    actions = ["kms:*"]
+    actions = ["ssm:GetParameter"]
+    resources = concat(
+      [
+        aws_ssm_parameter.callback_url.arn,
+        aws_ssm_parameter.db_database.arn,
+        aws_ssm_parameter.db_host.arn,
+        aws_ssm_parameter.db_port.arn,
+        aws_ssm_parameter.db_ssl.arn,
+        aws_ssm_parameter.time_zone.arn
+      ],
+      aws_ssm_parameter.callback_email_notifications_sns_arn.*.arn
+    )
+  }
+
+  statement {
+    actions = ["secretsmanager:GetSecretValue"]
+    resources = concat(
+      [data.aws_secretsmanager_secret_version.rds_read_write.arn],
+      data.aws_secretsmanager_secret_version.cct.*.arn
+    )
+  }
+
+  statement {
+    actions = [
+      "kms:Decrypt",
+      "kms:DescribeKey",
+      "kms:Encrypt",
+      "kms:GenerateDataKey",
+      "kms:GenerateDataKey*",
+      "kms:GetPublicKey",
+      "kms:ReEncrypt*"
+    ]
     resources = [
+      aws_kms_key.sns.arn,
       aws_kms_key.sqs.arn
     ]
+  }
+
+  dynamic statement {
+    for_each = local.enable_callback_email_notifications_count > 0 ? { 1 : 1 } : {}
+    content {
+      actions   = ["sns:Publish"]
+      resources = aws_sns_topic.callback_email_notifications.*.arn
+    }
   }
 }
 
@@ -35,7 +69,7 @@ data "aws_iam_policy_document" "callback_assume_role" {
       type = "Service"
 
       identifiers = [
-        "lambda.amazonaws.com",
+        "lambda.amazonaws.com"
       ]
     }
   }
@@ -64,28 +98,28 @@ resource "aws_iam_role_policy_attachment" "callback_policy" {
   policy_arn = aws_iam_policy.callback_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "callback_logs" {
+resource "aws_iam_role_policy_attachment" "callback_aws_managed_policy" {
   role       = aws_iam_role.callback.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
 resource "aws_lambda_function" "callback" {
-  filename         = "${path.module}/.zip/${module.labels.id}_callback.zip"
-  function_name    = "${module.labels.id}-callback"
-  source_code_hash = data.archive_file.callback.output_base64sha256
-  role             = aws_iam_role.callback.arn
-  runtime          = "nodejs10.x"
-  handler          = "callback.handler"
-  memory_size      = 128
-  timeout          = 15
-  tags             = module.labels.tags
+  # Default is to use the stub file, but we need to cater for S3 bucket file being the source
+  filename         = local.lambdas_use_s3_as_source ? null : "${path.module}/.zip/${module.labels.id}_callback.zip"
+  s3_bucket        = local.lambdas_use_s3_as_source ? var.lambdas_custom_s3_bucket : null
+  s3_key           = local.lambdas_use_s3_as_source ? var.lambda_callback_s3_key : null
+  source_code_hash = local.lambdas_use_s3_as_source ? "" : data.archive_file.callback.output_base64sha256
+
+  function_name = "${module.labels.id}-callback"
+  handler       = "callback.handler"
+  layers        = lookup(var.lambda_custom_runtimes, "callback", "NOT-FOUND") == "NOT-FOUND" ? null : var.lambda_custom_runtimes["callback"].layers
+  memory_size   = var.lambda_callback_memory_size
+  role          = aws_iam_role.callback.arn
+  runtime       = lookup(var.lambda_custom_runtimes, "callback", "NOT-FOUND") == "NOT-FOUND" ? var.lambda_default_runtime : var.lambda_custom_runtimes["callback"].runtime
+  tags          = module.labels.tags
+  timeout       = var.lambda_callback_timeout
 
   depends_on = [aws_cloudwatch_log_group.callback]
-
-  vpc_config {
-    security_group_ids = [module.lambda_sg.id]
-    subnet_ids         = module.vpc.private_subnets
-  }
 
   environment {
     variables = {
@@ -97,7 +131,13 @@ resource "aws_lambda_function" "callback" {
   lifecycle {
     ignore_changes = [
       source_code_hash,
+      filename
     ]
+  }
+
+  vpc_config {
+    security_group_ids = [module.lambda_sg.id]
+    subnet_ids         = module.vpc.private_subnets
   }
 }
 

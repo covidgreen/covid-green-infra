@@ -1,8 +1,8 @@
 # Misc
-aws_region   = "eu-west-1"
-environment  = "dev"
-profile      = "xyz-dev"
-root_profile = "xyz-dev"
+aws_region  = "eu-west-1"
+dns_profile = "xyz-dev"
+environment = "dev"
+profile     = "xyz-dev"
 
 # RDS Settings
 rds_backup_retention = 3
@@ -10,6 +10,7 @@ rds_backup_retention = 3
 # R53 Settings
 api_dns         = "api.dev.somewhere.com"
 push_dns        = "push.dev.somewhere.com"
+cognito_dns     = "dev.somewhere.com"
 route53_zone    = "somewhere.com"
 wildcard_domain = "*.somewhere.com"
 

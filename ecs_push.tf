@@ -14,24 +14,46 @@ data "aws_iam_policy_document" "push_ecs_assume_role_policy" {
 
 data "aws_iam_policy_document" "push_ecs_task_policy" {
   statement {
-    actions = ["ssm:GetParameter", "secretsmanager:GetSecretValue"]
-    resources = [
-      aws_ssm_parameter.log_level.arn,
-      aws_ssm_parameter.push_port.arn,
-      aws_ssm_parameter.push_host.arn,
+    actions = ["ssm:GetParameter"]
+    resources = concat([
       aws_ssm_parameter.cors_origin.arn,
-      aws_ssm_parameter.db_host.arn,
-      aws_ssm_parameter.db_reader_host.arn,
-      aws_ssm_parameter.db_port.arn,
       aws_ssm_parameter.db_database.arn,
+      aws_ssm_parameter.db_host.arn,
+      aws_ssm_parameter.db_pool_size.arn,
+      aws_ssm_parameter.db_port.arn,
+      aws_ssm_parameter.db_reader_host.arn,
       aws_ssm_parameter.db_ssl.arn,
       aws_ssm_parameter.default_country_code.arn,
+      aws_ssm_parameter.hsts_max_age.arn,
+      aws_ssm_parameter.log_level.arn,
+      aws_ssm_parameter.onset_date_mandatory.arn,
+      aws_ssm_parameter.push_cors_origin.arn,
+      aws_ssm_parameter.push_host.arn,
+      aws_ssm_parameter.push_port.arn,
+      aws_ssm_parameter.reduced_metrics_whitelist.arn,
       aws_ssm_parameter.security_code_charset.arn,
       aws_ssm_parameter.security_code_length.arn,
+      aws_ssm_parameter.security_code_lifetime_mins.arn,
+      aws_ssm_parameter.security_code_deeplinks_allowed.arn,
       aws_ssm_parameter.sms_url.arn,
-      data.aws_secretsmanager_secret_version.rds.arn,
-      data.aws_secretsmanager_secret_version.jwt.arn
-    ]
+      aws_ssm_parameter.symptom_date_offset.arn,
+      aws_ssm_parameter.time_zone.arn,
+      aws_ssm_parameter.use_test_date_as_onset_date.arn      
+      ],
+      aws_ssm_parameter.issue_proxy_url.*.arn,
+      aws_ssm_parameter.sms_scheduling.*.arn
+    )
+  }
+
+  statement {
+    actions = ["secretsmanager:GetSecretValue"]
+    resources = concat([
+      data.aws_secretsmanager_secret_version.jwt.arn,
+      data.aws_secretsmanager_secret_version.encrypt.arn,
+      data.aws_secretsmanager_secret_version.rds_read_write.arn
+      ],
+      data.aws_secretsmanager_secret_version.verify_proxy.*.arn
+    )
   }
 
   statement {
@@ -76,20 +98,6 @@ resource "aws_iam_role_policy_attachment" "push_ecs_task_policy" {
 # #########################################
 # Push Service
 # #########################################
-data "template_file" "push_service_container_definitions" {
-  template = file("templates/push_service_task_definition.tpl")
-
-  vars = {
-    config_var_prefix = local.config_var_prefix
-    image_uri         = "${aws_ecr_repository.push.repository_url}:latest"
-    listening_port    = var.push_listening_port
-    logs_service_name = aws_cloudwatch_log_group.push.name
-    log_group_region  = var.aws_region
-    node_env          = "production"
-    aws_region        = var.aws_region
-  }
-}
-
 resource "aws_ecs_task_definition" "push" {
   family                   = "${module.labels.id}-push"
   requires_compatibilities = ["FARGATE"]
@@ -98,9 +106,18 @@ resource "aws_ecs_task_definition" "push" {
   memory                   = var.push_services_task_memory
   execution_role_arn       = aws_iam_role.push_ecs_task_execution.arn
   task_role_arn            = aws_iam_role.push_ecs_task_role.arn
-  container_definitions    = data.template_file.push_service_container_definitions.rendered
+  tags                     = module.labels.tags
 
-  tags = module.labels.tags
+  container_definitions = templatefile(format("%s/templates/push_service_task_definition.tpl", path.module),
+    {
+      aws_region        = var.aws_region
+      config_var_prefix = local.config_var_prefix
+      image_uri         = local.ecs_push_image
+      listening_port    = var.push_listening_port
+      logs_service_name = aws_cloudwatch_log_group.push.name
+      log_group_region  = var.aws_region
+      node_env          = "production"
+  })
 }
 
 resource "aws_ecs_service" "push" {
@@ -134,16 +151,18 @@ resource "aws_ecs_service" "push" {
 }
 
 module "push_autoscale" {
-  source                      = "./modules/ecs-autoscale-service"
-  ecs_cluster_resource_name   = aws_ecs_cluster.services.name
-  service_resource_name       = aws_ecs_service.push.name
-  ecs_autoscale_max_instances = var.push_ecs_autoscale_max_instances
-  ecs_autoscale_min_instances = var.push_ecs_autoscale_min_instances
-  ecs_as_cpu_high_threshold   = var.push_cpu_high_threshold
-  ecs_as_cpu_low_threshold    = var.push_cpu_low_threshold
-  ecs_as_mem_high_threshold   = var.push_mem_high_threshold
-  ecs_as_mem_low_threshold    = var.push_mem_low_threshold
-  tags                        = module.labels.tags
+  source                              = "./modules/ecs-autoscale-service"
+  ecs_cluster_resource_name           = aws_ecs_cluster.services.name
+  service_resource_name               = aws_ecs_service.push.name
+  ecs_autoscale_max_instances         = var.push_ecs_autoscale_max_instances
+  ecs_autoscale_min_instances         = var.push_ecs_autoscale_min_instances
+  ecs_autoscale_scale_down_adjustment = var.push_ecs_autoscale_scale_down_adjustment
+  ecs_autoscale_scale_up_adjustment   = var.push_ecs_autoscale_scale_up_adjustment
+  ecs_as_cpu_high_threshold           = var.push_cpu_high_threshold
+  ecs_as_cpu_low_threshold            = var.push_cpu_low_threshold
+  ecs_as_mem_high_threshold           = var.push_mem_high_threshold
+  ecs_as_mem_low_threshold            = var.push_mem_low_threshold
+  tags                                = module.labels.tags
 }
 
 # #########################################

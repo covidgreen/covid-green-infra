@@ -22,25 +22,32 @@ dynamodb_table_name=${3}
 
 # S3 bucket
 # Create bucket
-aws s3api create-bucket --bucket ${s3_bucket_name} \
-    --region ${aws_region} \
-    --create-bucket-configuration LocationConstraint=${aws_region}
+# us-east-1 is a special case where you cannot specify a location contraint, see https://github.com/boto/boto3/issues/125
+if [[ ${aws_region} == "us-east-1" ]]; then
+	aws s3api create-bucket --bucket ${s3_bucket_name} \
+		--region ${aws_region}
+else
+	aws s3api create-bucket --bucket ${s3_bucket_name} \
+		--region ${aws_region} \
+		--create-bucket-configuration LocationConstraint=${aws_region}
+fi
 # Encrypt bucket
 aws s3api put-bucket-encryption \
-    --bucket ${s3_bucket_name} \
-    --server-side-encryption-configuration='{"Rules":[{"ApplyServerSideEncryptionByDefault":{"SSEAlgorithm":"AES256"}}]}'
+	--bucket ${s3_bucket_name} \
+	--server-side-encryption-configuration='{"Rules":[{"ApplyServerSideEncryptionByDefault":{"SSEAlgorithm":"AES256"}}]}'
 # Apply versioning
 aws s3api put-bucket-versioning --bucket ${s3_bucket_name} --versioning-configuration Status=Enabled
 # Apply block public access config
 aws s3api put-public-access-block \
-    --bucket ${s3_bucket_name} \
-    --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true" \
+	--bucket ${s3_bucket_name} \
+	--public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
 
 
 # DynamoDb table
 # Create table
 aws dynamodb create-table \
-    --table-name ${dynamodb_table_name} \
-    --attribute-definitions AttributeName=LockID,AttributeType=S \
-    --key-schema AttributeName=LockID,KeyType=HASH \
-    --billing-mode PAY_PER_REQUEST
+	--table-name ${dynamodb_table_name} \
+	--attribute-definitions AttributeName=LockID,AttributeType=S \
+	--key-schema AttributeName=LockID,KeyType=HASH \
+	--billing-mode PAY_PER_REQUEST \
+	--region ${aws_region}

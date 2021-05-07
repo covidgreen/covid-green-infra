@@ -2,3 +2,5 @@
 *.tfplan
 *.pem
 *.zip
+
+.idea

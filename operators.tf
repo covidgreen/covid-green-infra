@@ -14,7 +14,9 @@ data "aws_iam_policy_document" "operators" {
       aws_lambda_function.settings.arn,
       aws_lambda_function.token.arn
       ],
-    aws_lambda_function.cso.*.arn)
+      aws_lambda_function.cso.*.arn,
+      compact([module.daily_registrations_reporter.function_arn, module.download.function_arn, module.upload.function_arn])
+    )
   }
 
   # Explicitly deny anything on authorizer as it contains a secret
@@ -26,6 +28,36 @@ data "aws_iam_policy_document" "operators" {
       aws_lambda_function.authorizer.arn,
     ]
     effect = "Deny"
+  }
+
+  # Allow getting the RDS read_only_user credentials secret
+  statement {
+    actions = [
+      "secretsmanager:GetSecretValue"
+    ]
+    resources = [data.aws_secretsmanager_secret_version.rds_read_only.arn]
+  }
+
+  # Allow own MFA management
+  # See https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_aws_my-sec-creds-self-manage.html
+  # For the $${user_name} escaping see https://github.com/terraform-providers/terraform-provider-aws/issues/5984#issuecomment-424470589
+  statement {
+    actions = [
+      "iam:CreateVirtualMFADevice",
+      "iam:DeleteVirtualMFADevice"
+    ]
+    resources = [format("arn:aws:iam::%s:mfa/$${aws:username}", data.aws_caller_identity.current.account_id)]
+    sid       = "AllowManageOwnVirtualMFADevice"
+  }
+  statement {
+    actions = [
+      "iam:DeactivateMFADevice",
+      "iam:EnableMFADevice",
+      "iam:ListMFADevices",
+      "iam:ResyncMFADevice"
+    ]
+    resources = [format("arn:aws:iam::%s:user/$${aws:username}", data.aws_caller_identity.current.account_id)]
+    sid       = "AllowManageOwnUserMFA"
   }
 
   # Conditional

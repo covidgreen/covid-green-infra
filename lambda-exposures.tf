@@ -7,15 +7,33 @@ data "archive_file" "exposures" {
 data "aws_iam_policy_document" "exposures_policy" {
   statement {
     actions = [
-      "s3:*",
-      "ec2:CreateNetworkInterface",
-      "ec2:DescribeNetworkInterfaces",
-      "ec2:DetachNetworkInterface",
-      "ec2:DeleteNetworkInterface",
-      "secretsmanager:GetSecretValue",
-      "ssm:GetParameter"
+      "s3:*"
     ]
     resources = ["*"]
+  }
+
+  statement {
+    actions = ["ssm:GetParameter"]
+    resources = [
+      aws_ssm_parameter.app_bundle_id.arn,
+      aws_ssm_parameter.db_database.arn,
+      aws_ssm_parameter.db_host.arn,
+      aws_ssm_parameter.db_port.arn,
+      aws_ssm_parameter.db_ssl.arn,
+      aws_ssm_parameter.default_region.arn,
+      aws_ssm_parameter.disable_valid_key_check.arn,
+      aws_ssm_parameter.native_regions.arn,
+      aws_ssm_parameter.s3_assets_bucket.arn,
+      aws_ssm_parameter.variance_offset_mins.arn
+    ]
+  }
+
+  statement {
+    actions = ["secretsmanager:GetSecretValue"]
+    resources = [
+      data.aws_secretsmanager_secret_version.exposures.arn,
+      data.aws_secretsmanager_secret_version.rds_read_write.arn
+    ]
   }
 }
 
@@ -27,7 +45,7 @@ data "aws_iam_policy_document" "exposures_assume_role" {
       type = "Service"
 
       identifiers = [
-        "lambda.amazonaws.com",
+        "lambda.amazonaws.com"
       ]
     }
   }
@@ -56,28 +74,28 @@ resource "aws_iam_role_policy_attachment" "exposures_policy" {
   policy_arn = aws_iam_policy.exposures_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "exposures_logs" {
+resource "aws_iam_role_policy_attachment" "exposures_aws_managed_policy" {
   role       = aws_iam_role.exposures.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
 resource "aws_lambda_function" "exposures" {
-  filename         = "${path.module}/.zip/${module.labels.id}_exposures.zip"
-  function_name    = "${module.labels.id}-exposures"
-  source_code_hash = data.archive_file.exposures.output_base64sha256
-  role             = aws_iam_role.exposures.arn
-  runtime          = "nodejs10.x"
-  handler          = "exposures.handler"
-  memory_size      = 128
-  timeout          = 15
-  tags             = module.labels.tags
+  # Default is to use the stub file, but we need to cater for S3 bucket file being the source
+  filename         = local.lambdas_use_s3_as_source ? null : "${path.module}/.zip/${module.labels.id}_exposures.zip"
+  s3_bucket        = local.lambdas_use_s3_as_source ? var.lambdas_custom_s3_bucket : null
+  s3_key           = local.lambdas_use_s3_as_source ? var.lambda_exposures_s3_key : null
+  source_code_hash = local.lambdas_use_s3_as_source ? "" : data.archive_file.exposures.output_base64sha256
+
+  function_name = "${module.labels.id}-exposures"
+  handler       = "exposures.handler"
+  layers        = lookup(var.lambda_custom_runtimes, "exposures", "NOT-FOUND") == "NOT-FOUND" ? null : var.lambda_custom_runtimes["exposures"].layers
+  memory_size   = var.lambda_exposures_memory_size
+  role          = aws_iam_role.exposures.arn
+  runtime       = lookup(var.lambda_custom_runtimes, "exposures", "NOT-FOUND") == "NOT-FOUND" ? var.lambda_default_runtime : var.lambda_custom_runtimes["exposures"].runtime
+  tags          = module.labels.tags
+  timeout       = var.lambda_exposures_timeout
 
   depends_on = [aws_cloudwatch_log_group.exposures]
-
-  vpc_config {
-    security_group_ids = [module.lambda_sg.id]
-    subnet_ids         = module.vpc.private_subnets
-  }
 
   environment {
     variables = {
@@ -89,7 +107,13 @@ resource "aws_lambda_function" "exposures" {
   lifecycle {
     ignore_changes = [
       source_code_hash,
+      filename
     ]
+  }
+
+  vpc_config {
+    security_group_ids = [module.lambda_sg.id]
+    subnet_ids         = module.vpc.private_subnets
   }
 }
 

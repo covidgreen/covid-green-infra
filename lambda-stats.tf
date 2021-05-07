@@ -6,16 +6,30 @@ data "archive_file" "stats" {
 
 data "aws_iam_policy_document" "stats_policy" {
   statement {
-    actions = [
-      "s3:*",
-      "ec2:CreateNetworkInterface",
-      "ec2:DescribeNetworkInterfaces",
-      "ec2:DetachNetworkInterface",
-      "ec2:DeleteNetworkInterface",
-      "secretsmanager:GetSecretValue",
-      "ssm:GetParameter"
-    ]
+    actions   = ["s3:*"]
     resources = ["*"]
+  }
+
+  statement {
+    actions = ["ssm:GetParameter"]
+    resources = concat(
+      [
+        aws_ssm_parameter.db_database.arn,
+        aws_ssm_parameter.db_host.arn,
+        aws_ssm_parameter.db_port.arn,
+        aws_ssm_parameter.db_ssl.arn,
+        aws_ssm_parameter.s3_assets_bucket.arn,
+        aws_ssm_parameter.time_zone.arn
+      ],
+      aws_ssm_parameter.arcgis_url.*.arn
+    )
+  }
+
+  statement {
+    actions = ["secretsmanager:GetSecretValue"]
+    resources = [
+      data.aws_secretsmanager_secret_version.rds_read_write.arn
+    ]
   }
 }
 
@@ -27,7 +41,7 @@ data "aws_iam_policy_document" "stats_assume_role" {
       type = "Service"
 
       identifiers = [
-        "lambda.amazonaws.com",
+        "lambda.amazonaws.com"
       ]
     }
   }
@@ -56,28 +70,28 @@ resource "aws_iam_role_policy_attachment" "stats_policy" {
   policy_arn = aws_iam_policy.stats_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "stats_logs" {
+resource "aws_iam_role_policy_attachment" "stats_aws_managed_policy" {
   role       = aws_iam_role.stats.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
 resource "aws_lambda_function" "stats" {
-  filename         = "${path.module}/.zip/${module.labels.id}_stats.zip"
-  function_name    = "${module.labels.id}-stats"
-  source_code_hash = data.archive_file.stats.output_base64sha256
-  role             = aws_iam_role.stats.arn
-  runtime          = "nodejs10.x"
-  handler          = "stats.handler"
-  memory_size      = 128
-  timeout          = 15
-  tags             = module.labels.tags
+  # Default is to use the stub file, but we need to cater for S3 bucket file being the source
+  filename         = local.lambdas_use_s3_as_source ? null : "${path.module}/.zip/${module.labels.id}_stats.zip"
+  s3_bucket        = local.lambdas_use_s3_as_source ? var.lambdas_custom_s3_bucket : null
+  s3_key           = local.lambdas_use_s3_as_source ? var.lambda_stats_s3_key : null
+  source_code_hash = local.lambdas_use_s3_as_source ? "" : data.archive_file.stats.output_base64sha256
+
+  function_name = "${module.labels.id}-stats"
+  handler       = "stats.handler"
+  layers        = lookup(var.lambda_custom_runtimes, "stats", "NOT-FOUND") == "NOT-FOUND" ? null : var.lambda_custom_runtimes["stats"].layers
+  memory_size   = var.lambda_stats_memory_size
+  role          = aws_iam_role.stats.arn
+  runtime       = lookup(var.lambda_custom_runtimes, "stats", "NOT-FOUND") == "NOT-FOUND" ? var.lambda_default_runtime : var.lambda_custom_runtimes["stats"].runtime
+  tags          = module.labels.tags
+  timeout       = var.lambda_stats_timeout
 
   depends_on = [aws_cloudwatch_log_group.stats]
-
-  vpc_config {
-    security_group_ids = [module.lambda_sg.id]
-    subnet_ids         = module.vpc.private_subnets
-  }
 
   environment {
     variables = {
@@ -89,47 +103,14 @@ resource "aws_lambda_function" "stats" {
   lifecycle {
     ignore_changes = [
       source_code_hash,
+      filename
     ]
   }
-}
 
-module "lambda_sg" {
-  source      = "./modules/security-group"
-  open_egress = true
-  name        = "${module.labels.id}-lambda-stats"
-  environment = var.environment
-  vpc_id      = module.vpc.vpc_id
-  tags        = module.labels.tags
-}
-
-resource "aws_security_group_rule" "lambda_ingress" {
-  description       = "Allows backend services to accept connections from ALB"
-  type              = "ingress"
-  from_port         = 0
-  to_port           = 65535
-  protocol          = "-1"
-  cidr_blocks       = [var.vpc_cidr]
-  security_group_id = module.lambda_sg.id
-}
-
-resource "aws_security_group_rule" "lambda_egress_vpc" {
-  description       = "Allows outbound connections to VPC CIDR block"
-  type              = "egress"
-  from_port         = 0
-  to_port           = 65535
-  protocol          = "tcp"
-  cidr_blocks       = [var.vpc_cidr]
-  security_group_id = module.lambda_sg.id
-}
-
-resource "aws_security_group_rule" "lambda_egress_endpoints" {
-  description       = "Allows outbound connections to VPC S3 endpoint"
-  type              = "egress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  prefix_list_ids   = [module.vpc.vpc_endpoint_s3_pl_id]
-  security_group_id = module.lambda_sg.id
+  vpc_config {
+    security_group_ids = [module.lambda_sg.id]
+    subnet_ids         = module.vpc.private_subnets
+  }
 }
 
 resource "aws_cloudwatch_event_rule" "every_ten_minutes" {
