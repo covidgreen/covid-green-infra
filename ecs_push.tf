@@ -144,7 +144,6 @@ resource "aws_ecs_service" "push" {
 
   lifecycle {
     ignore_changes = [
-      task_definition,
       desired_count
     ]
   }
