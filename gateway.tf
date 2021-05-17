@@ -961,6 +961,7 @@ resource "aws_api_gateway_integration" "api_healthcheck_get_integration" {
   rest_api_id          = aws_api_gateway_rest_api.main.id
   resource_id          = aws_api_gateway_resource.api_healthcheck.id
   http_method          = aws_api_gateway_method.api_healthcheck_get.http_method
+  timeout_milliseconds = var.api_gateway_timeout_milliseconds
   passthrough_behavior = "WHEN_NO_TEMPLATES"
   type                 = "MOCK"
   request_templates = {
@@ -1005,6 +1006,7 @@ resource "aws_api_gateway_integration" "api_healthcheck_head_integration" {
   rest_api_id          = aws_api_gateway_rest_api.main.id
   resource_id          = aws_api_gateway_resource.api_healthcheck.id
   http_method          = aws_api_gateway_method.api_healthcheck_head.http_method
+  timeout_milliseconds = var.api_gateway_timeout_milliseconds
   passthrough_behavior = "WHEN_NO_TEMPLATES"
   type                 = "MOCK"
   request_templates = {

@@ -37,6 +37,7 @@ module "sms" {
   s3_key                                     = var.lambda_sms_s3_key
   security_group_ids                         = [module.lambda_sg.id]
   sqs_queue_arns_to_consume_from             = [aws_sqs_queue.sms.arn]
+  sqs_queue_arns_to_publish_to               = [aws_sqs_queue.sms.arn]
   subnet_ids                                 = module.vpc.private_subnets
   tags                                       = module.labels.tags
   timeout                                    = var.lambda_sms_timeout
