@@ -121,9 +121,6 @@ All the infrastructure set up is automated but not secrets that need to be creat
 ### Core Team
 
 * @ShaunBaker - Shaun Baker <shaun.baker@nearform.com>
-* @floridemai - Paul Negrutiu <paul.negrutiu@nearform.com>
-* @jackdclark - Jack Clark <jack.clark@nearform.com>
-* @andreaforni - Andrea Forni <andrea.forni@nearform.com>
 * @jackmurdoch - Jack Murdoch <jack.murdoch@nearform.com>
 * @pmcgrath - Pat McGrath <pat.mcgrath@nearform.com>
 * @zimny - Piotr Zimoch <piotr.zimoch@nearform.com>
@@ -131,13 +128,18 @@ All the infrastructure set up is automated but not secrets that need to be creat
 * @ninjatux - Valerio Barrila <valerio.barrila@nearform.com>
 
 ### Contributors
-
-* @segfault - Mark Guzman <segfault@hasno.info>
+* @floridemai - Paul Negrutiu <paul.negrutiu@nearform.com>
+* @jackdclark - Jack Clark <jack.clark@nearform.com>
+* @andreaforni - Andrea Forni <andrea.forni@nearform.com>
+* @fiacc - Fiac O'Brien Moran <fiacc.obrienmoran@nearform.com>
+* @daynelucas - Dayne Lucas <dayne.lucas@nearform.com>
+* @mb2con - Matt Bernard <matt.bernard@nearform.com>
 
 ### Past Contributors
 
-* TBD
-* TBD
+* @segfault - Mark Guzman <segfault@hasno.info>
+* @dennisgove - Dennis Gove <dgove1@bloomberg.net>
+* @dharding - David J Harding <davidjasonharding@gmail.com>
 
 ## Hosted By
 
