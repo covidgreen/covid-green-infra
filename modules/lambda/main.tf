@@ -226,7 +226,7 @@ data "aws_iam_policy_document" "this" {
   dynamic statement {
     for_each = var.aws_cloudwatch_metrics ? { 1 : 1 } : {}
     content {
-      actions   = ["cloudwatch:GetMetricsData"]
+      actions   = ["cloudwatch:GetMetricData"]
       resources = ["*"]
     }
   }
